@@ -1,8 +1,8 @@
 ### Owner
-@<Lawless, Thomas>
+@<Lawless, Thomas> 
 
 ### Administrator
-@<Ilya Mudritskiy>
+@<Ilya Mudritskiy> 
 
 # Introduction 
 ---
