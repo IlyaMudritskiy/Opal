@@ -54,12 +54,22 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="src\Configuration\Configuration.cs" />
-    <Compile Include="src\Configuration\IConfiguration.cs" />
-    <Compile Include="src\Design\Colors.cs" />
-    <Compile Include="src\GUI\ProcessScreens\Embossing\EmbossingScreenCreator.cs" />
-    <Compile Include="src\GUI\Tables\FeatureTable.cs" />
-    <Compile Include="src\GUI\ProcessScreens\Models\EmbossingScreenModel.cs" />
+    <Compile Include="src\Controller\Embossing\EmbossingCalculations.cs" />
+    <Compile Include="src\Controller\Forms\WorkFlow.cs" />
+    <Compile Include="src\Model\Data\Embossing\Feature.cs" />
+    <Compile Include="src\Model\Data\Embossing\Measurements.cs" />
+    <Compile Include="src\Model\Data\Embossing\ProcessStep.cs" />
+    <Compile Include="src\Model\Data\JsonFile.cs" />
+    <Compile Include="src\Controller\DataProcessing\EmbossingDataProcessor.cs" />
+    <Compile Include="src\Model\Data\Embossing\TransducerData.cs" />
+    <Compile Include="src\Model\Screen\Embossing\EmbossingTab.cs" />
+    <Compile Include="src\Model\Screen\Embossing\TableView.cs" />
+    <Compile Include="src\Model\Screen\IScreen.cs" />
+    <Compile Include="src\Utils\Design\Colors.cs" />
+    <Compile Include="src\Utils\Design\Fonts.cs" />
+    <Compile Include="src\View\Embossing\CommonElements.cs" />
+    <Compile Include="src\Model\Screen\Embossing\EmbossingScreen.cs" />
+    <Compile Include="src\Controller\FileProcessing\JsonReader.cs" />
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -81,6 +91,8 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <None Include="src\Config\ProcessSteps.json" />
+    <None Include="src\Config\TTL.json" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -90,9 +102,11 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Assets\" />
-    <Folder Include="src\Models\" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json">
+      <Version>13.0.3</Version>
+    </PackageReference>
     <PackageReference Include="ScottPlot">
       <Version>4.1.68</Version>
     </PackageReference>
