@@ -27,7 +27,7 @@ namespace ProcessDashboard
             }
             else
             {
-                screen.Update();
+                screen.Update(ref selectedFiles);
             }
         }
     }

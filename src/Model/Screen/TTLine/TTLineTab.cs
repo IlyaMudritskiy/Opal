@@ -1,4 +1,5 @@
-﻿using ScottPlot;
+﻿using ProcessDashboard.src.Utils.Design;
+using ScottPlot;
 using ScottPlot.Plottable;
 using System.Drawing;
 using System.Windows.Forms;
@@ -14,6 +15,13 @@ namespace ProcessDashboard.src.Model.Screen.TTLine
         public TableView DS12 { get; set; }
         public TableView DS21 { get; set; }
         public TableView DS22 { get; set; }
+
+        private Label XLabel { get; set; }
+        private Label YLabel { get; set; }
+        private Label XCoordLabel { get; set; }
+        private Label YCoordLabel { get; set; }
+
+        private Crosshair Crosshair;
 
         public TTLineTab(string title)
         {
@@ -78,6 +86,58 @@ namespace ProcessDashboard.src.Model.Screen.TTLine
             tabBase.ResumeLayout();
 
             Tab.Controls.Add(tabBase);
+
+            Crosshair = Plot.Plot.AddCrosshair(0, 0);
+
+            XLabel = new Label()
+            {
+                AutoSize = true,
+                Font = Fonts.Sennheiser.S,
+                Location = new Point(0, 0),
+                Name = "XLabel"
+            };
+
+            YLabel = new Label()
+            {
+                AutoSize = true,
+                Font = Fonts.Sennheiser.S,
+                Location = new Point(0, 0),
+                Name = "XLabel"
+            };
+
+            XCoordLabel = new Label()
+            {
+                AutoSize = true,
+                Font = Fonts.Sennheiser.S,
+                Location = new Point(0, 0),
+                Name = "XCoordLabel"
+            };
+
+            YCoordLabel = new Label()
+            {
+                AutoSize = true,
+                Font = Fonts.Sennheiser.S,
+                Location = new Point(0, 0),
+                Name = "YCoordLabel"
+            };
+
+            Plot.MouseMove += Plot_MouseMoved;
+        }
+
+        private void Plot_MouseMoved(object sender, MouseEventArgs e)
+        {
+            (double coordinateX, double coordinateY) = Plot.GetMouseCoordinates();
+
+            XLabel.Text = $"{e.X:0.000}";
+            YLabel.Text = $"{e.Y:0.000}";
+
+            XCoordLabel.Text = $"{coordinateX:0.00000000}";
+            YCoordLabel.Text = $"{coordinateY:0.00000000}";
+
+            Crosshair.X = coordinateX;
+            Crosshair.Y = coordinateY;
+
+            Plot.Refresh(lowQuality: false, skipIfCurrentlyRendering: true);
         }
     }
 }

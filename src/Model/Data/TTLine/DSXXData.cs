@@ -7,6 +7,7 @@ namespace ProcessDashboard.src.Model.Data.TTLine
     {
         public int TypeID { get; set; }
         public string LineID { get; set; }
+        public int Amount { get; set; }
         public List<Measurements> Temperature { get; set; }
         public List<Measurements> Pressure { get; set; }
         public double HoldPressureMean { get; set; }
@@ -20,6 +21,7 @@ namespace ProcessDashboard.src.Model.Data.TTLine
         {
             TypeID = DSXX[0].TypeID;
             LineID = DSXX[0].LineID;
+            Amount = DSXX.Count;
             Temperature = DSXX.Select(x => x.Temperature).ToList();
             Pressure = DSXX.Select(x => x.HighPressure).ToList();
             HoldPressureMean = DSXX.Average(x => x.HoldPressure);

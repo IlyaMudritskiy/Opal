@@ -3,6 +3,7 @@ using ProcessDashboard.src.Model.Data;
 using ProcessDashboard.src.Model.Data.TTLine;
 using ProcessDashboard.src.Utils.Design;
 using ScottPlot;
+using ScottPlot.Plottable;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -37,9 +38,11 @@ namespace ProcessDashboard.src.Model.Screen.TTLine
             panel.ResumeLayout();
         }
 
-        public void Update()
+        public void Update(ref List<JsonFile> files)
         {
-            throw new NotImplementedException();
+            clear(Temperature);
+            clear(Pressure);
+            LoadData(ref files);
         }
 
         public void LoadData(ref List<JsonFile> files)
@@ -52,14 +55,15 @@ namespace ProcessDashboard.src.Model.Screen.TTLine
             set(screenData.DS21, Temperature.DS21, Colors.DS21C, "DS 2-1");
             set(screenData.DS22, Temperature.DS22, Colors.DS22C, "DS 2-2");
 
-            Temperature.Header.Text += $" |  {lineID} - {typeID}";
+            Temperature.Header.Text = $"Temperature  |  {lineID} - {typeID}";
+            Pressure.Header.Text = $"Pressure  |  {lineID} - {typeID}";
         }
 
         private void set(DSXXData ds, TableView tv, Color color, string label)
         {
             if (ds != null && ds.Temperature.Count != 0)
             {
-                tv.AddData(ds.TempFeaturesMean, color);
+                tv.AddData(ds.TempFeaturesMean, color, ds.Amount);
 
                 foreach (var item in ds.Temperature)
                     Temperature.AddScatter(item.TimeOffset, item.Values, color, label);
@@ -70,6 +74,21 @@ namespace ProcessDashboard.src.Model.Screen.TTLine
                 lineID = ds.LineID;
                 typeID = ds.TypeID.ToString();
             }
+        }
+
+        private void clear(TTLineTab tab)
+        {
+            tab.Plot.Plot.Clear(typeof(ScatterPlot));
+            clearTable(tab.DS11);
+            clearTable(tab.DS12);
+            clearTable(tab.DS21);
+            clearTable(tab.DS22);
+        }
+
+        private void clearTable(TableView table)
+        {
+            table.DataSource.Clear();
+            table.Table.Refresh();
         }
     }
 }
