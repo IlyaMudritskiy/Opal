@@ -1,7 +1,10 @@
-﻿using ProcessDashboard.src.View.Embossing;
+﻿using ProcessDashboard.src.Model.Data.TTLine;
+using System.Collections.Generic;
+using System.Drawing;
 using System.Windows.Forms;
+using System.Xml.Serialization;
 
-namespace ProcessDashboard.src.Model.Screen.Embossing
+namespace ProcessDashboard.src.Model.Screen.TTLine
 {
     public class TableView
     {
@@ -13,6 +16,14 @@ namespace ProcessDashboard.src.Model.Screen.Embossing
         public TableView(string title)
         {
             _createLayout(title);
+        }
+
+        public void AddData(List<Feature> features, Color color)
+        {
+            Title.BackColor = color;
+
+            foreach(Feature feature in features)
+                DataSource.Add(feature);
         }
 
         private void _createLayout(string title)

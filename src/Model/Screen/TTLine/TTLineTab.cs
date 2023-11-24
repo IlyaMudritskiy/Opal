@@ -1,11 +1,11 @@
-﻿using ProcessDashboard.src.View.Embossing;
-using ScottPlot;
-using System;
+﻿using ScottPlot;
+using ScottPlot.Plottable;
+using System.Drawing;
 using System.Windows.Forms;
 
-namespace ProcessDashboard.src.Model.Screen.Embossing
+namespace ProcessDashboard.src.Model.Screen.TTLine
 {
-    public partial class EmbossingTab
+    public partial class TTLineTab
     {
         public TabPage Tab { get; set; }
         public Label Header { get; set; }
@@ -15,9 +15,23 @@ namespace ProcessDashboard.src.Model.Screen.Embossing
         public TableView DS21 { get; set; }
         public TableView DS22 { get; set; }
 
-        public EmbossingTab(string title)
+        public TTLineTab(string title)
         {
             _createLayout(title);
+        }
+
+        public void AddScatter(double[] x, double[] y, Color color, string label)
+        {
+            Plot.Plot.AddScatter(
+                xs: x,
+                ys: y,
+                color: color,
+                markerSize: 4,
+                lineWidth: 2,
+                label: label
+                );
+            Plot.Refresh();
+            Plot.Plot.AxisAuto();
         }
 
         private void _createLayout(string title)

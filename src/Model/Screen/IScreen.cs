@@ -1,4 +1,6 @@
-﻿using System.Windows.Forms;
+﻿using ProcessDashboard.src.Model.Data;
+using System.Collections.Generic;
+using System.Windows.Forms;
 
 namespace ProcessDashboard.src.Model.Screen
 {
@@ -6,7 +8,6 @@ namespace ProcessDashboard.src.Model.Screen
     {
         void Create(ref Panel panel);
         void Update();
-        void LoadData<T>(T data);
-        void Hide(ref Panel panel);
+        void LoadData(ref List<JsonFile> data);
     }
 }
