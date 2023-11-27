@@ -4,6 +4,8 @@ using ProcessDashboard.src.Model.Data;
 using ProcessDashboard.src.Model.Screen;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace ProcessDashboard
@@ -14,6 +16,7 @@ namespace ProcessDashboard
         public MainForm()
         {
             InitializeComponent();
+            setCultureSettings();
         }
 
         private void SelectFilesMenuButton_Click(object sender, EventArgs e)
@@ -29,6 +32,12 @@ namespace ProcessDashboard
             {
                 screen.Update(ref selectedFiles);
             }
+        }
+
+        private void setCultureSettings()
+        {
+            Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
+            Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
         }
     }
 }
