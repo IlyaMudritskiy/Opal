@@ -4,16 +4,16 @@ using System;
 using System.Linq;
 using System.Windows.Forms;
 using System.IO;
-using ProcessDashboard.src.Controller.FileProcessing;
+using ProcessDashboard.src.Model.Data.TTLine;
 
-namespace ProcessDashboard.src.Data
+namespace ProcessDashboard.src.Controller.TTLine
 {
-    public static class EmbossingDataProcessor
+    public static class TTLineDataProcessor
     {
-        public static List<TransducerData> OpenFiles(CommonDialog dialog)
+        public static List<JsonFile> OpenFiles(CommonDialog dialog)
         {
             List<string> files = new List<string>();
-            List <TransducerData> result = new List<TransducerData>();
+            List<JsonFile> result = new List<JsonFile>();
 
             if (dialog.ShowDialog() == DialogResult.OK)
             {
@@ -28,27 +28,22 @@ namespace ProcessDashboard.src.Data
                     FolderBrowserDialog folderDialog = dialog as FolderBrowserDialog;
                     files = Directory.GetFiles(folderDialog.SelectedPath).ToList();
                 }
-                result = loadFiles(files);
+
+                foreach (string file in files)
+                    result.Add(JsonReader.Read<JsonFile>(file));
             }
             return result;
         }
 
-        private static List<TransducerData> loadFiles(List<string> files)
+        public static List<TTLUnitData> LoadFiles(List<JsonFile> files)
         {
-            List<TransducerData> result = new List<TransducerData>();
+            List<TTLUnitData> result = new List<TTLUnitData>();
 
-            List<string> stepnames = new List<string> { 
-                "ps01_temperature_actual", 
-                "ps01_high_pressure_actual",
-                "ps01_hold_pressure_actual",
-                "ps01_heater_on"
-            };
-
-            foreach (string file in files)
+            foreach (JsonFile file in files)
             {
                 try
                 {
-                    result.Add(new TransducerData(JsonReader.Read<JsonFile>(file)));
+                    result.Add(new TTLUnitData(file));
                 }
                 catch (Exception ex)
                 {

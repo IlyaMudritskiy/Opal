@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace ProcessDashboard.src.Controller.FileProcessing
+namespace ProcessDashboard.src.Controller
 {
     public static class JsonReader
     {

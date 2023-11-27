@@ -1,9 +1,10 @@
 ﻿using ProcessDashboard.src.Utils.Design;
 using ScottPlot;
+using ScottPlot.Renderable;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace ProcessDashboard.src.View.Embossing
+namespace ProcessDashboard.src.Model.Screen
 {
     public static class CommonElements
     {
@@ -26,6 +27,10 @@ namespace ProcessDashboard.src.View.Embossing
             {
                 Dock = DockStyle.Fill
             };
+
+            //Legend legend = plot.Plot.Legend();
+            //legend.Location = Alignment.UpperRight;
+
             if (!string.IsNullOrEmpty(Title))
                 plot.Plot.Title(Title);
 
@@ -36,6 +41,8 @@ namespace ProcessDashboard.src.View.Embossing
                 plot.Plot.YLabel(YLabel);
 
             plot.Plot.AxisAuto();
+            plot.Refresh();
+
             return plot;
         }
 
