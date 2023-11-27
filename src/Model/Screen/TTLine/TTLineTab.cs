@@ -34,8 +34,8 @@ namespace ProcessDashboard.src.Model.Screen.TTLine
                 xs: x,
                 ys: y,
                 color: color,
-                markerSize: 4,
-                lineWidth: 2,
+                markerSize: 3,
+                lineWidth: 1,
                 label: label
                 );
             Plot.Refresh();
