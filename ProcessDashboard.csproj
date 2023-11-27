@@ -35,6 +35,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.IO.Compression" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -54,9 +55,11 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="src\Controller\Acoustic\AcousticProcessor.cs" />
     <Compile Include="src\Controller\ILineChecker.cs" />
     <Compile Include="src\Controller\ScreenCreator.cs" />
     <Compile Include="src\Controller\TTLine\FeatureCalculations.cs" />
+    <Compile Include="src\Model\Data\Acoustic\AcousticTest.cs" />
     <Compile Include="src\Model\Data\TTLine\Feature.cs" />
     <Compile Include="src\Model\Data\TTLine\Heater.cs" />
     <Compile Include="src\Model\Data\TTLine\Measurements.cs" />
@@ -96,7 +99,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <None Include="src\Config\ProcessSteps.json" />
+    <None Include="src\Config\Configuration.json" />
     <None Include="src\Config\TTL.json" />
   </ItemGroup>
   <ItemGroup>
@@ -109,6 +112,9 @@
     <Folder Include="Assets\" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="DotNetZip">
+      <Version>1.16.0</Version>
+    </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>13.0.3</Version>
     </PackageReference>

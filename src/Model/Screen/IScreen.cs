@@ -9,5 +9,7 @@ namespace ProcessDashboard.src.Model.Screen
         void Create(ref Panel panel);
         void Update(ref List<JsonFile> data);
         void LoadData(ref List<JsonFile> data);
+        string GetTypeID();
+        string GetLineID();
     }
 }

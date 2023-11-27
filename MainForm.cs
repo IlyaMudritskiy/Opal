@@ -1,6 +1,8 @@
 ﻿using ProcessDashboard.src.Controller;
+using ProcessDashboard.src.Controller.Acoustic;
 using ProcessDashboard.src.Controller.TTLine;
 using ProcessDashboard.src.Model.Data;
+using ProcessDashboard.src.Model.Data.Acoustic;
 using ProcessDashboard.src.Model.Screen;
 using System;
 using System.Collections.Generic;
@@ -17,6 +19,8 @@ namespace ProcessDashboard
         {
             InitializeComponent();
             setCultureSettings();
+            var acoustic = JsonReader.Read<AcousticTest>("C:\\Code\\Azure\\ProcessDashboard\\Assets\\Limits\\TestRef\\DUT_2_1513_231127105602112_20231127-110002.json");
+            Console.WriteLine();
         }
 
         private void SelectFilesMenuButton_Click(object sender, EventArgs e)
@@ -32,6 +36,8 @@ namespace ProcessDashboard
             {
                 screen.Update(ref selectedFiles);
             }
+
+            var acF = AcousticProcessor.GetAcousticFiles(ref selectedFiles, screen.GetTypeID());
         }
 
         private void setCultureSettings()

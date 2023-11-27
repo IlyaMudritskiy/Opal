@@ -5,6 +5,7 @@ namespace ProcessDashboard.src.Model.Data.TTLine
 {
     public class ScreenData
     {
+        public int ProductID { get; set; }
         public DSXXData DS11 { get; set; }
         public DSXXData DS12 { get; set; }
         public DSXXData DS21 { get; set; }

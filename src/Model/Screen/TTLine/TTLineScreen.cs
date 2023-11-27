@@ -59,6 +59,16 @@ namespace ProcessDashboard.src.Model.Screen.TTLine
             Pressure.Header.Text = $"Pressure  |  {lineID} - {typeID}";
         }
 
+        public string GetLineID()
+        {
+            return lineID;
+        }
+
+        public string GetTypeID()
+        {
+            return typeID;
+        }
+
         private void set(DSXXData ds, TableView tv, Color color, string label)
         {
             if (ds != null && ds.Temperature.Count != 0)
