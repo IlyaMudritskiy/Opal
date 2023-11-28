@@ -11,14 +11,15 @@ namespace ProcessDashboard.src.Controller
         {
             string line = checkLine(ref selectedFiles);
             string product = checkProduct(ref selectedFiles);
-            IScreen screen = null;
 
-            if (line == "TTL_M")
+            switch (line)
             {
-                screen = new TTLineScreen();
-            }
+                case "TTL_M":
+                    return new TTLineScreen();
 
-            return screen;                
+                default:
+                    return null;
+            }
         }
 
         private static string checkLine(ref List<JsonFile> selectedFiles)

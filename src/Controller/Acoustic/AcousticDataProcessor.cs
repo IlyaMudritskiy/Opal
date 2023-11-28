@@ -7,13 +7,11 @@ using System.Linq;
 
 namespace ProcessDashboard.src.Controller.Acoustic
 {
-    public static class AcousticProcessor
+    public static class AcousticDataProcessor
     {
-        public static List<AcousticTest> GetAcousticFiles(ref List<JsonFile> files, string typeID)
+        public static List<AcousticFile> OpenFiles(ref List<JsonFile> files, string typeID)
         {
             if (files == null) return null;
-
-            List<AcousticTest> result = new List<AcousticTest>();
 
             List<string> matchingFiles = new List<string>();
             List<string> acousticFiles = new List<string>();
@@ -26,9 +24,7 @@ namespace ProcessDashboard.src.Controller.Acoustic
                 matchingFiles.AddRange(findMatchingFileNames(ref files, ref acousticFiles));
             }
 
-            result = JsonReader.ReadFromZip<AcousticTest>(matchingFiles);
-
-            return result;
+            return JsonReader.ReadFromZip<AcousticFile>(matchingFiles);
         }
 
         private static List<string> findMatchingFileNames(ref List<JsonFile> files, ref List<string> fileNames)
@@ -44,7 +40,7 @@ namespace ProcessDashboard.src.Controller.Acoustic
             return matchingFileNames;
         }
 
-        private static string getPath(JsonFile file, string typeID, int hourOffset = 0) 
+        private static string getPath(JsonFile file, string typeID, int hourOffset = 0)
         {
             DateTime dt = DateTime.Parse(file.Steps.Where(x => x.StepName == "ps01_high_pressure_actual").FirstOrDefault().Measurements[0].DateTime);
             string date = $"{dt.Year}{dt.Month}{dt.Day}";

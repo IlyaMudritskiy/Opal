@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace ProcessDashboard.src.Model.Data.Acoustic
 {
     [JsonObject(MemberSerialization.OptIn)]
-    public class AcousticTest
+    public class AcousticFile
     {
         [JsonProperty(PropertyName = "DUT")]
         public AcousticDUT DUT { get; set; }
@@ -23,13 +23,25 @@ namespace ProcessDashboard.src.Model.Data.Acoustic
         public string TypeID { get; set; }
 
         [JsonProperty(PropertyName = "serialnr")]
-        public string Serial { get; set; }
+        public string Serial { 
+            get { return _serial; } 
+            set 
+            { 
+                Track = int.Parse(value[value.Length - 2].ToString());
+                Press = int.Parse(value[value.Length - 1].ToString());
+                _serial = value;
+            } 
+        }
+        private string _serial;
 
         [JsonProperty(PropertyName = "duttime")]
         public string Time { get; set; }
 
         [JsonProperty(PropertyName = "nestnumber")]
         public int Nest { get; set; }
+
+        public int Track { get; set; }
+        public int Press { get; set; }
     }
 
     [JsonObject(MemberSerialization.OptIn)]

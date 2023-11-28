@@ -55,11 +55,11 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="src\Controller\Acoustic\AcousticProcessor.cs" />
+    <Compile Include="src\Controller\Acoustic\AcousticDataProcessor.cs" />
     <Compile Include="src\Controller\ILineChecker.cs" />
     <Compile Include="src\Controller\ScreenCreator.cs" />
     <Compile Include="src\Controller\TTLine\FeatureCalculations.cs" />
-    <Compile Include="src\Model\Data\Acoustic\AcousticTest.cs" />
+    <Compile Include="src\Model\Data\Acoustic\AcousticFile.cs" />
     <Compile Include="src\Model\Data\TTLine\Feature.cs" />
     <Compile Include="src\Model\Data\TTLine\Heater.cs" />
     <Compile Include="src\Model\Data\TTLine\Measurements.cs" />
@@ -70,6 +70,7 @@
     <Compile Include="src\Model\Data\TTLine\DSXXData.cs" />
     <Compile Include="src\Model\Data\TTLine\ScreenData.cs" />
     <Compile Include="src\Model\Data\TTLine\TTLUnitData.cs" />
+    <Compile Include="src\Model\Screen\Acoustic\AcousticTab.cs" />
     <Compile Include="src\Model\Screen\TTLine\TTLineTab.cs" />
     <Compile Include="src\Model\Screen\TTLine\TableView.cs" />
     <Compile Include="src\Model\Screen\IScreen.cs" />

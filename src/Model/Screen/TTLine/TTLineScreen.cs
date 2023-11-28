@@ -1,6 +1,9 @@
-﻿using ProcessDashboard.src.Controller.TTLine;
+﻿using ProcessDashboard.src.Controller.Acoustic;
+using ProcessDashboard.src.Controller.TTLine;
 using ProcessDashboard.src.Model.Data;
+using ProcessDashboard.src.Model.Data.Acoustic;
 using ProcessDashboard.src.Model.Data.TTLine;
+using ProcessDashboard.src.Model.Screen.Acoustic;
 using ProcessDashboard.src.Utils.Design;
 using ScottPlot;
 using ScottPlot.Plottable;
@@ -17,6 +20,7 @@ namespace ProcessDashboard.src.Model.Screen.TTLine
         public TabControl Tabs { get; set; }
         public TTLineTab Temperature { get; set; }
         public TTLineTab Pressure { get; set; }
+        public AcousticTab FrequencyResponse { get; set; }
 
         private string lineID;
         private string typeID;
@@ -31,8 +35,10 @@ namespace ProcessDashboard.src.Model.Screen.TTLine
             Tabs = new TabControl() { Dock = DockStyle.Fill };
             Temperature = new TTLineTab("Temperature Details");
             Pressure = new TTLineTab("Pressure Details");
+            FrequencyResponse = new AcousticTab("Frequency Response");
             Tabs.TabPages.Add(Temperature.Tab);
             Tabs.TabPages.Add(Pressure.Tab);
+            Tabs.TabPages.Add(FrequencyResponse.Tab);
             panel.SuspendLayout();
             panel.Controls.Add(Tabs);
             panel.ResumeLayout();
@@ -48,12 +54,18 @@ namespace ProcessDashboard.src.Model.Screen.TTLine
         public void LoadData(ref List<JsonFile> files)
         {
             List<TTLUnitData> data = TTLineDataProcessor.LoadFiles(files);
-            var screenData = new ScreenData(data);
+            List<AcousticFile> acousticFiles = AcousticDataProcessor.OpenFiles(ref files, files[0].DUT.TypeID);
+            var screenData = new ScreenData(data, acousticFiles);
 
-            set(screenData.DS11, Temperature.DS11, Colors.DS11C, "DS 1-1");
-            set(screenData.DS12, Temperature.DS12, Colors.DS12C, "DS 1-2");
-            set(screenData.DS21, Temperature.DS21, Colors.DS21C, "DS 2-1");
-            set(screenData.DS22, Temperature.DS22, Colors.DS22C, "DS 2-2");
+            setProcessData(screenData.DS11, Temperature.DS11, Colors.DS11C, "DS 1-1");
+            setProcessData(screenData.DS12, Temperature.DS12, Colors.DS12C, "DS 1-2");
+            setProcessData(screenData.DS21, Temperature.DS21, Colors.DS21C, "DS 2-1");
+            setProcessData(screenData.DS22, Temperature.DS22, Colors.DS22C, "DS 2-2");
+
+            setAcousticData(screenData.DS11, Colors.DS11C, "DS 1-1");
+            setAcousticData(screenData.DS12, Colors.DS12C, "DS 1-2");
+            setAcousticData(screenData.DS21, Colors.DS21C, "DS 2-1");
+            setAcousticData(screenData.DS22, Colors.DS22C, "DS 2-2");
 
             Temperature.Header.Text = $"Temperature  |  {lineID} - {typeID}";
             Pressure.Header.Text = $"Pressure  |  {lineID} - {typeID}";
@@ -69,7 +81,7 @@ namespace ProcessDashboard.src.Model.Screen.TTLine
             return typeID;
         }
 
-        private void set(DSXXData ds, TableView tv, Color color, string label)
+        private void setProcessData(DSXXData ds, TableView tv, Color color, string label)
         {
             if (ds != null && ds.Temperature.Count != 0)
             {
@@ -83,6 +95,17 @@ namespace ProcessDashboard.src.Model.Screen.TTLine
 
                 lineID = ds.LineID;
                 typeID = ds.TypeID.ToString();
+            }
+        }
+
+        private void setAcousticData(DSXXData data, Color color, string label)
+        {
+            if (data == null || data.AcousticFiles == null) return;
+            foreach (var file in data.AcousticFiles)
+            {
+                string dieside = $"DS{data.Track}{data.Press}";
+                var frequency = file.Steps.Where(x => x.StepName == "freq").FirstOrDefault();
+                FrequencyResponse.AddScatter(frequency.Measurement[0], frequency.Measurement[1], color, label, dieside);
             }
         }
 
