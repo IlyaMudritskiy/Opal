@@ -15,6 +15,7 @@ namespace ProcessDashboard.src.Controller.Acoustic
 
             List<string> matchingFiles = new List<string>();
             List<string> acousticFiles = new List<string>();
+            List<AcousticFile> result = new List<AcousticFile>();
             string path;
 
             for (int i = -1; i < 3; i++)
@@ -24,19 +25,21 @@ namespace ProcessDashboard.src.Controller.Acoustic
                 matchingFiles.AddRange(findMatchingFileNames(ref files, ref acousticFiles));
             }
 
-            return JsonReader.ReadFromZip<AcousticFile>(matchingFiles);
+            foreach (var f in JsonReader.ReadFromZip<AcousticFile>(matchingFiles))
+                if (f.DUT.Pass)
+                    result.Add(f);
+
+            return result;
         }
 
         private static List<string> findMatchingFileNames(ref List<JsonFile> files, ref List<string> fileNames)
         {
             List<string> matchingFileNames = new List<string>();
-
             foreach (string fileName in fileNames)
             {
                 if (files.Any(obj => fileName.Contains(obj.DUT.SerialNumber)))
                     matchingFileNames.Add(fileName);
             }
-
             return matchingFileNames;
         }
 

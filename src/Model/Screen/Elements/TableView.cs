@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
-using System.Xml.Serialization;
 
-namespace ProcessDashboard.src.Model.Screen.TTLine
+namespace ProcessDashboard.src.Model.Screen.Elements
 {
     public class TableView
     {
@@ -24,10 +23,10 @@ namespace ProcessDashboard.src.Model.Screen.TTLine
         {
             Title.BackColor = color;
 
-            foreach(Feature feature in features)
+            foreach (Feature feature in features)
                 DataSource.Add(feature);
 
-            Title.Text = $"{this.title}  |  Amount: {amount}";
+            Title.Text = $"{title}  |  Amount: {amount}";
         }
 
         private void _createLayout(string title)

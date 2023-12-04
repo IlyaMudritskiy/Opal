@@ -1,71 +1,120 @@
-﻿using ScottPlot;
+﻿using ProcessDashboard.src.Model.Data.Acoustic;
+using ProcessDashboard.src.Model.Screen.Elements;
+using ProcessDashboard.src.Utils.Design;
+using ScottPlot;
+using System;
+using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace ProcessDashboard.src.Model.Screen.Acoustic
 {
-    public class AcousticTab
+    public class AcousticTab : AbsTab
     {
-        public TabPage Tab { get; set; }
-        public Label Header { get; set; }
-        public FormsPlot DS11 { get; set; }
-        public FormsPlot DS12 { get; set; }
-        public FormsPlot DS21 { get; set; }
-        public FormsPlot DS22 { get; set; }
+        //public TabPage Tab { get; set; }
+        //public Label Header { get; set; }
+        public PlotView DS11 { get; set; }
+        public PlotView DS12 { get; set; }
+        public PlotView DS21 { get; set; }
+        public PlotView DS22 { get; set; }
 
-        public AcousticTab(string title)
+        public string UnitX { get; set; }
+        public string UnitY { get; set; }
+
+        private Limit upper { get; set; }
+        private Limit lower { get; set; }
+        private Limit reference { get; set; }
+
+        public AcousticTab(string title, string unitX, string unitY)
         {
-            _createLayout(title);
+            UnitX = unitX;
+            UnitY = unitY;
+            createLayout(title);
         }
 
-        public void AddScatter(double[] x, double[] y, Color color, string label, string DS)
+        public override void AddScatter(double[] x, double[] y, Color color, string flag = "")
         {
-            switch (DS)
+            double[] xs = x.Select(xx => Math.Log10(xx)).ToArray();
+            switch (flag)
             {
-                case "DS11":
-                    addScatter(x, y, color, label, DS11);
+                case "DS 1-1":
+                    DS11.AddScatter(xs, y, color);
                     break;
-                case "DS12":
-                    addScatter(x, y, color, label, DS12);
+                case "DS 1-2":
+                    DS12.AddScatter(xs, y, color);
                     break;
-                case "DS21":
-                    addScatter(x, y, color, label, DS21);
+                case "DS 2-1":
+                    DS21.AddScatter(xs, y, color);
                     break;
-                case "DS22":
-                    addScatter(x, y, color, label, DS22);
+                case "DS 2-2":
+                    DS22.AddScatter(xs, y, color);
                     break;
             }
+            FitPlots();
         }
 
-        private void addScatter(double[] x, double[] y, Color color, string label, FormsPlot plot)
+        public void AddLimits(string upperPath = "", string lowerPath = "", string refPath = "")
         {
-            plot.Plot.AddScatter(
-                xs: x,
-                ys: y,
-                color: color,
-                markerSize: 3,
-                lineWidth: 1,
-                label: label
-                );
-            plot.Refresh();
-            plot.Plot.AxisAuto();
+            upper = addLimit(upperPath, Colors.Green);
+            lower = addLimit(lowerPath, Colors.Green);
+            reference = addLimit(refPath, Colors.Red, 1, 1);
+            FitPlots();
         }
 
-        private void _createLayout(string title)
+        private Limit addLimit(string path, Color color, int line = 2, int marker = 2)
+        {
+            if (string.IsNullOrEmpty(path)) { return null; }
+
+            Limit limit = new Limit(path);
+            double[] xs = limit.X.Select(i => Math.Log10(i)).ToArray();
+            double[] ys = limit.Y.Select(i => Math.Log10(i)).ToArray();
+            DS11.AddScatter(xs, limit.Y.ToArray(), color, line, marker);
+            DS12.AddScatter(xs, limit.Y.ToArray(), color, line, marker);
+            DS21.AddScatter(xs, limit.Y.ToArray(), color, line, marker);
+            DS22.AddScatter(xs, limit.Y.ToArray(), color, line, marker);
+            FitPlots();
+            return limit;
+        }
+
+        public override void Clear()
+        {
+            DS11.Clear();
+            DS12.Clear();
+            DS21.Clear();
+            DS22.Clear();
+            upper = null;
+            lower = null;
+            reference = null;
+        }
+
+        public void FitPlots()
+        {
+            DS11.Plot.Refresh();
+            DS11.Plot.Plot.AxisAuto();
+            DS12.Plot.Refresh();
+            DS12.Plot.Plot.AxisAuto();
+            DS21.Plot.Refresh();
+            DS21.Plot.Plot.AxisAuto();
+            DS22.Plot.Refresh();
+            DS22.Plot.Plot.AxisAuto();
+        }
+
+        protected override void createLayout(string title)
         {
             Tab = new TabPage() { Text = title };
-            Header = CommonElements.Header(title);
-            DS11 = CommonElements.Plot("Die-Side 1-1");
-            DS12 = CommonElements.Plot("Die-Side 1-2");
-            DS21 = CommonElements.Plot("Die-Side 2-1");
-            DS22 = CommonElements.Plot("Die-Side 2-2");
+            Title = CommonElements.Header(title);
+            DS11 = new PlotView("Die-Side 1-1", Colors.DS11C, UnitX, UnitY, true);
+            DS12 = new PlotView("Die-Side 1-2", Colors.DS12C, UnitX, UnitY, true);
+            DS21 = new PlotView("Die-Side 2-1", Colors.DS21C, UnitX, UnitY, true);
+            DS22 = new PlotView("Die-Side 2-2", Colors.DS22C, UnitX, UnitY, true);
 
             TableLayoutPanel tabBase = new TableLayoutPanel()
             {
                 ColumnCount = 1,
                 RowCount = 2,
                 Dock = DockStyle.Fill,
-                ColumnStyles = { new ColumnStyle(SizeType.Percent, 100F)},
+                ColumnStyles = { new ColumnStyle(SizeType.Percent, 100F) },
                 RowStyles =
                 {
                     new RowStyle(SizeType.Absolute, 30),
@@ -92,14 +141,14 @@ namespace ProcessDashboard.src.Model.Screen.Acoustic
             };
 
             plotArea.SuspendLayout();
-            plotArea.Controls.Add(DS11, 0, 0);
-            plotArea.Controls.Add(DS12, 1, 0);
-            plotArea.Controls.Add(DS21, 0, 1);
-            plotArea.Controls.Add(DS22, 1, 1);
+            plotArea.Controls.Add(DS11.Layout, 0, 0);
+            plotArea.Controls.Add(DS12.Layout, 1, 0);
+            plotArea.Controls.Add(DS21.Layout, 0, 1);
+            plotArea.Controls.Add(DS22.Layout, 1, 1);
             plotArea.ResumeLayout();
 
             tabBase.SuspendLayout();
-            tabBase.Controls.Add(Header, 0, 0);
+            tabBase.Controls.Add(Title, 0, 0);
             tabBase.Controls.Add(plotArea, 0, 1);
             tabBase.ResumeLayout();
 

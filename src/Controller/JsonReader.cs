@@ -1,8 +1,11 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace ProcessDashboard.src.Controller
 {
@@ -29,12 +32,13 @@ namespace ProcessDashboard.src.Controller
 
         public static List<T> Read<T>(IEnumerable<string> filePaths)
         {
-            List<T> result = new List<T>();
-            foreach (string filePath in filePaths)
-            {
-                result.Add(Read<T>(filePath));
-            }
-            return result;
+            ConcurrentBag<T> result = new ConcurrentBag<T>();
+
+            Parallel.ForEach(filePaths, f => {
+                result.Add(Read<T>(f));
+            });
+
+            return result.ToList();
         }
 
         public static T ReadFromZip<T>(string zipFilePath)
@@ -61,20 +65,19 @@ namespace ProcessDashboard.src.Controller
 
         public static List<T> ReadFromZip<T>(IEnumerable<string> zipFilePaths)
         {
-            List<T> result = new List<T>();
-            foreach (string zipFilePath in zipFilePaths)
-            {
-                result.Add(ReadFromZip<T>(zipFilePath));
-            }
-            return result;
+            ConcurrentBag<T> result = new ConcurrentBag<T>();
+
+            Parallel.ForEach(zipFilePaths, f => {
+                result.Add(ReadFromZip<T>(f));
+            });
+
+            return result.ToList();
         }
 
         public static void Write<T>(string filePath, T data)
         {
             if (data == null)
-            {
                 throw new ArgumentNullException(nameof(data), "Data to write cannot be null.");
-            }
 
             try
             {

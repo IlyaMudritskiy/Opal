@@ -1,6 +1,6 @@
 ﻿using ProcessDashboard.src.Utils.Design;
 using ScottPlot;
-using ScottPlot.Renderable;
+using System;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -44,6 +44,18 @@ namespace ProcessDashboard.src.Model.Screen
             plot.Refresh();
 
             return plot;
+        }
+
+        public static void ToLog(FormsPlot plot)
+        {
+            //plot.Plot.XAxis.TickLabelFormat(logTickLabels);
+            plot.Plot.XAxis.MinorLogScale(true);
+            plot.Plot.XAxis.MajorGrid(true, Color.FromArgb(80, Color.Black));
+            plot.Plot.XAxis.MinorGrid(true, Color.FromArgb(20, Color.Black));
+            plot.Plot.YAxis.MajorGrid(true, Color.FromArgb(80, Color.Black));
+            //plot.Plot.SetAxisLimits(0, 150, 0, Math.Log10(10_000_000));
+            plot.Plot.AxisAuto();
+            plot.Refresh();
         }
 
         public static DataGridView DataGridView()

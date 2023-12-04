@@ -1,7 +1,10 @@
 ﻿using ProcessDashboard.src.Model.Data;
 using ProcessDashboard.src.Model.Screen;
 using ProcessDashboard.src.Model.Screen.TTLine;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace ProcessDashboard.src.Controller
 {
@@ -37,7 +40,6 @@ namespace ProcessDashboard.src.Controller
                 else
                     counter--;
             }
-
             return counter == 0 ? line : "";
         }
 
@@ -56,7 +58,6 @@ namespace ProcessDashboard.src.Controller
                 else
                     counter--;
             }
-
             return counter == 0 ? product : "";
         }
     }

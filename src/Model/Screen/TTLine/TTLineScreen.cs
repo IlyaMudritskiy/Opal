@@ -4,6 +4,7 @@ using ProcessDashboard.src.Model.Data;
 using ProcessDashboard.src.Model.Data.Acoustic;
 using ProcessDashboard.src.Model.Data.TTLine;
 using ProcessDashboard.src.Model.Screen.Acoustic;
+using ProcessDashboard.src.Model.Screen.Elements;
 using ProcessDashboard.src.Utils.Design;
 using ScottPlot;
 using ScottPlot.Plottable;
@@ -17,28 +18,31 @@ namespace ProcessDashboard.src.Model.Screen.TTLine
 {
     public class TTLineScreen : IScreen
     {
-        public TabControl Tabs { get; set; }
-        public TTLineTab Temperature { get; set; }
-        public TTLineTab Pressure { get; set; }
-        public AcousticTab FrequencyResponse { get; set; }
+        private TabControl Tabs { get; set; }
+
+        // Process data tabs
+        private TTLineTab Temperature { get; set; }
+        private TTLineTab Pressure { get; set; }
+
+        // Acoustic data tabs
+        private AcousticTab FR { get; set; }
+        private AcousticTab THD { get; set; }
+        private AcousticTab RNB { get; set; }
+        private AcousticTab IMP { get; set; }
+
+        // Data
+        private ScreenData ScreenData { get; set; }
 
         private string lineID;
         private string typeID;
 
-        public TTLineScreen()
-        {
-            //Create(ref panel);
-        }
-
         public void Create(ref Panel panel)
         {
             Tabs = new TabControl() { Dock = DockStyle.Fill };
-            Temperature = new TTLineTab("Temperature Details");
-            Pressure = new TTLineTab("Pressure Details");
-            FrequencyResponse = new AcousticTab("Frequency Response");
-            Tabs.TabPages.Add(Temperature.Tab);
-            Tabs.TabPages.Add(Pressure.Tab);
-            Tabs.TabPages.Add(FrequencyResponse.Tab);
+
+            createTabs();
+            addTabs();
+
             panel.SuspendLayout();
             panel.Controls.Add(Tabs);
             panel.ResumeLayout();
@@ -48,40 +52,92 @@ namespace ProcessDashboard.src.Model.Screen.TTLine
         {
             clear(Temperature);
             clear(Pressure);
+            FR.Clear();
+            THD.Clear();
+            RNB.Clear();
+            IMP.Clear();
             LoadData(ref files);
         }
 
         public void LoadData(ref List<JsonFile> files)
         {
-            List<TTLUnitData> data = TTLineDataProcessor.LoadFiles(files);
-            List<AcousticFile> acousticFiles = AcousticDataProcessor.OpenFiles(ref files, files[0].DUT.TypeID);
-            var screenData = new ScreenData(data, acousticFiles);
+            // Transform JsonFile to ready-to-use line object
+            List<TTLUnitData> processData = TTLineDataProcessor.LoadFiles(files);
+            // Find and open acoustic files
+            List<AcousticFile> acousticData = AcousticDataProcessor.OpenFiles(ref files, files[0].DUT.TypeID);
 
-            setProcessData(screenData.DS11, Temperature.DS11, Colors.DS11C, "DS 1-1");
-            setProcessData(screenData.DS12, Temperature.DS12, Colors.DS12C, "DS 1-2");
-            setProcessData(screenData.DS21, Temperature.DS21, Colors.DS21C, "DS 2-1");
-            setProcessData(screenData.DS22, Temperature.DS22, Colors.DS22C, "DS 2-2");
+            ScreenData = new ScreenData(processData, acousticData);
 
-            setAcousticData(screenData.DS11, Colors.DS11C, "DS 1-1");
-            setAcousticData(screenData.DS12, Colors.DS12C, "DS 1-2");
-            setAcousticData(screenData.DS21, Colors.DS21C, "DS 2-1");
-            setAcousticData(screenData.DS22, Colors.DS22C, "DS 2-2");
+            fillData();
+            renameHeaders();
 
-            Temperature.Header.Text = $"Temperature  |  {lineID} - {typeID}";
-            Pressure.Header.Text = $"Pressure  |  {lineID} - {typeID}";
+            
+            FR.AddLimits(
+                upperPath: "C:\\Code\\Azure\\ProcessDashboard\\Assets\\Limits\\TestRef\\Limits\\RespMax.dB",
+                lowerPath: "C:\\Code\\Azure\\ProcessDashboard\\Assets\\Limits\\TestRef\\Limits\\RespMin.dB",
+                refPath: "C:\\Code\\Azure\\ProcessDashboard\\Assets\\Limits\\TestRef\\Limits\\Resp_Ref.txt"
+                );
+
+            THD.AddLimits(
+                refPath: "C:\\Code\\Azure\\ProcessDashboard\\Assets\\Limits\\TestRef\\Limits\\THD_Ref.txt"
+                );
+
+            RNB.AddLimits(
+                upperPath: "C:\\Code\\Azure\\ProcessDashboard\\Assets\\Limits\\TestRef\\Limits\\RBzMax.dB"
+                );
+
+            IMP.AddLimits(
+                upperPath: "C:\\Code\\Azure\\ProcessDashboard\\Assets\\Limits\\TestRef\\Limits\\ImpMax.Ohm",
+                lowerPath: "C:\\Code\\Azure\\ProcessDashboard\\Assets\\Limits\\TestRef\\Limits\\ImpMin.Ohm",
+                refPath: "C:\\Code\\Azure\\ProcessDashboard\\Assets\\Limits\\TestRef\\Limits\\ImpRef.Ohm"
+                );
+            
         }
 
-        public string GetLineID()
+        private void createTabs()
         {
-            return lineID;
+            Temperature = new TTLineTab("Temperature Details");
+            Pressure = new TTLineTab("Pressure Details");
+            FR = new AcousticTab("FR", "Hz", "dB SPL");
+            THD = new AcousticTab("THD", "Hz", "%");
+            RNB = new AcousticTab("RNB", "Hz", "dB SPL");
+            IMP = new AcousticTab("IMP", "Hz", "Ω");
         }
 
-        public string GetTypeID()
+        private void addTabs()
         {
-            return typeID;
+            Tabs.TabPages.Add(Temperature.Tab);
+            Tabs.TabPages.Add(Pressure.Tab);
+            Tabs.TabPages.Add(FR.Tab);
+            Tabs.TabPages.Add(THD.Tab);
+            Tabs.TabPages.Add(RNB.Tab);
+            Tabs.TabPages.Add(IMP.Tab);
         }
 
-        private void setProcessData(DSXXData ds, TableView tv, Color color, string label)
+        private void renameHeaders()
+        {
+            Temperature.Title.Text = $"Temperature  |  {lineID} - {typeID}";
+            Pressure.Title.Text = $"Pressure  |  {lineID} - {typeID}";
+            FR.Title.Text = $"Frequency Response  |  {lineID} - {typeID}";
+            THD.Title.Text = $"Total Harmonic Distortion  |  {lineID} - {typeID}";
+            RNB.Title.Text = $"Rub and Buzz  |  {lineID} - {typeID}";
+            IMP.Title.Text = $"Impedance  |  {lineID} - {typeID}";
+        }
+
+        private void fillData()
+        {
+            addProcessData(ScreenData.DS11, Temperature.DS11, Colors.DS11C, "DS 1-1");
+            addProcessData(ScreenData.DS12, Temperature.DS12, Colors.DS12C, "DS 1-2");
+            addProcessData(ScreenData.DS21, Temperature.DS21, Colors.DS21C, "DS 2-1");
+            addProcessData(ScreenData.DS22, Temperature.DS22, Colors.DS22C, "DS 2-2");
+
+            addAcousticData(FR, "freq");
+            addAcousticData(THD, "thd");
+            addAcousticData(RNB, "rnb");
+            addAcousticData(IMP, "imp");
+        }
+
+        private void addProcessData(DSXXData ds, TableView tv, Color color, string label)
         {
             if (ds != null && ds.Temperature.Count != 0)
             {
@@ -98,14 +154,22 @@ namespace ProcessDashboard.src.Model.Screen.TTLine
             }
         }
 
-        private void setAcousticData(DSXXData data, Color color, string label)
+        private void addAcousticData(AcousticTab tab, string name)
+        {
+            setAcousticData(tab, ScreenData.DS11, Colors.DS11C, name, "DS 1-1");
+            setAcousticData(tab, ScreenData.DS12, Colors.DS12C, name, "DS 1-2");
+            setAcousticData(tab, ScreenData.DS21, Colors.DS21C, name, "DS 2-1");
+            setAcousticData(tab, ScreenData.DS22, Colors.DS22C, name, "DS 2-2");
+        }
+
+        private void setAcousticData(AcousticTab tab, DSXXData data, Color color, string stepname, string label)
         {
             if (data == null || data.AcousticFiles == null) return;
             foreach (var file in data.AcousticFiles)
             {
-                string dieside = $"DS{data.Track}{data.Press}";
-                var frequency = file.Steps.Where(x => x.StepName == "freq").FirstOrDefault();
-                FrequencyResponse.AddScatter(frequency.Measurement[0], frequency.Measurement[1], color, label, dieside);
+                string ds = $"DS{data.Track}{data.Press}";
+                var step = file.Steps.Where(x => x.StepName == stepname).FirstOrDefault();
+                tab.AddScatter(step.Measurement[0], step.Measurement[1], Colors.Grey, label);
             }
         }
 
