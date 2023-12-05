@@ -116,5 +116,17 @@ namespace ProcessDashboard.src.Model.Data.TTLine
                 .OrderByDescending(i => Values[i])
                 .FirstOrDefault();
         }
+
+        public double MaxValue()
+        {
+            int index = MaxValueIndex();
+            return Values[index];
+        }
+
+        public double MaxValueTime()
+        {
+            int index = MaxValueIndex();
+            return TimeOffset[index];
+        }
     }
 }
