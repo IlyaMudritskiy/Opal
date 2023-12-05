@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Reflection.Emit;
 using System.Windows.Forms;
 
 namespace ProcessDashboard.src.Model.Screen.TTLine
@@ -137,10 +138,15 @@ namespace ProcessDashboard.src.Model.Screen.TTLine
 
         private void fillData()
         {
-            addProcessData(ScreenData.DS11, Temperature.DS11, Colors.DS11C, "DS 1-1");
-            addProcessData(ScreenData.DS12, Temperature.DS12, Colors.DS12C, "DS 1-2");
-            addProcessData(ScreenData.DS21, Temperature.DS21, Colors.DS21C, "DS 2-1");
-            addProcessData(ScreenData.DS22, Temperature.DS22, Colors.DS22C, "DS 2-2");
+            addTempData(ScreenData.DS11, Temperature.DS11, Colors.DS11C, "DS 1-1");
+            addTempData(ScreenData.DS12, Temperature.DS12, Colors.DS12C, "DS 1-2");
+            addTempData(ScreenData.DS21, Temperature.DS21, Colors.DS21C, "DS 2-1");
+            addTempData(ScreenData.DS22, Temperature.DS22, Colors.DS22C, "DS 2-2");
+
+            addPressData(ScreenData.DS11, Pressure.DS11, Colors.DS11C, "DS 1-1");
+            addPressData(ScreenData.DS12, Pressure.DS12, Colors.DS12C, "DS 1-2");
+            addPressData(ScreenData.DS21, Pressure.DS21, Colors.DS21C, "DS 2-1");
+            addPressData(ScreenData.DS22, Pressure.DS22, Colors.DS22C, "DS 2-2");
 
             addAcousticData(FR, "freq");
             addAcousticData(THD, "thd");
@@ -148,21 +154,36 @@ namespace ProcessDashboard.src.Model.Screen.TTLine
             addAcousticData(IMP, "imp");
         }
 
-        private void addProcessData(DSXXData ds, TableView tv, Color color, string label)
+        private void addTempData(DSXXData ds, TableView tv, Color color, string label)
         {
-            if (ds != null && ds.Temperature.Count != 0)
+            if (ds == null) return;
+
+            if (ds.Temperature.Count != 0)
             {
                 tv.AddData(ds.TempFeaturesMean, color, ds.Amount);
 
                 foreach (var item in ds.Temperature)
                     Temperature.AddScatter(item.TimeOffset, item.Values, color, label);
+            }
+
+            lineID = ds.LineID;
+            typeID = ds.TypeID.ToString();
+        }
+
+        private void addPressData(DSXXData ds, TableView tv, Color color, string label)
+        {
+            if (ds == null) return;
+
+            if (ds.Pressure.Count != 0)
+            {
+                tv.AddData(ds.PressFeaturesMean, color, ds.Amount);
 
                 foreach (var item in ds.Pressure)
                     Pressure.AddScatter(item.TimeOffset, item.Values, color, label);
-
-                lineID = ds.LineID;
-                typeID = ds.TypeID.ToString();
             }
+
+            lineID = ds.LineID;
+            typeID = ds.TypeID.ToString();
         }
 
         private void addAcousticData(AcousticTab tab, string name)

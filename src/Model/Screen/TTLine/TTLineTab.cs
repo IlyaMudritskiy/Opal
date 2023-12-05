@@ -9,8 +9,6 @@ namespace ProcessDashboard.src.Model.Screen.TTLine
 {
     public class TTLineTab : AbsTab
     {
-        //public TabPage Tab { get; set; }
-        //public Label Title { get; set; }
         public FormsPlot Plot { get; set; }
         public TableView DS11 { get; set; }
         public TableView DS12 { get; set; }
