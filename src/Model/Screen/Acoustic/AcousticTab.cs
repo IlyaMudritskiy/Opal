@@ -22,10 +22,6 @@ namespace ProcessDashboard.src.Model.Screen.Acoustic
         public string UnitX { get; set; }
         public string UnitY { get; set; }
 
-        private Limit upper { get; set; }
-        private Limit lower { get; set; }
-        private Limit reference { get; set; }
-
         public AcousticTab(string title, string unitX, string unitY)
         {
             UnitX = unitX;
@@ -54,27 +50,24 @@ namespace ProcessDashboard.src.Model.Screen.Acoustic
             FitPlots();
         }
 
-        public void AddLimits(string upperPath = "", string lowerPath = "", string refPath = "")
+        public void AddLimits(Limit upper, Limit lower, Limit reference)
         {
-            upper = addLimit(upperPath, Colors.Green);
-            lower = addLimit(lowerPath, Colors.Green);
-            reference = addLimit(refPath, Colors.Red, 1, 1);
+            addLimit(upper, Colors.Green);
+            addLimit(lower, Colors.Green);
+            addLimit(reference, Colors.Red, 1, 1);
             FitPlots();
         }
 
-        private Limit addLimit(string path, Color color, int line = 2, int marker = 2)
+        private void addLimit(Limit limit, Color color, int line = 2, int marker = 2)
         {
-            if (string.IsNullOrEmpty(path)) { return null; }
+            if (limit == null) { return; }
 
-            Limit limit = new Limit(path);
             double[] xs = limit.X.Select(i => Math.Log10(i)).ToArray();
-            double[] ys = limit.Y.Select(i => Math.Log10(i)).ToArray();
             DS11.AddScatter(xs, limit.Y.ToArray(), color, line, marker);
             DS12.AddScatter(xs, limit.Y.ToArray(), color, line, marker);
             DS21.AddScatter(xs, limit.Y.ToArray(), color, line, marker);
             DS22.AddScatter(xs, limit.Y.ToArray(), color, line, marker);
             FitPlots();
-            return limit;
         }
 
         public override void Clear()
@@ -83,9 +76,6 @@ namespace ProcessDashboard.src.Model.Screen.Acoustic
             DS12.Clear();
             DS21.Clear();
             DS22.Clear();
-            upper = null;
-            lower = null;
-            reference = null;
         }
 
         public void FitPlots()

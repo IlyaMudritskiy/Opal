@@ -1,4 +1,5 @@
-﻿using ProcessDashboard.src.Model.Data;
+﻿using ProcessDashboard.src.Model.Config;
+using ProcessDashboard.src.Model.Data;
 using ProcessDashboard.src.Model.Data.Acoustic;
 using System;
 using System.Collections.Generic;
@@ -30,6 +31,70 @@ namespace ProcessDashboard.src.Controller.Acoustic
                     result.Add(f);
 
             return result;
+        }
+
+        public static Dictionary<string, Limit> OpenLimitFiles()
+        {
+            Config config = Config.Instance;
+
+            string[] limitFiles = Directory.GetFiles(config.LimitsFolder);
+
+            return checkLimitName(limitFiles);
+        }
+
+        private static Dictionary<string, Limit> checkLimitName(string[] filepaths)
+        {
+            string[] limitNames = {
+                "FRUpper", "FRLower", "FRReference",
+                "THDUpper", "THDLower", "THDReference",
+                "RNBUpper", "RNBLower", "RNBReference",
+                "IMPUpper", "IMPLower", "IMPReference"
+            };
+
+            Dictionary<string, Limit> result = new Dictionary<string, Limit>();
+
+            foreach (string name in limitNames) result[name] = null;
+
+            foreach (string file in filepaths)
+            {
+                if (file.Contains("FR"))
+                {
+                    (string type, Limit limit) = checkLimitType(file, "FR");
+                    result[type] = limit;
+                }
+                if (file.Contains("THD"))
+                {
+                    (string type, Limit limit) = checkLimitType(file, "THD");
+                    result[type] = limit;
+                }
+                if (file.Contains("RNB"))
+                {
+                    (string type, Limit limit) = checkLimitType(file, "RNB");
+                    result[type] = limit;
+                }
+                if (file.Contains("IMP"))
+                {
+                    (string type, Limit limit) = checkLimitType(file, "IMP");
+                    result[type] = limit;
+                }
+            }
+            return result;
+        }
+
+        private static (string, Limit) checkLimitType(string filepath, string limitName)
+        {
+            if (!File.Exists(filepath)) return (null, null);
+
+            string filename = Path.GetFileName(filepath);
+
+            if (filename.Contains("Upper"))
+                return ($"{limitName}Upper", new Limit(filepath));
+            if (filename.Contains("Lower"))
+                return ($"{limitName}Lower", new Limit(filepath));
+            if (filename.Contains("Reference"))
+                return ($"{limitName}Reference", new Limit(filepath));
+
+            return (null, null);
         }
 
         private static List<string> findMatchingFileNames(ref List<JsonFile> files, ref List<string> fileNames)

@@ -1,10 +1,7 @@
 ﻿using ProcessDashboard.src.Model.Data;
 using ProcessDashboard.src.Model.Screen;
 using ProcessDashboard.src.Model.Screen.TTLine;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ProcessDashboard.src.Controller
 {
@@ -18,7 +15,7 @@ namespace ProcessDashboard.src.Controller
             switch (line)
             {
                 case "TTL_M":
-                    return new TTLineScreen();
+                    return TTLineScreen.Instance;
 
                 default:
                     return null;

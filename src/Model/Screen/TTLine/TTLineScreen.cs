@@ -6,7 +6,6 @@ using ProcessDashboard.src.Model.Data.TTLine;
 using ProcessDashboard.src.Model.Screen.Acoustic;
 using ProcessDashboard.src.Model.Screen.Elements;
 using ProcessDashboard.src.Utils.Design;
-using ScottPlot;
 using ScottPlot.Plottable;
 using System;
 using System.Collections.Generic;
@@ -18,6 +17,10 @@ namespace ProcessDashboard.src.Model.Screen.TTLine
 {
     public class TTLineScreen : IScreen
     {
+        private static readonly Lazy<TTLineScreen> lazy =
+        new Lazy<TTLineScreen>(() => new TTLineScreen());
+        public static TTLineScreen Instance => lazy.Value;
+
         private TabControl Tabs { get; set; }
 
         // Process data tabs
@@ -70,28 +73,36 @@ namespace ProcessDashboard.src.Model.Screen.TTLine
 
             fillData();
             renameHeaders();
+            addLimits();
+        }
 
-            
+        private void addLimits()
+        {
+            var limits = AcousticDataProcessor.OpenLimitFiles();
+
             FR.AddLimits(
-                upperPath: "C:\\Code\\Azure\\ProcessDashboard\\Assets\\Limits\\TestRef\\Limits\\RespMax.dB",
-                lowerPath: "C:\\Code\\Azure\\ProcessDashboard\\Assets\\Limits\\TestRef\\Limits\\RespMin.dB",
-                refPath: "C:\\Code\\Azure\\ProcessDashboard\\Assets\\Limits\\TestRef\\Limits\\Resp_Ref.txt"
+                upper: limits["FRUpper"],
+                lower: limits["FRLower"],
+                reference: limits["FRReference"]
                 );
 
             THD.AddLimits(
-                refPath: "C:\\Code\\Azure\\ProcessDashboard\\Assets\\Limits\\TestRef\\Limits\\THD_Ref.txt"
+                upper: limits["THDUpper"],
+                lower: limits["THDLower"],
+                reference: limits["THDReference"]
                 );
 
             RNB.AddLimits(
-                upperPath: "C:\\Code\\Azure\\ProcessDashboard\\Assets\\Limits\\TestRef\\Limits\\RBzMax.dB"
+                upper: limits["RNBUpper"],
+                lower: limits["RNBLower"],
+                reference: limits["RNBReference"]
                 );
 
             IMP.AddLimits(
-                upperPath: "C:\\Code\\Azure\\ProcessDashboard\\Assets\\Limits\\TestRef\\Limits\\ImpMax.Ohm",
-                lowerPath: "C:\\Code\\Azure\\ProcessDashboard\\Assets\\Limits\\TestRef\\Limits\\ImpMin.Ohm",
-                refPath: "C:\\Code\\Azure\\ProcessDashboard\\Assets\\Limits\\TestRef\\Limits\\ImpRef.Ohm"
+                upper: limits["IMPUpper"],
+                lower: limits["IMPLower"],
+                reference: limits["IMPReference"]
                 );
-            
         }
 
         private void createTabs()
