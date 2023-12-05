@@ -66,7 +66,6 @@ namespace ProcessDashboard.src.Controller.TTLine
                 Y = Math.Round(P1, round)
             };
 
-            // Value data points used to calculate features
             DataPoint Tmax = new DataPoint()
             {
                 Name = "Tmax",
@@ -75,6 +74,7 @@ namespace ProcessDashboard.src.Controller.TTLine
                 Y = Math.Round(data.Temperature.Values[data.Temperature.MaxValueIndex()], round)
             };
 
+            // Value data points used to calculate features
             data.DataPoints = new List<DataPoint> { t2, t4, t7, t8, t9, t10, Tmax };
 
 
@@ -157,6 +157,11 @@ namespace ProcessDashboard.src.Controller.TTLine
                 Description = "Tmax - T1",
                 Value = Math.Round(Tmax.Y - t4.Y, round)
             });
+        }
+
+        private static void tempFeatures()
+        {
+
         }
     }
 }

@@ -34,10 +34,9 @@
             this.processedDataToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pDFReportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dataAndReportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.SelectFilesMenuButton = new System.Windows.Forms.ToolStripMenuItem();
             this.MainFormPanel = new System.Windows.Forms.Panel();
             this.JsonFileDialog = new System.Windows.Forms.OpenFileDialog();
-            this.JsonFolderDialog = new System.Windows.Forms.FolderBrowserDialog();
-            this.SelectFilesMenuButton = new System.Windows.Forms.ToolStripMenuItem();
             this.MainMenuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -67,7 +66,7 @@
             this.pDFReportToolStripMenuItem,
             this.dataAndReportToolStripMenuItem});
             this.saveProcessedDataToolStripMenuItem.Name = "saveProcessedDataToolStripMenuItem";
-            this.saveProcessedDataToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.saveProcessedDataToolStripMenuItem.Size = new System.Drawing.Size(98, 22);
             this.saveProcessedDataToolStripMenuItem.Text = "Save";
             // 
             // processedDataToolStripMenuItem
@@ -88,12 +87,18 @@
             this.dataAndReportToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
             this.dataAndReportToolStripMenuItem.Text = "Data and Report";
             // 
+            // SelectFilesMenuButton
+            // 
+            this.SelectFilesMenuButton.Name = "SelectFilesMenuButton";
+            this.SelectFilesMenuButton.Size = new System.Drawing.Size(84, 20);
+            this.SelectFilesMenuButton.Text = "Select File(s)";
+            this.SelectFilesMenuButton.Click += new System.EventHandler(this.SelectFilesMenuButton_Click);
+            // 
             // MainFormPanel
             // 
             this.MainFormPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.MainFormPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.MainFormPanel.Location = new System.Drawing.Point(0, 27);
             this.MainFormPanel.Name = "MainFormPanel";
             this.MainFormPanel.Size = new System.Drawing.Size(1584, 835);
@@ -103,13 +108,6 @@
             // 
             this.JsonFileDialog.FileName = "JsonFileDialog";
             this.JsonFileDialog.Multiselect = true;
-            // 
-            // SelectFilesMenuButton
-            // 
-            this.SelectFilesMenuButton.Name = "SelectFilesMenuButton";
-            this.SelectFilesMenuButton.Size = new System.Drawing.Size(84, 20);
-            this.SelectFilesMenuButton.Text = "Select File(s)";
-            this.SelectFilesMenuButton.Click += new System.EventHandler(this.SelectFilesMenuButton_Click);
             // 
             // MainForm
             // 
@@ -138,7 +136,6 @@
         private System.Windows.Forms.ToolStripMenuItem dataAndReportToolStripMenuItem;
         private System.Windows.Forms.Panel MainFormPanel;
         private System.Windows.Forms.OpenFileDialog JsonFileDialog;
-        private System.Windows.Forms.FolderBrowserDialog JsonFolderDialog;
         private System.Windows.Forms.ToolStripMenuItem SelectFilesMenuButton;
     }
 }

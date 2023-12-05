@@ -3,54 +3,45 @@ using System.Collections.Generic;
 using System;
 using System.Linq;
 using System.Windows.Forms;
-using System.IO;
 using ProcessDashboard.src.Model.Data.TTLine;
+using System.Threading.Tasks;
+using System.Collections.Concurrent;
 
 namespace ProcessDashboard.src.Controller.TTLine
 {
     public static class TTLineDataProcessor
     {
-        public static List<JsonFile> OpenFiles(CommonDialog dialog)
+        public static List<JsonFile> OpenFiles(OpenFileDialog dialog)
         {
             List<string> files = new List<string>();
-            List<JsonFile> result = new List<JsonFile>();
+            ConcurrentBag<JsonFile> result = new ConcurrentBag<JsonFile>();
 
             if (dialog.ShowDialog() == DialogResult.OK)
+                files = dialog.FileNames.ToList();
+            else
+                return null;
+
+            Parallel.ForEach(files, f =>
             {
-                if (dialog is OpenFileDialog)
-                {
-                    OpenFileDialog fileDialog = dialog as OpenFileDialog;
-                    files = fileDialog.FileNames.ToList();
-                }
+                    result.Add(JsonReader.Read<JsonFile>(f));
+            });
 
-                if (dialog is FolderBrowserDialog)
-                {
-                    FolderBrowserDialog folderDialog = dialog as FolderBrowserDialog;
-                    files = Directory.GetFiles(folderDialog.SelectedPath).ToList();
-                }
-
-                foreach (string file in files)
-                    result.Add(JsonReader.Read<JsonFile>(file));
-            }
-            return result;
+            return result.ToList();
         }
 
         public static List<TTLUnitData> LoadFiles(List<JsonFile> files)
         {
-            List<TTLUnitData> result = new List<TTLUnitData>();
-
-            foreach (JsonFile file in files)
+            ConcurrentBag<TTLUnitData> result = new ConcurrentBag<TTLUnitData>();
+            
+            Parallel.ForEach(files, f =>
             {
                 try
                 {
-                    result.Add(new TTLUnitData(file));
+                    result.Add(new TTLUnitData(f));
                 }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
-                }
-            }
-            return result;
+                catch (Exception ex) { }
+            });
+            return result.ToList();
         }
     }
 }
