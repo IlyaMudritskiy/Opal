@@ -21,7 +21,7 @@ namespace ProcessDashboard.src.Controller.Acoustic
 
             if (config.Acoustic.ManualSelection && dialog != null)
                 if (dialog.ShowDialog() == DialogResult.OK)
-                    acousticFiles = dialog.FileNames.ToList();
+                    return manualSelected(ref files, dialog.FileNames.ToList());
                 
             if (!config.Acoustic.ManualSelection)
                 return fromDefaultLocation(ref files, typeID);
@@ -43,7 +43,6 @@ namespace ProcessDashboard.src.Controller.Acoustic
             List<string> matchingFiles = new List<string>();
             List<string> acousticFiles = new List<string>();
             List<AcousticFile> result = new List<AcousticFile>();
-            Config config = Config.Instance;
 
             DateTime dt = DateTime.Parse(processFiles[0].Steps.Where(x => x.StepName == "ps01_high_pressure_actual").FirstOrDefault().Measurements[0].DateTime);
 
@@ -67,17 +66,12 @@ namespace ProcessDashboard.src.Controller.Acoustic
                 if (f.DUT.Pass)
                     result.Add(f);
 
-            if (config.SaveFiles.Enabled)
-                config.SaveFiles.UsedAcousticFiles = matchingFiles.ToArray();
-
             return result;
         }
 
-        private static List<AcousticFile> manualSelected(List<JsonFile> processFiles, IEnumerable<string> acousticFiles)
+        private static List<AcousticFile> manualSelected(ref List<JsonFile> processFiles, IEnumerable<string> acousticFiles)
         {
             if (acousticFiles == null || acousticFiles.Count() == 0) return null;
-
-            Config config = Config.Instance;
 
             List<AcousticFile> result = new List<AcousticFile>();
 
@@ -86,9 +80,6 @@ namespace ProcessDashboard.src.Controller.Acoustic
             foreach (var f in JsonReader.ReadFromZip<AcousticFile>(matchingFiles))
                 if (f.DUT.Pass)
                     result.Add(f);
-
-            if (config.SaveFiles.Enabled)
-                config.SaveFiles.UsedAcousticFiles = matchingFiles.ToArray();
 
             return result;
         }

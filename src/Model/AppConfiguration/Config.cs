@@ -18,9 +18,6 @@ namespace ProcessDashboard.src.Model.AppConfiguration
         [JsonProperty(PropertyName = "Acoustic")]
         public Acoustic Acoustic { get; set; }
 
-        [JsonProperty(PropertyName = "SaveFiles")]
-        public SaveFiles SaveFiles { get; set; }
-
         private Config()
         {
             try
@@ -55,21 +52,5 @@ namespace ProcessDashboard.src.Model.AppConfiguration
 
         [JsonProperty(PropertyName = "ManualSelection")]
         public bool ManualSelection { get; set; }
-    }
-
-    [JsonObject(MemberSerialization.OptIn)]
-    public class SaveFiles
-    {
-        [JsonProperty(PropertyName = "Enabled")]
-        public bool Enabled { set; get; }
-
-        [JsonProperty(PropertyName = "Destination")]
-        public string Destination { get; set; }
-
-        [JsonProperty(PropertyName = "UsedProcessFiles")]
-        public string[] UsedProcessFiles { get; set; }
-
-        [JsonProperty(PropertyName = "UsedAcousticFiles")]
-        public string[] UsedAcousticFiles { get; set; }
     }
 }

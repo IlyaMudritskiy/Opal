@@ -26,7 +26,6 @@ namespace ProcessDashboard.src.Controller.App
 
         public void Run(ref OpenFileDialog dialog, ref Panel panel)
         {
-            Config config = Config.Instance;
             // Get the user selected files
             List<string> files = TTLineDataProcessor.GetFiles(dialog);
             List<JsonFile> jsonFiles = TTLineDataProcessor.OpenFiles(files);
@@ -43,14 +42,6 @@ namespace ProcessDashboard.src.Controller.App
             {
                 screen.Update(ref jsonFiles);
             }
-
-            if (config.SaveFiles.Enabled)
-            {
-                config.SaveFiles.UsedProcessFiles = files.ToArray();
-                config.Save();
-                FileSaver.CopyAll();
-            }
-                
         }
 
         private void setCultureSettings()
