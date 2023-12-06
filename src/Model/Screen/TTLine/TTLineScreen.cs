@@ -36,14 +36,16 @@ namespace ProcessDashboard.src.Model.Screen.TTLine
 
         // Data
         private ScreenData ScreenData { get; set; }
-        private Config config = Config.Instance;
+        private readonly Config config = Config.Instance;
+        private OpenFileDialog dialog;
 
         private string lineID;
         private string typeID;
 
-        public void Create(ref Panel panel)
+        public void Create(ref Panel panel, OpenFileDialog dialog)
         {
             Tabs = new TabControl() { Dock = DockStyle.Fill };
+            this.dialog = dialog;
 
             createTabs();
             addTabs();
@@ -74,7 +76,7 @@ namespace ProcessDashboard.src.Model.Screen.TTLine
             // Transform JsonFile to ready-to-use line object
             List<TTLUnitData> processData = TTLineDataProcessor.LoadFiles(files);
             // Find and open acoustic files
-            List<AcousticFile> acousticData = AcousticDataProcessor.OpenFiles(ref files, files[0].DUT.TypeID);
+            List<AcousticFile> acousticData = AcousticDataProcessor.OpenFiles(ref files, files[0].DUT.TypeID, dialog);
 
             ScreenData = new ScreenData(processData, acousticData);
 

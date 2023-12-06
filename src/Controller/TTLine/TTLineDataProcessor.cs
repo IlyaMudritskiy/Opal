@@ -11,25 +11,18 @@ namespace ProcessDashboard.src.Controller.TTLine
 {
     public static class TTLineDataProcessor
     {
-        public static List<JsonFile> OpenFiles(OpenFileDialog dialog)
+        public static List<JsonFile> OpenFiles(IEnumerable<string> files)
         {
-            List<string> files = new List<string>();
+            if (files == null || files.Count() == 0) return null;
+
             ConcurrentBag<JsonFile> result = new ConcurrentBag<JsonFile>();
 
-            if (dialog.ShowDialog() == DialogResult.OK)
-                files = dialog.FileNames.ToList();
-            else
-                return null;
-
-            Parallel.ForEach(files, f =>
-            {
-                    result.Add(JsonReader.Read<JsonFile>(f));
-            });
+            Parallel.ForEach(files, f => { result.Add(JsonReader.Read<JsonFile>(f)); });
 
             return result.ToList();
         }
 
-        public static List<TTLUnitData> LoadFiles(List<JsonFile> files)
+        public static List<TTLUnitData> LoadFiles(IEnumerable<JsonFile> files)
         {
             ConcurrentBag<TTLUnitData> result = new ConcurrentBag<TTLUnitData>();
             
@@ -42,6 +35,14 @@ namespace ProcessDashboard.src.Controller.TTLine
                 catch (Exception ex) { }
             });
             return result.ToList();
+        }
+
+        public static List<string> GetFiles(OpenFileDialog dialog)
+        {
+            if (dialog.ShowDialog() == DialogResult.OK)
+                return dialog.FileNames.ToList();
+            else
+                return null;
         }
     }
 }

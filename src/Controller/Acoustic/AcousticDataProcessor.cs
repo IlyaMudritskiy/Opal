@@ -5,20 +5,25 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Windows.Forms;
 
 namespace ProcessDashboard.src.Controller.Acoustic
 {
     public static class AcousticDataProcessor
     {
-        public static List<AcousticFile> OpenFiles(ref List<JsonFile> files, string typeID)
+        public static List<AcousticFile> OpenFiles(ref List<JsonFile> files, string typeID, OpenFileDialog dialog = null)
         {
             if (files == null) return null;
 
+            List<string> acousticFiles = new List<string>();
+
             Config config = Config.Instance;
 
-            if (config.Acoustic.IsFilesCustomLocation)
-                return fromCustomLocation(ref files, config.Acoustic.CustomFilesPath);
-            if (!config.Acoustic.IsFilesCustomLocation)
+            if (config.Acoustic.ManualSelection && dialog != null)
+                if (dialog.ShowDialog() == DialogResult.OK)
+                    acousticFiles = dialog.FileNames.ToList();
+                
+            if (!config.Acoustic.ManualSelection)
                 return fromDefaultLocation(ref files, typeID);
             else
                 return null;
@@ -38,6 +43,7 @@ namespace ProcessDashboard.src.Controller.Acoustic
             List<string> matchingFiles = new List<string>();
             List<string> acousticFiles = new List<string>();
             List<AcousticFile> result = new List<AcousticFile>();
+            Config config = Config.Instance;
 
             DateTime dt = DateTime.Parse(processFiles[0].Steps.Where(x => x.StepName == "ps01_high_pressure_actual").FirstOrDefault().Measurements[0].DateTime);
 
@@ -61,22 +67,28 @@ namespace ProcessDashboard.src.Controller.Acoustic
                 if (f.DUT.Pass)
                     result.Add(f);
 
+            if (config.SaveFiles.Enabled)
+                config.SaveFiles.UsedAcousticFiles = matchingFiles.ToArray();
+
             return result;
         }
 
-        private static List<AcousticFile> fromCustomLocation(ref List<JsonFile> processFiles, string path)
+        private static List<AcousticFile> manualSelected(List<JsonFile> processFiles, IEnumerable<string> acousticFiles)
         {
-            if (!Directory.Exists(path)) return null;
+            if (acousticFiles == null || acousticFiles.Count() == 0) return null;
+
+            Config config = Config.Instance;
 
             List<AcousticFile> result = new List<AcousticFile>();
 
-            string[] files = Directory.GetFiles(path);
-
-            List<string> matchingFiles = findMatchingFileNames(ref processFiles, files);
+            List<string> matchingFiles = findMatchingFileNames(ref processFiles, acousticFiles);
 
             foreach (var f in JsonReader.ReadFromZip<AcousticFile>(matchingFiles))
                 if (f.DUT.Pass)
                     result.Add(f);
+
+            if (config.SaveFiles.Enabled)
+                config.SaveFiles.UsedAcousticFiles = matchingFiles.ToArray();
 
             return result;
         }
@@ -136,7 +148,7 @@ namespace ProcessDashboard.src.Controller.Acoustic
             return (null, null);
         }
 
-        private static List<string> findMatchingFileNames(ref List<JsonFile> files, string[] fileNames)
+        private static List<string> findMatchingFileNames(ref List<JsonFile> files, IEnumerable<string> fileNames)
         {
             List<string> matchingFileNames = new List<string>();
 
