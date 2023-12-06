@@ -60,7 +60,7 @@
     <Compile Include="src\Controller\ILineChecker.cs" />
     <Compile Include="src\Controller\ScreenCreator.cs" />
     <Compile Include="src\Controller\TTLine\FeatureCalculations.cs" />
-    <Compile Include="src\Model\Config\Config.cs" />
+    <Compile Include="src\Model\AppConfiguration\Config.cs" />
     <Compile Include="src\Model\Data\Acoustic\AcousticFile.cs" />
     <Compile Include="src\Model\Data\Acoustic\Limit.cs" />
     <Compile Include="src\Model\Data\TTLine\Feature.cs" />
@@ -96,7 +96,6 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <None Include="Config\config.json" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

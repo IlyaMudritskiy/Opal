@@ -1,5 +1,6 @@
 ﻿using ProcessDashboard.src.Controller.Acoustic;
 using ProcessDashboard.src.Controller.TTLine;
+using ProcessDashboard.src.Model.AppConfiguration;
 using ProcessDashboard.src.Model.Data;
 using ProcessDashboard.src.Model.Data.Acoustic;
 using ProcessDashboard.src.Model.Data.TTLine;
@@ -11,7 +12,6 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Reflection.Emit;
 using System.Windows.Forms;
 
 namespace ProcessDashboard.src.Model.Screen.TTLine
@@ -36,6 +36,7 @@ namespace ProcessDashboard.src.Model.Screen.TTLine
 
         // Data
         private ScreenData ScreenData { get; set; }
+        private Config config = Config.Instance;
 
         private string lineID;
         private string typeID;
@@ -56,10 +57,15 @@ namespace ProcessDashboard.src.Model.Screen.TTLine
         {
             clear(Temperature);
             clear(Pressure);
-            FR.Clear();
-            THD.Clear();
-            RNB.Clear();
-            IMP.Clear();
+
+            if (config.Acoustic.Enabled)
+            {
+                FR.Clear();
+                THD.Clear();
+                RNB.Clear();
+                IMP.Clear();
+            }
+            
             LoadData(ref files);
         }
 
@@ -79,6 +85,8 @@ namespace ProcessDashboard.src.Model.Screen.TTLine
 
         private void addLimits()
         {
+            if (!config.Acoustic.Enabled) return;
+
             var limits = AcousticDataProcessor.OpenLimitFiles();
 
             FR.AddLimits(
@@ -110,6 +118,9 @@ namespace ProcessDashboard.src.Model.Screen.TTLine
         {
             Temperature = new TTLineTab("Temperature Details");
             Pressure = new TTLineTab("Pressure Details");
+
+            if (!config.Acoustic.Enabled) return;
+
             FR = new AcousticTab("FR", "Hz", "dB SPL");
             THD = new AcousticTab("THD", "Hz", "%");
             RNB = new AcousticTab("RNB", "Hz", "dB SPL");
@@ -120,6 +131,9 @@ namespace ProcessDashboard.src.Model.Screen.TTLine
         {
             Tabs.TabPages.Add(Temperature.Tab);
             Tabs.TabPages.Add(Pressure.Tab);
+
+            if (!config.Acoustic.Enabled) return;
+
             Tabs.TabPages.Add(FR.Tab);
             Tabs.TabPages.Add(THD.Tab);
             Tabs.TabPages.Add(RNB.Tab);
@@ -130,6 +144,9 @@ namespace ProcessDashboard.src.Model.Screen.TTLine
         {
             Temperature.Title.Text = $"Temperature  |  {lineID} - {typeID}";
             Pressure.Title.Text = $"Pressure  |  {lineID} - {typeID}";
+
+            if (!config.Acoustic.Enabled) return;
+
             FR.Title.Text = $"Frequency Response  |  {lineID} - {typeID}";
             THD.Title.Text = $"Total Harmonic Distortion  |  {lineID} - {typeID}";
             RNB.Title.Text = $"Rub and Buzz  |  {lineID} - {typeID}";
@@ -148,10 +165,13 @@ namespace ProcessDashboard.src.Model.Screen.TTLine
             addPressData(ScreenData.DS21, Pressure.DS21, Colors.DS21C, "DS 2-1");
             addPressData(ScreenData.DS22, Pressure.DS22, Colors.DS22C, "DS 2-2");
 
-            addAcousticData(FR, "freq");
-            addAcousticData(THD, "thd");
-            addAcousticData(RNB, "rnb");
-            addAcousticData(IMP, "imp");
+            if (config.Acoustic.Enabled)
+            {
+                addAcousticData(FR, "freq");
+                addAcousticData(THD, "thd");
+                addAcousticData(RNB, "rnb");
+                addAcousticData(IMP, "imp");
+            }
         }
 
         private void addTempData(DSXXData ds, TableView tv, Color color, string label)
