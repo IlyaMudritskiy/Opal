@@ -6,7 +6,7 @@ namespace ProcessDashboard.src.Model.Screen
 {
     public interface IScreen
     {
-        void Create(ref Panel panel);
+        void Create(ref Panel panel, OpenFileDialog dialog);
         void Update(ref List<JsonFile> data);
         void LoadData(ref List<JsonFile> data);
     }

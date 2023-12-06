@@ -36,17 +36,19 @@ namespace ProcessDashboard.src.Model.Screen.TTLine
 
         // Data
         private ScreenData ScreenData { get; set; }
-        private Config config = Config.Instance;
+        private readonly Config config = Config.Instance;
+        private OpenFileDialog dialog;
 
         private string lineID;
         private string typeID;
 
-        public void Create(ref Panel panel)
+        public void Create(ref Panel panel, OpenFileDialog dialog)
         {
             Tabs = new TabControl() { Dock = DockStyle.Fill };
+            this.dialog = dialog;
 
-            createTabs();
-            addTabs();
+            prepareProcessTabs();
+            prepareAcousticTabs();
 
             panel.SuspendLayout();
             panel.Controls.Add(Tabs);
@@ -74,13 +76,39 @@ namespace ProcessDashboard.src.Model.Screen.TTLine
             // Transform JsonFile to ready-to-use line object
             List<TTLUnitData> processData = TTLineDataProcessor.LoadFiles(files);
             // Find and open acoustic files
-            List<AcousticFile> acousticData = AcousticDataProcessor.OpenFiles(ref files, files[0].DUT.TypeID);
+            List<AcousticFile> acousticData = AcousticDataProcessor.OpenFiles(ref files, files[0].DUT.TypeID, dialog);
 
             ScreenData = new ScreenData(processData, acousticData);
 
-            fillData();
-            renameHeaders();
+            fillProcessData();
+            fillAcousticData();
+            renameProcessHeaders();
+            renameAcousticHeaders();
             addLimits();
+        }
+
+        private void prepareProcessTabs()
+        {
+            Temperature = new TTLineTab("Temperature Details");
+            Pressure = new TTLineTab("Pressure Details");
+
+            Tabs.TabPages.Add(Temperature.Tab);
+            Tabs.TabPages.Add(Pressure.Tab);
+        }
+
+        private void prepareAcousticTabs()
+        {
+            if (!config.Acoustic.Enabled) return;
+
+            FR = new AcousticTab("FR", "Hz", "dB SPL");
+            THD = new AcousticTab("THD", "Hz", "%");
+            RNB = new AcousticTab("RNB", "Hz", "dB SPL");
+            IMP = new AcousticTab("IMP", "Hz", "Ω");
+
+            Tabs.TabPages.Add(FR.Tab);
+            Tabs.TabPages.Add(THD.Tab);
+            Tabs.TabPages.Add(RNB.Tab);
+            Tabs.TabPages.Add(IMP.Tab);
         }
 
         private void addLimits()
@@ -114,37 +142,14 @@ namespace ProcessDashboard.src.Model.Screen.TTLine
                 );
         }
 
-        private void createTabs()
-        {
-            Temperature = new TTLineTab("Temperature Details");
-            Pressure = new TTLineTab("Pressure Details");
-
-            if (!config.Acoustic.Enabled) return;
-
-            FR = new AcousticTab("FR", "Hz", "dB SPL");
-            THD = new AcousticTab("THD", "Hz", "%");
-            RNB = new AcousticTab("RNB", "Hz", "dB SPL");
-            IMP = new AcousticTab("IMP", "Hz", "Ω");
-        }
-
-        private void addTabs()
-        {
-            Tabs.TabPages.Add(Temperature.Tab);
-            Tabs.TabPages.Add(Pressure.Tab);
-
-            if (!config.Acoustic.Enabled) return;
-
-            Tabs.TabPages.Add(FR.Tab);
-            Tabs.TabPages.Add(THD.Tab);
-            Tabs.TabPages.Add(RNB.Tab);
-            Tabs.TabPages.Add(IMP.Tab);
-        }
-
-        private void renameHeaders()
+        private void renameProcessHeaders()
         {
             Temperature.Title.Text = $"Temperature  |  {lineID} - {typeID}";
             Pressure.Title.Text = $"Pressure  |  {lineID} - {typeID}";
+        }
 
+        private void renameAcousticHeaders()
+        {
             if (!config.Acoustic.Enabled) return;
 
             FR.Title.Text = $"Frequency Response  |  {lineID} - {typeID}";
@@ -153,7 +158,7 @@ namespace ProcessDashboard.src.Model.Screen.TTLine
             IMP.Title.Text = $"Impedance  |  {lineID} - {typeID}";
         }
 
-        private void fillData()
+        private void fillProcessData()
         {
             addTempData(ScreenData.DS11, Temperature.DS11, Colors.DS11C, "DS 1-1");
             addTempData(ScreenData.DS12, Temperature.DS12, Colors.DS12C, "DS 1-2");
@@ -164,14 +169,16 @@ namespace ProcessDashboard.src.Model.Screen.TTLine
             addPressData(ScreenData.DS12, Pressure.DS12, Colors.DS12C, "DS 1-2");
             addPressData(ScreenData.DS21, Pressure.DS21, Colors.DS21C, "DS 2-1");
             addPressData(ScreenData.DS22, Pressure.DS22, Colors.DS22C, "DS 2-2");
+        }
 
-            if (config.Acoustic.Enabled)
-            {
-                addAcousticData(FR, "freq");
-                addAcousticData(THD, "thd");
-                addAcousticData(RNB, "rnb");
-                addAcousticData(IMP, "imp");
-            }
+        private void fillAcousticData()
+        {
+            if (!config.Acoustic.Enabled) return;
+
+            addAcousticData(FR, "freq");
+            addAcousticData(THD, "thd");
+            addAcousticData(RNB, "rnb");
+            addAcousticData(IMP, "imp");
         }
 
         private void addTempData(DSXXData ds, TableView tv, Color color, string label)

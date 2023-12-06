@@ -1,4 +1,5 @@
 ﻿using ProcessDashboard.src.Controller.TTLine;
+using ProcessDashboard.src.Model.AppConfiguration;
 using ProcessDashboard.src.Model.Data;
 using ProcessDashboard.src.Model.Screen;
 using System;
@@ -26,19 +27,20 @@ namespace ProcessDashboard.src.Controller.App
         public void Run(ref OpenFileDialog dialog, ref Panel panel)
         {
             // Get the user selected files
-            List<JsonFile> files = TTLineDataProcessor.OpenFiles(dialog);
-
+            List<string> files = TTLineDataProcessor.GetFiles(dialog);
+            List<JsonFile> jsonFiles = TTLineDataProcessor.OpenFiles(files);
+           
             if (files == null || files.Count == 0) return;
 
             if (screen == null)
             {
-                screen = ScreenCreator.GetIScreen(ref files);
-                screen.Create(ref panel);
-                screen.LoadData(ref files);
+                screen = ScreenCreator.GetIScreen(ref jsonFiles);
+                screen.Create(ref panel, dialog);
+                screen.LoadData(ref jsonFiles);
             }
             else
             {
-                screen.Update(ref files);
+                screen.Update(ref jsonFiles);
             }
         }
 

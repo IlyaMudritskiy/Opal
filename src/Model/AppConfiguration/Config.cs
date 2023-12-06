@@ -35,7 +35,7 @@ namespace ProcessDashboard.src.Model.AppConfiguration
         {
             try
             {
-                File.WriteAllText(path, JsonConvert.SerializeObject(this));
+                File.WriteAllText(path, JsonConvert.SerializeObject(this, Formatting.Indented));
             }
             catch (Exception ex)
             {
@@ -44,15 +44,13 @@ namespace ProcessDashboard.src.Model.AppConfiguration
         }
     }
 
+    [JsonObject(MemberSerialization.OptIn)]
     public class Acoustic
     {
         [JsonProperty(PropertyName = "Enabled")]
         public bool Enabled { get; set; }
 
-        [JsonProperty(PropertyName = "IsFilesCustomLocation")]
-        public bool IsFilesCustomLocation { get; set; }
-
-        [JsonProperty(PropertyName = "CustomFilesPath")]
-        public string CustomFilesPath { get; set; }
+        [JsonProperty(PropertyName = "ManualSelection")]
+        public bool ManualSelection { get; set; }
     }
 }
