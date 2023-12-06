@@ -2,7 +2,7 @@
 using System;
 using System.IO;
 
-namespace ProcessDashboard.src.Model.Config
+namespace ProcessDashboard.src.Model.AppConfiguration
 {
     [JsonObject(MemberSerialization.OptIn)]
     public class Config
@@ -14,6 +14,9 @@ namespace ProcessDashboard.src.Model.Config
 
         [JsonProperty(PropertyName = "LimitsFolder")]
         public string LimitsFolder { get; set; }
+
+        [JsonProperty(PropertyName = "Acoustic")]
+        public Acoustic Acoustic { get; set; }
 
         private Config()
         {
@@ -39,5 +42,17 @@ namespace ProcessDashboard.src.Model.Config
                 // Log
             }
         }
+    }
+
+    public class Acoustic
+    {
+        [JsonProperty(PropertyName = "Enabled")]
+        public bool Enabled { get; set; }
+
+        [JsonProperty(PropertyName = "IsFilesCustomLocation")]
+        public bool IsFilesCustomLocation { get; set; }
+
+        [JsonProperty(PropertyName = "CustomFilesPath")]
+        public string CustomFilesPath { get; set; }
     }
 }

@@ -1,4 +1,4 @@
-﻿using ProcessDashboard.src.Model.Config;
+﻿using ProcessDashboard.src.Model.AppConfiguration;
 using ProcessDashboard.src.Model.Data;
 using ProcessDashboard.src.Model.Data.Acoustic;
 using System;
@@ -14,23 +14,14 @@ namespace ProcessDashboard.src.Controller.Acoustic
         {
             if (files == null) return null;
 
-            List<string> matchingFiles = new List<string>();
-            List<string> acousticFiles = new List<string>();
-            List<AcousticFile> result = new List<AcousticFile>();
-            string path;
+            Config config = Config.Instance;
 
-            for (int i = -1; i < 3; i++)
-            {
-                path = getPath(files[0], typeID, i);
-                acousticFiles = Directory.GetFiles(path).ToList();
-                matchingFiles.AddRange(findMatchingFileNames(ref files, ref acousticFiles));
-            }
-
-            foreach (var f in JsonReader.ReadFromZip<AcousticFile>(matchingFiles))
-                if (f.DUT.Pass)
-                    result.Add(f);
-
-            return result;
+            if (config.Acoustic.IsFilesCustomLocation)
+                return fromCustomLocation(ref files, config.Acoustic.CustomFilesPath);
+            if (!config.Acoustic.IsFilesCustomLocation)
+                return fromDefaultLocation(ref files, typeID);
+            else
+                return null;
         }
 
         public static Dictionary<string, Limit> OpenLimitFiles()
@@ -40,6 +31,54 @@ namespace ProcessDashboard.src.Controller.Acoustic
             string[] limitFiles = Directory.GetFiles(config.LimitsFolder);
 
             return checkLimitName(limitFiles);
+        }
+
+        private static List<AcousticFile> fromDefaultLocation(ref List<JsonFile> processFiles, string typeID)
+        {
+            List<string> matchingFiles = new List<string>();
+            List<string> acousticFiles = new List<string>();
+            List<AcousticFile> result = new List<AcousticFile>();
+
+            DateTime dt = DateTime.Parse(processFiles[0].Steps.Where(x => x.StepName == "ps01_high_pressure_actual").FirstOrDefault().Measurements[0].DateTime);
+
+            for (int i = -1; i < 3; i++)
+            {
+                string date = dt.AddDays(i).ToString("yyyyMMdd");
+                string path = $"Z:\\autolines\\ttl\\acoustic\\{typeID}\\{date}";
+
+                if (!Directory.Exists(path)) continue;
+
+                string[] hourDirs = Directory.GetDirectories(path);
+
+                foreach (var dir in hourDirs)
+                {
+                    string[] hourFiles = Directory.GetFiles(dir);
+                    matchingFiles.AddRange(findMatchingFileNames(ref processFiles, hourFiles));
+                }
+            }
+
+            foreach (var f in JsonReader.ReadFromZip<AcousticFile>(matchingFiles))
+                if (f.DUT.Pass)
+                    result.Add(f);
+
+            return result;
+        }
+
+        private static List<AcousticFile> fromCustomLocation(ref List<JsonFile> processFiles, string path)
+        {
+            if (!Directory.Exists(path)) return null;
+
+            List<AcousticFile> result = new List<AcousticFile>();
+
+            string[] files = Directory.GetFiles(path);
+
+            List<string> matchingFiles = findMatchingFileNames(ref processFiles, files);
+
+            foreach (var f in JsonReader.ReadFromZip<AcousticFile>(matchingFiles))
+                if (f.DUT.Pass)
+                    result.Add(f);
+
+            return result;
         }
 
         private static Dictionary<string, Limit> checkLimitName(string[] filepaths)
@@ -97,23 +136,15 @@ namespace ProcessDashboard.src.Controller.Acoustic
             return (null, null);
         }
 
-        private static List<string> findMatchingFileNames(ref List<JsonFile> files, ref List<string> fileNames)
+        private static List<string> findMatchingFileNames(ref List<JsonFile> files, string[] fileNames)
         {
             List<string> matchingFileNames = new List<string>();
+
             foreach (string fileName in fileNames)
-            {
                 if (files.Any(obj => fileName.Contains(obj.DUT.SerialNumber)))
                     matchingFileNames.Add(fileName);
-            }
-            return matchingFileNames;
-        }
 
-        private static string getPath(JsonFile file, string typeID, int hourOffset = 0)
-        {
-            DateTime dt = DateTime.Parse(file.Steps.Where(x => x.StepName == "ps01_high_pressure_actual").FirstOrDefault().Measurements[0].DateTime);
-            string date = $"{dt.Year}{dt.Month}{dt.Day}";
-            int hour = dt.Hour + hourOffset;
-            return $"Z:\\autolines\\ttl\\acoustic\\{typeID}\\{date}\\{hour}";
+            return matchingFileNames;
         }
     }
 }
