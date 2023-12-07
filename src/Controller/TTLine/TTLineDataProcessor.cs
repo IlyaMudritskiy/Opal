@@ -11,9 +11,14 @@ namespace ProcessDashboard.src.Controller.TTLine
 {
     public static class TTLineDataProcessor
     {
+        private static readonly NLog.Logger Log = NLog.LogManager.GetCurrentClassLogger();
         public static List<JsonFile> OpenFiles(IEnumerable<string> files)
         {
-            if (files == null || files.Count() == 0) return null;
+            if (files == null || files.Count() == 0)
+            {
+                Log.Trace("No files were passed to method");
+                return null;
+            }
 
             ConcurrentBag<JsonFile> result = new ConcurrentBag<JsonFile>();
 
@@ -32,7 +37,9 @@ namespace ProcessDashboard.src.Controller.TTLine
                 {
                     result.Add(new TTLUnitData(f));
                 }
-                catch (Exception ex) { }
+                catch (Exception ex) {
+                    Log.Warn($"Json file Serial:{f.DUT.SerialNumber} failed to be transformed. Exception: {ex.Message}");
+                }
             });
             return result.ToList();
         }

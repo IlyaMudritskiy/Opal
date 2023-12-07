@@ -7,6 +7,8 @@ namespace ProcessDashboard.src.Controller.TTLine
 {
     public static class FeatureCalculations
     {
+        private static readonly NLog.Logger Log = NLog.LogManager.GetCurrentClassLogger();
+
         public static void Calculate(TTLUnitData data)
         {
             if (data == null) return;
@@ -294,6 +296,15 @@ namespace ProcessDashboard.src.Controller.TTLine
                 Value = Math.Round(P4.Y - P1)
             });
             #endregion
+
+            foreach (var feature in data.TempFeatures)
+                Log.Trace($"{feature}");
+
+            foreach (var feature in data.PressFeatures)
+                Log.Trace($"{feature}");
+
+            foreach (var ponit in data.DataPoints)
+                Log.Trace($"{ponit}");
         }
     }
 }

@@ -11,13 +11,16 @@ namespace ProcessDashboard.src.Controller
 {
     public static class JsonReader
     {
+        private static readonly NLog.Logger Log = NLog.LogManager.GetCurrentClassLogger();
+
         public static T Read<T>(string filePath)
         {
             if (!File.Exists(filePath))
             {
-                throw new FileNotFoundException($"The file '{filePath}' does not exist.");
+                Log.Error($"The file '{filePath}' does not exist");
+                return default(T);
             }
-
+                
             try
             {
                 string json = File.ReadAllText(filePath);
@@ -26,8 +29,9 @@ namespace ProcessDashboard.src.Controller
             }
             catch (JsonSerializationException ex)
             {
-                throw new JsonSerializationException($"Error deserializing JSON: {ex.Message}", ex);
+                Log.Error($"Error deserializing JSON: {ex.Message}");
             }
+            return default(T);
         }
 
         public static List<T> Read<T>(IEnumerable<string> filePaths)
@@ -47,8 +51,8 @@ namespace ProcessDashboard.src.Controller
             using (ZipArchive zipArchive = new ZipArchive(fileStream, ZipArchiveMode.Read))
             {
                 if (zipArchive.Entries.Count != 1)
-                {
-                    throw new InvalidOperationException("The zip file must contain exactly one entry (JSON file).");
+                { 
+                    Log.Error("The zip file must contain exactly one entry (JSON file).");
                 }
 
                 ZipArchiveEntry entry = zipArchive.Entries[0];
@@ -86,7 +90,7 @@ namespace ProcessDashboard.src.Controller
             }
             catch (JsonSerializationException ex)
             {
-                throw new JsonSerializationException($"Error serializing data to JSON: {ex.Message}", ex);
+                Log.Error($"Error serializing data to JSON: {ex.Message}", ex);
             }
         }
     }

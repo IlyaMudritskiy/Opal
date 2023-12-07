@@ -47,6 +47,4 @@ namespace ProcessDashboard.src.Model.Data.TTLine
             FeatureCalculations.Calculate(this);
         }
     }
-
-    
 }
