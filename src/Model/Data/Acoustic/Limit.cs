@@ -7,6 +7,8 @@ namespace ProcessDashboard.src.Model.Data.Acoustic
 {
     public class Limit
     {
+        private static readonly NLog.Logger Log = NLog.LogManager.GetCurrentClassLogger();
+
         public List<double> X { get; set; } = new List<double>();
         public List<double> Y { get; set; } = new List<double>();
 
@@ -35,7 +37,7 @@ namespace ProcessDashboard.src.Model.Data.Acoustic
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Log.Error(ex.Message);
             }
         }
     }

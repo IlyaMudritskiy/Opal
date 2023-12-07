@@ -22,6 +22,8 @@ namespace ProcessDashboard.src.Model.Data.TTLine
         public double[] TimeOffset { get; set; }
         public double[] Values { get; set; }
 
+        private static readonly NLog.Logger Log = NLog.LogManager.GetCurrentClassLogger();
+
         public Measurements(List<Measurement> measurements)
         {
             if (measurements == null)
@@ -40,9 +42,9 @@ namespace ProcessDashboard.src.Model.Data.TTLine
                     resultOffset[i] = (DateTime.Parse(dateTime[i]) - DateTime.Parse(dateTime[0])).TotalSeconds;
                     resultValues[i] = double.Parse(values[i]);
                 }
-                catch (Exception e)
+                catch (Exception ex)
                 {
-                    Console.WriteLine(e.ToString());
+                    Log.Error(ex.Message);
                 }
             }
             TimeOffset = resultOffset;

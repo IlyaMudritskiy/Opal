@@ -10,6 +10,8 @@ namespace ProcessDashboard.src.Model.AppConfiguration
         private static readonly Lazy<Config> lazy = new Lazy<Config>(() => new Config());
         public static Config Instance => lazy.Value;
 
+        private static readonly NLog.Logger Log = NLog.LogManager.GetCurrentClassLogger();
+
         private string path = $"{Directory.GetCurrentDirectory()}\\Config\\config.json";
 
         [JsonProperty(PropertyName = "LimitsFolder")]
@@ -27,7 +29,7 @@ namespace ProcessDashboard.src.Model.AppConfiguration
             }
             catch (Exception ex)
             {
-                // Log config file does not exist
+                Log.Error(ex);
             }
         }
 
@@ -39,7 +41,7 @@ namespace ProcessDashboard.src.Model.AppConfiguration
             }
             catch (Exception ex)
             {
-                // Log
+                Log.Error($"Failed to save config to {path}, {ex}");
             }
         }
     }
