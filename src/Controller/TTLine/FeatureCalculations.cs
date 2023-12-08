@@ -296,15 +296,6 @@ namespace ProcessDashboard.src.Controller.TTLine
                 Value = Math.Round(P4.Y - P1)
             });
             #endregion
-
-            foreach (var feature in data.TempFeatures)
-                Log.Trace($"{feature}");
-
-            foreach (var feature in data.PressFeatures)
-                Log.Trace($"{feature}");
-
-            foreach (var ponit in data.DataPoints)
-                Log.Trace($"{ponit}");
         }
     }
 }
