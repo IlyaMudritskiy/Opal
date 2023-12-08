@@ -7,6 +7,8 @@ namespace ProcessDashboard.src.Controller.TTLine
 {
     public static class FeatureCalculations
     {
+        private static readonly NLog.Logger Log = NLog.LogManager.GetCurrentClassLogger();
+
         public static void Calculate(TTLUnitData data)
         {
             if (data == null) return;

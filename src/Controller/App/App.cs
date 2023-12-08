@@ -13,9 +13,11 @@ namespace ProcessDashboard.src.Controller.App
     public class App
     {
         // Singleton
-        private static readonly Lazy<App> lazy =
-        new Lazy<App>(() => new App());
+        private static readonly Lazy<App> lazy = new Lazy<App>(() => new App());
         public static App Instance => lazy.Value;
+
+        private static readonly NLog.Logger Log = NLog.LogManager.GetCurrentClassLogger();
+
         public App() 
         {
             setCultureSettings();
@@ -29,9 +31,13 @@ namespace ProcessDashboard.src.Controller.App
             // Get the user selected files
             List<string> files = TTLineDataProcessor.GetFiles(dialog);
             List<JsonFile> jsonFiles = TTLineDataProcessor.OpenFiles(files);
-           
-            if (files == null || files.Count == 0) return;
 
+            if (files == null || files.Count == 0)
+            {
+                Log.Trace("No files are selected (dialog was canceled or closed)");
+                return;
+            }
+                            
             if (screen == null)
             {
                 screen = ScreenCreator.GetIScreen(ref jsonFiles);

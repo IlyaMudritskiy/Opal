@@ -14,5 +14,10 @@
         /// Value at time X
         /// </summary>
         public double Y { get; set; }
+
+        public override string ToString()
+        {
+            return $"DataPoint: {Name}, X: {X}, Y: {Y}";
+        }
     }
 }
