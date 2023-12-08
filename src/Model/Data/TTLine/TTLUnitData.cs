@@ -20,7 +20,8 @@ namespace ProcessDashboard.src.Model.Data.TTLine
         public List<Feature> TempFeatures { get; set; }
         public List<Feature> PressFeatures { get; set; }
         public List<DataPoint> DataPoints { get; set; }
-        
+
+        private static readonly NLog.Logger Log = NLog.LogManager.GetCurrentClassLogger();
 
         public TTLUnitData(JsonFile file)
         {
@@ -34,6 +35,9 @@ namespace ProcessDashboard.src.Model.Data.TTLine
 
             Temperature = new Measurements(file.Steps.Where(x => x.StepName == "ps01_temperature_actual").FirstOrDefault().Measurements);
             HighPressure = new Measurements(file.Steps.Where(x => x.StepName == "ps01_high_pressure_actual").FirstOrDefault().Measurements);
+
+            if (Temperature.MaxTime() > 22 || HighPressure.MaxTime() > 22) return;
+
             HoldPressure = file.Steps.Where(x => x.StepName == "ps01_hold_pressure_actual")
                 .FirstOrDefault().Measurements
                 .Average(item => double.Parse(item.MeasurementValue));
@@ -43,7 +47,16 @@ namespace ProcessDashboard.src.Model.Data.TTLine
             HeaterCurrent = file.Steps.Where(x => x.StepName == "ps01_heater_current_actual")
                 .FirstOrDefault().Measurements
                 .Average(item => double.Parse(item.MeasurementValue));
-            Heater = new Heater(file.Steps.Where(x => x.StepName == "ps01_heater_on").FirstOrDefault().Measurements);
+            try
+            {
+                Heater = new Heater(file.Steps.Where(x => x.StepName == "ps01_heater_on").FirstOrDefault().Measurements);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex);
+                return;
+            }
+            
             FeatureCalculations.Calculate(this);
         }
     }

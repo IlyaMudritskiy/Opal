@@ -35,7 +35,8 @@ namespace ProcessDashboard.src.Controller.TTLine
             {
                 try
                 {
-                    result.Add(new TTLUnitData(f));
+                    if (checkFile(f))
+                        result.Add(new TTLUnitData(f));
                 }
                 catch (Exception ex) {
                     Log.Warn($"Json file Serial:{f.DUT.SerialNumber} failed to be transformed. Exception: {ex.Message}");
@@ -50,6 +51,21 @@ namespace ProcessDashboard.src.Controller.TTLine
                 return dialog.FileNames.ToList();
             else
                 return null;
+        }
+
+        private static bool checkFile(JsonFile file)
+        {
+            var temp = new Measurements(file.Steps.Where(x => x.StepName == "ps01_temperature_actual").FirstOrDefault().Measurements);
+            var press = new Measurements(file.Steps.Where(x => x.StepName == "ps01_high_pressure_actual").FirstOrDefault().Measurements);
+            var heater = file.Steps.Where(x => x.StepName == "ps01_heater_on").FirstOrDefault();
+
+            if (heater == null || heater.Measurements.Count != 2)
+                return false;
+
+            if ((temp.MaxTime() + press.MaxTime()) / 2 > 25)
+                return false;
+
+            return true;
         }
     }
 }

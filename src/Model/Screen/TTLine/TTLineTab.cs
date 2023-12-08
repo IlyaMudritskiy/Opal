@@ -38,6 +38,7 @@ namespace ProcessDashboard.src.Model.Screen.TTLine
                 );
             Plot.Refresh();
             Plot.Plot.AxisAuto();
+            Plot.Refresh();
         }
 
         public override void Clear()
@@ -125,6 +126,9 @@ namespace ProcessDashboard.src.Model.Screen.TTLine
             };
 
             Plot.MouseMove += Plot_MouseMoved;
+
+            Plot.Refresh();
+            Plot.Plot.AxisAuto();
         }
 
         private void Plot_MouseMoved(object sender, MouseEventArgs e)

@@ -130,5 +130,10 @@ namespace ProcessDashboard.src.Model.Data.TTLine
             int index = MaxValueIndex();
             return TimeOffset[index];
         }
+
+        public double MaxTime()
+        {
+            return TimeOffset.Max();
+        }
     }
 }

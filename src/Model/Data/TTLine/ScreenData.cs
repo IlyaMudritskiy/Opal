@@ -23,7 +23,7 @@ namespace ProcessDashboard.src.Model.Data.TTLine
                     data.Where(x => x.Track == 1 && x.Press == 1).ToList(),
                     acousticFiles.Where(x => x.DUT.Track == 1 && x.DUT.Press == 1).ToList());
             }
-            catch (Exception ex) { Log.Error(ex.Message); }
+            catch (Exception ex) { Log.Trace($"DS11: {ex.Message}"); }
 
             try
             {
@@ -31,7 +31,7 @@ namespace ProcessDashboard.src.Model.Data.TTLine
                     data.Where(x => x.Track == 1 && x.Press == 2).ToList(),
                     acousticFiles.Where(x => x.DUT.Track == 1 && x.DUT.Press == 2).ToList());
             }
-            catch (Exception ex) { Log.Error(ex.Message); }
+            catch (Exception ex) { Log.Trace($"DS12: {ex.Message}"); }
 
             try
             {
@@ -39,7 +39,7 @@ namespace ProcessDashboard.src.Model.Data.TTLine
                     data.Where(x => x.Track == 2 && x.Press == 1).ToList(),
                     acousticFiles.Where(x => x.DUT.Track == 2 && x.DUT.Press == 1).ToList());
             }
-            catch (Exception ex) { Log.Error(ex.Message); }
+            catch (Exception ex) { Log.Trace($"DS21: {ex.Message}"); }
 
             try
             {
@@ -47,7 +47,7 @@ namespace ProcessDashboard.src.Model.Data.TTLine
                     data.Where(x => x.Track == 2 && x.Press == 2).ToList(),
                     acousticFiles.Where(x => x.DUT.Track == 2 && x.DUT.Press == 2).ToList());
             }
-            catch (Exception ex) { Log.Error(ex.Message); }
+            catch (Exception ex) { Log.Trace($"DS22: {ex.Message}"); }
         }
     }
 }
