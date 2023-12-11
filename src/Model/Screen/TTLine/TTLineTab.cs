@@ -25,6 +25,7 @@ namespace ProcessDashboard.src.Model.Screen.TTLine
         public TTLineTab(string title)
         {
             createLayout(title);
+            Fit();
         }
 
         public override void AddScatter(double[] x, double[] y, Color color, string flag = "")
@@ -34,11 +35,8 @@ namespace ProcessDashboard.src.Model.Screen.TTLine
                 ys: y,
                 color: color,
                 markerSize: 0,
-                lineWidth: 1
-                );
-            Plot.Refresh();
-            Plot.Plot.AxisAuto();
-            Plot.Refresh();
+                lineWidth: 1);
+            Fit();
         }
 
         public override void Clear()
@@ -127,24 +125,32 @@ namespace ProcessDashboard.src.Model.Screen.TTLine
 
             Plot.MouseMove += Plot_MouseMoved;
 
-            Plot.Refresh();
-            Plot.Plot.AxisAuto();
+            Fit();
         }
 
         private void Plot_MouseMoved(object sender, MouseEventArgs e)
         {
             (double coordinateX, double coordinateY) = Plot.GetMouseCoordinates();
 
-            XLabel.Text = $"{e.X:0.000}";
-            YLabel.Text = $"{e.Y:0.000}";
+            XLabel.Text = $"{e.X:70.000}";
+            YLabel.Text = $"{e.Y:70.000}";
 
-            XCoordLabel.Text = $"{coordinateX:0.00000000}";
-            YCoordLabel.Text = $"{coordinateY:0.00000000}";
+            XCoordLabel.Text = $"{coordinateX:70.00000000}";
+            YCoordLabel.Text = $"{coordinateY:70.00000000}";
 
             Crosshair.X = coordinateX;
             Crosshair.Y = coordinateY;
 
             Plot.Refresh(lowQuality: false, skipIfCurrentlyRendering: true);
+        }
+
+        private void Fit()
+        {
+            Plot.Refresh();
+            Plot.Plot.AxisAuto();
+            Plot.Refresh();
+            Plot.Plot.AxisAuto();
+            Plot.Refresh();
         }
     }
 }

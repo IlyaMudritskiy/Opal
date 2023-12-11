@@ -18,6 +18,8 @@ namespace ProcessDashboard.src.Controller.App
 
         private static readonly NLog.Logger Log = NLog.LogManager.GetCurrentClassLogger();
 
+        private Config config = Config.Instance;
+
         public App() 
         {
             setCultureSettings();

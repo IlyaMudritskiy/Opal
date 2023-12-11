@@ -122,24 +122,28 @@ namespace ProcessDashboard.src.Model.Screen.TTLine
                 lower: limits["FRLower"],
                 reference: limits["FRReference"]
                 );
+            FR.PlotMean();
 
             THD.AddLimits(
                 upper: limits["THDUpper"],
                 lower: limits["THDLower"],
                 reference: limits["THDReference"]
                 );
+            THD.PlotMean();
 
             RNB.AddLimits(
                 upper: limits["RNBUpper"],
                 lower: limits["RNBLower"],
                 reference: limits["RNBReference"]
                 );
+            RNB.PlotMean();
 
             IMP.AddLimits(
                 upper: limits["IMPUpper"],
                 lower: limits["IMPLower"],
                 reference: limits["IMPReference"]
                 );
+            IMP.PlotMean();
         }
 
         private void renameProcessHeaders()
