@@ -73,6 +73,7 @@
     <Compile Include="src\Model\Data\TTLine\DSXXData.cs" />
     <Compile Include="src\Model\Data\TTLine\ScreenData.cs" />
     <Compile Include="src\Model\Data\TTLine\TTLUnitData.cs" />
+    <Compile Include="src\Model\Screen\Acoustic\AcousticMeasurement.cs" />
     <Compile Include="src\Model\Screen\Acoustic\AcousticTab.cs" />
     <Compile Include="src\Model\Screen\Elements\PlotView.cs" />
     <Compile Include="src\Model\Screen\AbsTab.cs" />

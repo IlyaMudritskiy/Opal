@@ -39,6 +39,15 @@ namespace ProcessDashboard.src.Model.Screen.Elements
             Plot.Plot.AddHorizontalLine(value, color: Colors.Black, width);
         }
 
+        public void Fit()
+        {
+            Plot.Refresh();
+            Plot.Plot.AxisAuto();
+            Plot.Refresh();
+            Plot.Plot.AxisAuto();
+            Plot.Refresh();
+        }
+
         private void createLayout(string title, Color color, string unitx = "", string unity = "", bool log = false)
         {
             Title = CommonElements.Header(title);
@@ -75,9 +84,7 @@ namespace ProcessDashboard.src.Model.Screen.Elements
             panel.Controls.Add(Title, 0, 0);
             panel.Controls.Add(Plot, 0, 1);
             panel.ResumeLayout();
-            Layout = panel;
-
-            
+            Layout = panel;            
         }
 
         private void toLog(FormsPlot plot)
