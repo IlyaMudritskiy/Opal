@@ -35,6 +35,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.IO.Compression" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -54,9 +55,14 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="src\Controller\Acoustic\AcousticDataProcessor.cs" />
+    <Compile Include="src\Controller\App\App.cs" />
     <Compile Include="src\Controller\ILineChecker.cs" />
     <Compile Include="src\Controller\ScreenCreator.cs" />
     <Compile Include="src\Controller\TTLine\FeatureCalculations.cs" />
+    <Compile Include="src\Model\AppConfiguration\Config.cs" />
+    <Compile Include="src\Model\Data\Acoustic\AcousticFile.cs" />
+    <Compile Include="src\Model\Data\Acoustic\Limit.cs" />
     <Compile Include="src\Model\Data\TTLine\Feature.cs" />
     <Compile Include="src\Model\Data\TTLine\Heater.cs" />
     <Compile Include="src\Model\Data\TTLine\Measurements.cs" />
@@ -67,12 +73,16 @@
     <Compile Include="src\Model\Data\TTLine\DSXXData.cs" />
     <Compile Include="src\Model\Data\TTLine\ScreenData.cs" />
     <Compile Include="src\Model\Data\TTLine\TTLUnitData.cs" />
+    <Compile Include="src\Model\Screen\Acoustic\AcousticMeasurement.cs" />
+    <Compile Include="src\Model\Screen\Acoustic\AcousticTab.cs" />
+    <Compile Include="src\Model\Screen\Elements\PlotView.cs" />
+    <Compile Include="src\Model\Screen\AbsTab.cs" />
     <Compile Include="src\Model\Screen\TTLine\TTLineTab.cs" />
-    <Compile Include="src\Model\Screen\TTLine\TableView.cs" />
+    <Compile Include="src\Model\Screen\Elements\TableView.cs" />
     <Compile Include="src\Model\Screen\IScreen.cs" />
     <Compile Include="src\Utils\Design\Colors.cs" />
     <Compile Include="src\Utils\Design\Fonts.cs" />
-    <Compile Include="src\Model\Screen\CommonElements.cs" />
+    <Compile Include="src\Model\Screen\Elements\CommonElements.cs" />
     <Compile Include="src\Model\Screen\TTLine\TTLineScreen.cs" />
     <Compile Include="src\Controller\JsonReader.cs" />
     <EmbeddedResource Include="MainForm.resx">
@@ -87,6 +97,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <None Include="NLog.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -96,8 +109,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <None Include="src\Config\ProcessSteps.json" />
-    <None Include="src\Config\TTL.json" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -105,12 +116,16 @@
   <ItemGroup>
     <Content Include=".gitignore" />
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Folder Include="Assets\" />
-  </ItemGroup>
-  <ItemGroup>
+    <PackageReference Include="DotNetZip">
+      <Version>1.16.0</Version>
+    </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>13.0.3</Version>
+    </PackageReference>
+    <PackageReference Include="NLog">
+      <Version>5.2.7</Version>
     </PackageReference>
     <PackageReference Include="ScottPlot">
       <Version>4.1.68</Version>

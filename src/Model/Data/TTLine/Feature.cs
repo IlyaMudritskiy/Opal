@@ -9,5 +9,10 @@ namespace ProcessDashboard.src.Model.Data.TTLine
         public string Description { get; set; }
         private double _value;
         public double Value { get { return _value; } set { _value = Math.Round(value, 3); } }
+
+        public override string ToString()
+        {
+            return $"Feature: {ID}, Name: {Name}, Value: {Value}";
+        }
     }
 }

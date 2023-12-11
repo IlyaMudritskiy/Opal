@@ -3,54 +3,69 @@ using System.Collections.Generic;
 using System;
 using System.Linq;
 using System.Windows.Forms;
-using System.IO;
 using ProcessDashboard.src.Model.Data.TTLine;
+using System.Threading.Tasks;
+using System.Collections.Concurrent;
 
 namespace ProcessDashboard.src.Controller.TTLine
 {
     public static class TTLineDataProcessor
     {
-        public static List<JsonFile> OpenFiles(CommonDialog dialog)
+        private static readonly NLog.Logger Log = NLog.LogManager.GetCurrentClassLogger();
+        public static List<JsonFile> OpenFiles(IEnumerable<string> files)
         {
-            List<string> files = new List<string>();
-            List<JsonFile> result = new List<JsonFile>();
-
-            if (dialog.ShowDialog() == DialogResult.OK)
+            if (files == null || files.Count() == 0)
             {
-                if (dialog is OpenFileDialog)
-                {
-                    OpenFileDialog fileDialog = dialog as OpenFileDialog;
-                    files = fileDialog.FileNames.ToList();
-                }
-
-                if (dialog is FolderBrowserDialog)
-                {
-                    FolderBrowserDialog folderDialog = dialog as FolderBrowserDialog;
-                    files = Directory.GetFiles(folderDialog.SelectedPath).ToList();
-                }
-
-                foreach (string file in files)
-                    result.Add(JsonReader.Read<JsonFile>(file));
+                Log.Trace("No files were passed to method");
+                return null;
             }
-            return result;
+
+            ConcurrentBag<JsonFile> result = new ConcurrentBag<JsonFile>();
+
+            Parallel.ForEach(files, f => { result.Add(JsonReader.Read<JsonFile>(f)); });
+
+            return result.ToList();
         }
 
-        public static List<TTLUnitData> LoadFiles(List<JsonFile> files)
+        public static List<TTLUnitData> LoadFiles(IEnumerable<JsonFile> files)
         {
-            List<TTLUnitData> result = new List<TTLUnitData>();
-
-            foreach (JsonFile file in files)
+            ConcurrentBag<TTLUnitData> result = new ConcurrentBag<TTLUnitData>();
+            
+            Parallel.ForEach(files, f =>
             {
                 try
                 {
-                    result.Add(new TTLUnitData(file));
+                    if (checkFile(f))
+                        result.Add(new TTLUnitData(f));
                 }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
+                catch (Exception ex) {
+                    Log.Warn($"Json file Serial:{f.DUT.SerialNumber} failed to be transformed. Exception: {ex.Message}");
                 }
-            }
-            return result;
+            });
+            return result.ToList();
+        }
+
+        public static List<string> GetFiles(OpenFileDialog dialog)
+        {
+            if (dialog.ShowDialog() == DialogResult.OK)
+                return dialog.FileNames.ToList();
+            else
+                return null;
+        }
+
+        private static bool checkFile(JsonFile file)
+        {
+            var temp = new Measurements(file.Steps.Where(x => x.StepName == "ps01_temperature_actual").FirstOrDefault().Measurements);
+            var press = new Measurements(file.Steps.Where(x => x.StepName == "ps01_high_pressure_actual").FirstOrDefault().Measurements);
+            var heater = file.Steps.Where(x => x.StepName == "ps01_heater_on").FirstOrDefault();
+
+            if (heater == null || heater.Measurements.Count != 2)
+                return false;
+
+            if ((temp.MaxTime() + press.MaxTime()) / 2 > 25)
+                return false;
+
+            return true;
         }
     }
 }

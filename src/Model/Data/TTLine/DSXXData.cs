@@ -1,13 +1,21 @@
-﻿using System.Collections.Generic;
+﻿using ProcessDashboard.src.Model.Data.Acoustic;
+using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Remoting.Metadata.W3cXsd2001;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrackBar;
 
 namespace ProcessDashboard.src.Model.Data.TTLine
 {
     public class DSXXData
     {
+        // General information about DieSide
         public int TypeID { get; set; }
         public string LineID { get; set; }
+        public int Track { get; set; }
+        public int Press { get; set; }
         public int Amount { get; set; }
+
+        // Measurements data
         public List<Measurements> Temperature { get; set; }
         public List<Measurements> Pressure { get; set; }
         public double HoldPressureMean { get; set; }
@@ -17,16 +25,22 @@ namespace ProcessDashboard.src.Model.Data.TTLine
         public List<Feature> PressFeaturesMean { get; set; }
         public List<List<DataPoint>> DataPoints { get; set; }
 
-        public DSXXData(List<TTLUnitData> DSXX)
+        // Acoustic data
+        public List<AcousticFile> AcousticFiles { get; set; }
+        public Dictionary<string, Dictionary<string, List<double>>> AcousticMean { get; set; }
+
+        public DSXXData(List<TTLUnitData> DSXX, List<AcousticFile> acousticFiles)
         {
             TypeID = DSXX[0].TypeID;
             LineID = DSXX[0].LineID;
+            Track = DSXX[0].Track;
+            Press = DSXX[0].Press;
             Amount = DSXX.Count;
             Temperature = DSXX.Select(x => x.Temperature).ToList();
             Pressure = DSXX.Select(x => x.HighPressure).ToList();
-            HoldPressureMean = DSXX.Average(x => x.HoldPressure);
-            PrePressureMean = DSXX.Average(x => x.PrePressure);
-            HeaterCurrentMean = DSXX.Average(x => x.HeaterCurrent);
+            //HoldPressureMean = DSXX.Average(x => x.HoldPressure);
+            //PrePressureMean = DSXX.Average(x => x.PrePressure);
+            //HeaterCurrentMean = DSXX.Average(x => x.HeaterCurrent);
             TempFeaturesMean = DSXX
                 .SelectMany(unit => unit.TempFeatures)
                 .GroupBy(feature => feature.ID)
@@ -47,11 +61,12 @@ namespace ProcessDashboard.src.Model.Data.TTLine
                     Description = group.First().Description,
                     Value = group.Average(x => x.Value)
                 }).ToList();
-            DataPoints = new List<List<DataPoint>>();
-            foreach(var ds in DSXX)
+            //DataPoints = new List<List<DataPoint>>();
+            //foreach(var ds in DSXX)
             {
-                DataPoints.Add(ds.DataPoints);
+                //DataPoints.Add(ds.DataPoints);
             }
+            AcousticFiles = acousticFiles;
         }
     }
 }

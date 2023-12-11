@@ -7,17 +7,22 @@ namespace ProcessDashboard.src.Controller.TTLine
 {
     public static class FeatureCalculations
     {
+        private static readonly NLog.Logger Log = NLog.LogManager.GetCurrentClassLogger();
+
         public static void Calculate(TTLUnitData data)
         {
             if (data == null) return;
 
             // Constants
-            double Tp = 135.0; // Value (temperature)
+            double TD = 135.0; // Value (temperature)
             double t9_const = 0; // Pressure const
             double P1 = 0; // Value (pressure)
-            double tc = 0; // Time 
+            double tc = 0; // Time
+            double tHP = 0.7; // Time
+            double tsettle = 0.5; // Time
             int round = 3;
 
+            #region DataPoints
             // Time data points with X and Y values that are used to calculate Features
             DataPoint t2 = new DataPoint() {
                 Name = "t2",
@@ -26,12 +31,36 @@ namespace ProcessDashboard.src.Controller.TTLine
                 Y = Math.Round(data.Temperature.FindPointByTime(data.Heater.On).Y, round)
             };
 
+            DataPoint t3 = new DataPoint()
+            {
+                Name = "t3",
+                Descritpion = "Time value of measured temperature equals the pre-defined set-value, TD.",
+                X = Math.Round(data.Temperature.FindPointByValue(TD).X, round),
+                Y = TD
+            };
+
             DataPoint t4 = new DataPoint()
             {
                 Name = "t4",
                 Descritpion = "Time value of Heater turning OFF",
                 X = Math.Round(data.Heater.Off, round),
                 Y = Math.Round(data.Temperature.FindPointByTime(data.Heater.Off).Y, round)
+            };
+
+            DataPoint t5 = new DataPoint()
+            {
+                Name = "t5",
+                Descritpion = "t3 + tHP",
+                X = Math.Round(t3.X + tHP),
+                Y = Math.Round(data.HighPressure.FindPointByTime(t3.X + tHP).Y, round)
+            };
+
+            DataPoint t6 = new DataPoint()
+            {
+                Name = "t6",
+                Descritpion = "Maximum Pressure",
+                X = Math.Round(data.HighPressure.MaxValueTime(), round),
+                Y = Math.Round(data.HighPressure.MaxValue(), round)
             };
 
             DataPoint t7 = new DataPoint()
@@ -66,22 +95,40 @@ namespace ProcessDashboard.src.Controller.TTLine
                 Y = Math.Round(P1, round)
             };
 
-            // Value data points used to calculate features
             DataPoint Tmax = new DataPoint()
             {
                 Name = "Tmax",
                 Descritpion = "Maximum temperature",
-                X = Math.Round(data.Temperature.TimeOffset[data.Temperature.MaxValueIndex()], round),
-                Y = Math.Round(data.Temperature.Values[data.Temperature.MaxValueIndex()], round)
+                X = Math.Round(data.Temperature.MaxValueTime(), round),
+                Y = Math.Round(data.Temperature.MaxValue(), round)
             };
 
-            data.DataPoints = new List<DataPoint> { t2, t4, t7, t8, t9, t10, Tmax };
+            DataPoint P3 = new DataPoint()
+            {
+                Name = "P3",
+                Descritpion = "Pressure Value at (t6 + tsettle)",
+                X = Math.Round(t6.X + tsettle, round),
+                Y = Math.Round(data.HighPressure.FindPointByTime(t6.X + tsettle).Y, round)
+            };
 
+            DataPoint P4 = new DataPoint()
+            {
+                Name = "P4",
+                Descritpion = "Pressure Value at t9",
+                X = t9.X,
+                Y = Math.Round(data.HighPressure.FindPointByTime(t9.X).X, round)
+            };
+            #endregion
 
+            // Value data points used to calculate features
+            data.DataPoints = new List<DataPoint> { t2, t3, t4, t5, t6, t7, t8, t9, t10, Tmax, P3, P4 };
+
+            #region TemperatureFeatures
+            // Features
             data.TempFeatures.Add(new Feature()
             {
                 ID = "tT2",
-                Name = "F1",
+                Name = "TF1",
                 Description = "Time value of Heater turning OFF - Time value of Heater turning ON",
                 Value = Math.Round(t4.X - t2.X, round)
             });
@@ -89,7 +136,7 @@ namespace ProcessDashboard.src.Controller.TTLine
             data.TempFeatures.Add(new Feature()
             {
                 ID = "tT3",
-                Name = "F2",
+                Name = "TF2",
                 Description = "Time of pressure intensifier released - Time value of Heater turning OFF",
                 Value = Math.Round(t7.X - t4.X, round)
             });
@@ -97,7 +144,7 @@ namespace ProcessDashboard.src.Controller.TTLine
             data.TempFeatures.Add(new Feature()
             {
                 ID = "tT4",
-                Name = "F3",
+                Name = "TF3",
                 Description = "t7 + tc - Time of pressure intensifier released",
                 Value = Math.Round(t8.X - t7.X, round)
             });
@@ -105,7 +152,7 @@ namespace ProcessDashboard.src.Controller.TTLine
             data.TempFeatures.Add(new Feature()
             {
                 ID = "tT5",
-                Name = "F4",
+                Name = "TF4",
                 Description = "Time value of measured temperature equals the pre-defined set-value - t7 + tc",
                 Value = Math.Round(t9.X - t8.X, round)
             });
@@ -113,7 +160,7 @@ namespace ProcessDashboard.src.Controller.TTLine
             data.TempFeatures.Add(new Feature()
             {
                 ID = "tT6",
-                Name = "F5",
+                Name = "TF5",
                 Description = "Time value of measured pressure equals the pre-defined pressure value, P1 - Time value of measured temperature equals \r\nthe pre-defined set-value",
                 Value = Math.Round(t10.X - t9.X, round)
             });
@@ -121,7 +168,7 @@ namespace ProcessDashboard.src.Controller.TTLine
             data.TempFeatures.Add(new Feature()
             {
                 ID = "Tmax",
-                Name = "F6",
+                Name = "TF6",
                 Description = "Maximum Temperature",
                 Value = Math.Round(Tmax.Y, round)
             });
@@ -129,7 +176,7 @@ namespace ProcessDashboard.src.Controller.TTLine
             data.TempFeatures.Add(new Feature()
             {
                 ID = "T0",
-                Name = "F7",
+                Name = "TF7",
                 Description = "Temperature value of Heater turning ON",
                 Value = Math.Round(t2.Y, round)
             });
@@ -137,7 +184,7 @@ namespace ProcessDashboard.src.Controller.TTLine
             data.TempFeatures.Add(new Feature()
             {
                 ID = "T1",
-                Name = "F8",
+                Name = "TF8",
                 Description = "Temperature value of Heater turning OFF (rising slope)",
                 Value = Math.Round(t4.Y, round)
             });
@@ -145,7 +192,7 @@ namespace ProcessDashboard.src.Controller.TTLine
             data.TempFeatures.Add(new Feature()
             {
                 ID = "TempDiff1",
-                Name = "F9",
+                Name = "TF9",
                 Description = "T1 - T0",
                 Value = Math.Round(t4.Y - t2.Y, round)
             });
@@ -153,10 +200,102 @@ namespace ProcessDashboard.src.Controller.TTLine
             data.TempFeatures.Add(new Feature()
             {
                 ID = "TempDiff2",
-                Name = "F10",
+                Name = "TF10",
                 Description = "Tmax - T1",
                 Value = Math.Round(Tmax.Y - t4.Y, round)
             });
+            #endregion
+
+            #region PressureFeatures
+            // Pressure features
+            data.PressFeatures.Add(new Feature()
+            {
+                ID = "tp1",
+                Name = "PF1",
+                Description = "(t6 + tsettle) - t5",
+                Value = Math.Round(t6.X + tsettle - t5.X, round)
+            });
+
+            data.PressFeatures.Add(new Feature()
+            {
+                ID = "tp2",
+                Name = "PF2",
+                Description = "t9 - (t6 + tsettle)",
+                Value = Math.Round(t9.X - (t6.X + tsettle))
+            });
+
+            data.PressFeatures.Add(new Feature()
+            {
+                ID = "T2",
+                Name = "PF3",
+                Description = "t6 + 2",
+                Value = Math.Round(t6.X + 2)
+            });
+
+            data.PressFeatures.Add(new Feature()
+            {
+                ID = "P1",
+                Name = "PF4",
+                Description = "pre-defined pressure value at t5",
+                Value = Math.Round(t5.Y)
+            });
+
+            data.PressFeatures.Add(new Feature()
+            {
+                ID = "P2",
+                Name = "PF5",
+                Description = "Maximum pressure",
+                Value = Math.Round(t6.Y)
+            });
+
+            data.PressFeatures.Add(new Feature()
+            {
+                ID = "P3",
+                Name = "PF6",
+                Description = "Pressure Value at (t6 + tsettle)",
+                Value = Math.Round(P3.Y, round)
+            });
+
+            data.PressFeatures.Add(new Feature()
+            {
+                ID = "P4",
+                Name = "PF7",
+                Description = "Pressure Value at t9",
+                Value = Math.Round(t9.Y, round)
+            });
+
+            data.PressFeatures.Add(new Feature()
+            {
+                ID = "PresDiff1",
+                Name = "PF8",
+                Description = "P2 - P1",
+                Value = Math.Round(t6.Y - P1)
+            });
+
+            data.PressFeatures.Add(new Feature()
+            {
+                ID = "PresDiff2",
+                Name = "PF9",
+                Description = "P2 – P3",
+                Value = Math.Round(t6.Y - P3.Y, round)
+            });
+
+            data.PressFeatures.Add(new Feature()
+            {
+                ID = "PresDiff3",
+                Name = "PF10",
+                Description = "P3 – P4",
+                Value = Math.Round(P3.Y - P4.Y)
+            });
+
+            data.PressFeatures.Add(new Feature()
+            {
+                ID = "PresDiff4",
+                Name = "PF11",
+                Description = "P4 – P1",
+                Value = Math.Round(P4.Y - P1)
+            });
+            #endregion
         }
     }
 }

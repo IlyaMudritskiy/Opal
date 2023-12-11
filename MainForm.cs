@@ -1,43 +1,36 @@
-﻿using ProcessDashboard.src.Controller;
-using ProcessDashboard.src.Controller.TTLine;
-using ProcessDashboard.src.Model.Data;
-using ProcessDashboard.src.Model.Screen;
+﻿using ProcessDashboard.src.Controller.App;
+using ProcessDashboard.src.Model.AppConfiguration;
 using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Threading;
 using System.Windows.Forms;
 
 namespace ProcessDashboard
 {
     public partial class MainForm : Form
     {
-        private IScreen screen;
+        private Config config = Config.Instance;
         public MainForm()
         {
             InitializeComponent();
-            setCultureSettings();
         }
 
         private void SelectFilesMenuButton_Click(object sender, EventArgs e)
         {
-            List<JsonFile> selectedFiles = TTLineDataProcessor.OpenFiles(JsonFileDialog);
-            if (screen == null)
-            {
-                screen = ScreenCreator.GetIScreen(ref selectedFiles);
-                screen.Create(ref MainFormPanel);
-                screen.LoadData(ref selectedFiles);
-            }
-            else
-            {
-                screen.Update(ref selectedFiles);
-            }
+            App app = App.Instance;
+            app.Run(ref JsonFileDialog, ref MainFormPanel);
         }
 
-        private void setCultureSettings()
+        private void OnOffAcousticPlotsMenuButton_Click(object sender, EventArgs e)
         {
-            Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
-            Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
+            config.Acoustic.Enabled = !config.Acoustic.Enabled;
+            OnOffAcousticPlotsMenuButton.Checked = config.Acoustic.Enabled;
+            config.Save();
+        }
+
+        private void FileSelectionTypeMenuButton_Click(object sender, EventArgs e)
+        {
+            config.Acoustic.ManualSelection = !config.Acoustic.ManualSelection;
+            FileSelectionTypeMenuButton.Checked = config.Acoustic.ManualSelection;
+            config.Save();
         }
     }
 }

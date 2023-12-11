@@ -1,4 +1,5 @@
-﻿using ProcessDashboard.src.Utils.Design;
+﻿using ProcessDashboard.src.Model.Screen.Elements;
+using ProcessDashboard.src.Utils.Design;
 using ScottPlot;
 using ScottPlot.Plottable;
 using System.Drawing;
@@ -6,10 +7,8 @@ using System.Windows.Forms;
 
 namespace ProcessDashboard.src.Model.Screen.TTLine
 {
-    public partial class TTLineTab
+    public class TTLineTab : AbsTab
     {
-        public TabPage Tab { get; set; }
-        public Label Header { get; set; }
         public FormsPlot Plot { get; set; }
         public TableView DS11 { get; set; }
         public TableView DS12 { get; set; }
@@ -25,27 +24,30 @@ namespace ProcessDashboard.src.Model.Screen.TTLine
 
         public TTLineTab(string title)
         {
-            _createLayout(title);
+            createLayout(title);
+            Fit();
         }
 
-        public void AddScatter(double[] x, double[] y, Color color, string label)
+        public override void AddScatter(double[] x, double[] y, Color color, string flag = "")
         {
             Plot.Plot.AddScatter(
                 xs: x,
                 ys: y,
                 color: color,
-                markerSize: 4,
-                lineWidth: 2,
-                label: label
-                );
-            Plot.Refresh();
-            Plot.Plot.AxisAuto();
+                markerSize: 0,
+                lineWidth: 1);
+            Fit();
         }
 
-        private void _createLayout(string title)
+        public override void Clear()
+        {
+
+        }
+
+        protected override void createLayout(string title)
         {
             Tab = new TabPage() { Text = title };
-            Header = CommonElements.Header(title);
+            Title = CommonElements.Header(title);
             Plot = CommonElements.Plot();
             DS11 = new TableView("Die-Side 1-1");
             DS12 = new TableView("Die-Side 1-2");
@@ -80,7 +82,7 @@ namespace ProcessDashboard.src.Model.Screen.TTLine
             tableArea.ResumeLayout();
 
             tabBase.SuspendLayout();
-            tabBase.Controls.Add(Header, 0, 0);
+            tabBase.Controls.Add(Title, 0, 0);
             tabBase.Controls.Add(Plot, 0, 1);
             tabBase.Controls.Add(tableArea, 0, 2);
             tabBase.ResumeLayout();
@@ -93,7 +95,7 @@ namespace ProcessDashboard.src.Model.Screen.TTLine
             {
                 AutoSize = true,
                 Font = Fonts.Sennheiser.S,
-                Location = new Point(0, 0),
+                Location = new System.Drawing.Point(0, 0),
                 Name = "XLabel"
             };
 
@@ -101,7 +103,7 @@ namespace ProcessDashboard.src.Model.Screen.TTLine
             {
                 AutoSize = true,
                 Font = Fonts.Sennheiser.S,
-                Location = new Point(0, 0),
+                Location = new System.Drawing.Point(0, 0),
                 Name = "XLabel"
             };
 
@@ -109,7 +111,7 @@ namespace ProcessDashboard.src.Model.Screen.TTLine
             {
                 AutoSize = true,
                 Font = Fonts.Sennheiser.S,
-                Location = new Point(0, 0),
+                Location = new System.Drawing.Point(0, 0),
                 Name = "XCoordLabel"
             };
 
@@ -117,27 +119,38 @@ namespace ProcessDashboard.src.Model.Screen.TTLine
             {
                 AutoSize = true,
                 Font = Fonts.Sennheiser.S,
-                Location = new Point(0, 0),
+                Location = new System.Drawing.Point(0, 0),
                 Name = "YCoordLabel"
             };
 
             Plot.MouseMove += Plot_MouseMoved;
+
+            Fit();
         }
 
         private void Plot_MouseMoved(object sender, MouseEventArgs e)
         {
             (double coordinateX, double coordinateY) = Plot.GetMouseCoordinates();
 
-            XLabel.Text = $"{e.X:0.000}";
-            YLabel.Text = $"{e.Y:0.000}";
+            XLabel.Text = $"{e.X:70.000}";
+            YLabel.Text = $"{e.Y:70.000}";
 
-            XCoordLabel.Text = $"{coordinateX:0.00000000}";
-            YCoordLabel.Text = $"{coordinateY:0.00000000}";
+            XCoordLabel.Text = $"{coordinateX:70.00000000}";
+            YCoordLabel.Text = $"{coordinateY:70.00000000}";
 
             Crosshair.X = coordinateX;
             Crosshair.Y = coordinateY;
 
             Plot.Refresh(lowQuality: false, skipIfCurrentlyRendering: true);
+        }
+
+        private void Fit()
+        {
+            Plot.Refresh();
+            Plot.Plot.AxisAuto();
+            Plot.Refresh();
+            Plot.Plot.AxisAuto();
+            Plot.Refresh();
         }
     }
 }

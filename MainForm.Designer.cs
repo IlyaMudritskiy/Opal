@@ -34,10 +34,13 @@
             this.processedDataToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pDFReportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dataAndReportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.SelectFilesMenuButton = new System.Windows.Forms.ToolStripMenuItem();
+            this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.OnOffAcousticPlotsMenuButton = new System.Windows.Forms.ToolStripMenuItem();
+            this.FileSelectionTypeMenuButton = new System.Windows.Forms.ToolStripMenuItem();
             this.MainFormPanel = new System.Windows.Forms.Panel();
             this.JsonFileDialog = new System.Windows.Forms.OpenFileDialog();
-            this.JsonFolderDialog = new System.Windows.Forms.FolderBrowserDialog();
-            this.SelectFilesMenuButton = new System.Windows.Forms.ToolStripMenuItem();
             this.MainMenuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -45,7 +48,8 @@
             // 
             this.MainMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
-            this.SelectFilesMenuButton});
+            this.SelectFilesMenuButton,
+            this.settingsToolStripMenuItem});
             this.MainMenuStrip.Location = new System.Drawing.Point(0, 0);
             this.MainMenuStrip.Name = "MainMenuStrip";
             this.MainMenuStrip.Size = new System.Drawing.Size(1584, 24);
@@ -67,7 +71,7 @@
             this.pDFReportToolStripMenuItem,
             this.dataAndReportToolStripMenuItem});
             this.saveProcessedDataToolStripMenuItem.Name = "saveProcessedDataToolStripMenuItem";
-            this.saveProcessedDataToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.saveProcessedDataToolStripMenuItem.Size = new System.Drawing.Size(98, 22);
             this.saveProcessedDataToolStripMenuItem.Text = "Save";
             // 
             // processedDataToolStripMenuItem
@@ -88,12 +92,49 @@
             this.dataAndReportToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
             this.dataAndReportToolStripMenuItem.Text = "Data and Report";
             // 
+            // SelectFilesMenuButton
+            // 
+            this.SelectFilesMenuButton.Name = "SelectFilesMenuButton";
+            this.SelectFilesMenuButton.Size = new System.Drawing.Size(84, 20);
+            this.SelectFilesMenuButton.Text = "Select File(s)";
+            this.SelectFilesMenuButton.Click += new System.EventHandler(this.SelectFilesMenuButton_Click);
+            // 
+            // settingsToolStripMenuItem
+            // 
+            this.settingsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItem1});
+            this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
+            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
+            this.settingsToolStripMenuItem.Text = "Settings";
+            // 
+            // toolStripMenuItem1
+            // 
+            this.toolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.OnOffAcousticPlotsMenuButton,
+            this.FileSelectionTypeMenuButton});
+            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
+            this.toolStripMenuItem1.Text = "Acoustic";
+            // 
+            // OnOffAcousticPlotsMenuButton
+            // 
+            this.OnOffAcousticPlotsMenuButton.Name = "OnOffAcousticPlotsMenuButton";
+            this.OnOffAcousticPlotsMenuButton.Size = new System.Drawing.Size(235, 22);
+            this.OnOffAcousticPlotsMenuButton.Text = "Show Acoustic Tabs";
+            this.OnOffAcousticPlotsMenuButton.Click += new System.EventHandler(this.OnOffAcousticPlotsMenuButton_Click);
+            // 
+            // FileSelectionTypeMenuButton
+            // 
+            this.FileSelectionTypeMenuButton.Name = "FileSelectionTypeMenuButton";
+            this.FileSelectionTypeMenuButton.Size = new System.Drawing.Size(235, 22);
+            this.FileSelectionTypeMenuButton.Text = "Manual Acoustic File Selection";
+            this.FileSelectionTypeMenuButton.Click += new System.EventHandler(this.FileSelectionTypeMenuButton_Click);
+            // 
             // MainFormPanel
             // 
             this.MainFormPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.MainFormPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.MainFormPanel.Location = new System.Drawing.Point(0, 27);
             this.MainFormPanel.Name = "MainFormPanel";
             this.MainFormPanel.Size = new System.Drawing.Size(1584, 835);
@@ -103,13 +144,6 @@
             // 
             this.JsonFileDialog.FileName = "JsonFileDialog";
             this.JsonFileDialog.Multiselect = true;
-            // 
-            // SelectFilesMenuButton
-            // 
-            this.SelectFilesMenuButton.Name = "SelectFilesMenuButton";
-            this.SelectFilesMenuButton.Size = new System.Drawing.Size(84, 20);
-            this.SelectFilesMenuButton.Text = "Select File(s)";
-            this.SelectFilesMenuButton.Click += new System.EventHandler(this.SelectFilesMenuButton_Click);
             // 
             // MainForm
             // 
@@ -125,6 +159,11 @@
             this.MainMenuStrip.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
+            //
+            // Custom
+            //
+            this.OnOffAcousticPlotsMenuButton.Checked = config.Acoustic.Enabled;
+            this.FileSelectionTypeMenuButton.Checked = config.Acoustic.ManualSelection;
 
         }
 
@@ -138,8 +177,11 @@
         private System.Windows.Forms.ToolStripMenuItem dataAndReportToolStripMenuItem;
         private System.Windows.Forms.Panel MainFormPanel;
         private System.Windows.Forms.OpenFileDialog JsonFileDialog;
-        private System.Windows.Forms.FolderBrowserDialog JsonFolderDialog;
         private System.Windows.Forms.ToolStripMenuItem SelectFilesMenuButton;
+        private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem OnOffAcousticPlotsMenuButton;
+        private System.Windows.Forms.ToolStripMenuItem FileSelectionTypeMenuButton;
     }
 }
 

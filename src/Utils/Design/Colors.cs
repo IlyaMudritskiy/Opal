@@ -13,10 +13,11 @@ namespace ProcessDashboard.src.Utils.Design
         public static Color Black { get; } = Color.FromArgb(51, 51, 51);
         public static Color Purple { get; } = Color.FromArgb(144, 58, 173);
         public static Color Cyan { get; } = Color.FromArgb(42, 161, 152);
+        public static Color Grey { get; } = Color.FromArgb(151, 151, 151);
 
-        public static Color DS11C = Orange;
-        public static Color DS12C = Cyan;
-        public static Color DS21C = Blue;
-        public static Color DS22C = Purple;
+        public static Color DS11C { get; } = Orange;
+        public static Color DS12C { get; } = Cyan;
+        public static Color DS21C { get; } = Blue;
+        public static Color DS22C { get; } = Purple;
     }
 }
