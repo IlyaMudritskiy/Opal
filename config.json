@@ -1,0 +1,8 @@
+{
+  "DataDriveLetter": "Z",
+  "LimitsFolder": "Limits",
+  "Acoustic": {
+    "Enabled": true,
+    "ManualSelection": false
+  }
+}
