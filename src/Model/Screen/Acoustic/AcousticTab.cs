@@ -74,10 +74,18 @@ namespace ProcessDashboard.src.Model.Screen.Acoustic
             var ds12 = getMean(ds12Mean);
             var ds21 = getMean(ds21Mean);
             var ds22 = getMean(ds22Mean);
-            AcousticMean.AddScatter(ds11.X, ds11.Y, Colors.DS11C, 2);
-            AcousticMean.AddScatter(ds12.X, ds12.Y, Colors.DS12C, 2);
-            AcousticMean.AddScatter(ds21.X, ds21.Y, Colors.DS21C, 2);
-            AcousticMean.AddScatter(ds22.X, ds22.Y, Colors.DS22C, 2);
+
+            if (ds11 != null) 
+                AcousticMean.AddScatter(ds11.X, ds11.Y, Colors.DS11C, 2);
+
+            if (ds12 != null)
+                AcousticMean.AddScatter(ds12.X, ds12.Y, Colors.DS12C, 2);
+
+            if (ds21 != null)
+                AcousticMean.AddScatter(ds21.X, ds21.Y, Colors.DS21C, 2);
+
+            if (ds22 != null)
+                AcousticMean.AddScatter(ds22.X, ds22.Y, Colors.DS22C, 2);
             FitPlots();
         }
 
@@ -121,6 +129,7 @@ namespace ProcessDashboard.src.Model.Screen.Acoustic
             DS12.AddScatter(xs, limit.Y.ToArray(), color, line, marker);
             DS21.AddScatter(xs, limit.Y.ToArray(), color, line, marker);
             DS22.AddScatter(xs, limit.Y.ToArray(), color, line, marker);
+            AcousticMean.AddScatter(xs, limit.Y.ToArray(), color, line, marker);
             FitPlots();
         }
 

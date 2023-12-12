@@ -12,7 +12,10 @@ namespace ProcessDashboard.src.Model.AppConfiguration
 
         private static readonly NLog.Logger Log = NLog.LogManager.GetCurrentClassLogger();
 
-        private string path = $"{Directory.GetCurrentDirectory()}\\Config\\config.json";
+        private string path = $"{Directory.GetCurrentDirectory()}\\config.json";
+
+        [JsonProperty(PropertyName = "DataDriveLetter")]
+        public string DataDriveLetter { get; set; }
 
         [JsonProperty(PropertyName = "LimitsFolder")]
         public string LimitsFolder { get; set; }

@@ -40,6 +40,8 @@ namespace ProcessDashboard.src.Controller.Acoustic
 
         private static List<AcousticFile> fromDefaultLocation(ref List<JsonFile> processFiles, string typeID)
         {
+            Config config = Config.Instance;
+
             List<string> matchingFiles = new List<string>();
             List<string> acousticFiles = new List<string>();
             List<AcousticFile> result = new List<AcousticFile>();
@@ -49,7 +51,7 @@ namespace ProcessDashboard.src.Controller.Acoustic
             for (int i = -1; i < 3; i++)
             {
                 string date = dt.AddDays(i).ToString("yyyyMMdd");
-                string path = $"Z:\\autolines\\ttl\\acoustic\\{typeID}\\{date}";
+                string path = $"{config.DataDriveLetter}:\\autolines\\ttl\\acoustic\\{typeID}\\{date}";
 
                 if (!Directory.Exists(path)) continue;
 
