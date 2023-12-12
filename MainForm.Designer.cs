@@ -169,7 +169,7 @@
 
         #endregion
 
-        private System.Windows.Forms.MenuStrip MainMenuStrip;
+        private new System.Windows.Forms.MenuStrip MainMenuStrip;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveProcessedDataToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem processedDataToolStripMenuItem;

@@ -15,7 +15,7 @@ namespace ProcessDashboard.src.Controller.Acoustic
         {
             if (files == null) return null;
 
-            List<string> acousticFiles = new List<string>();
+            //List<string> acousticFiles = new List<string>();
 
             Config config = Config.Instance;
 
@@ -29,11 +29,12 @@ namespace ProcessDashboard.src.Controller.Acoustic
                 return null;
         }
 
-        public static Dictionary<string, Limit> OpenLimitFiles()
+        public static Dictionary<string, Limit> OpenLimitFiles(string typeID)
         {
-            Config config = Config.Instance;
+            string path = $"{Directory.GetCurrentDirectory()}\\Limits\\{typeID}";
+            if (!Directory.Exists(path)) return null;
 
-            string[] limitFiles = Directory.GetFiles(config.LimitsFolder);
+            string[] limitFiles = Directory.GetFiles($"{Directory.GetCurrentDirectory()}\\Limits\\{typeID}");
 
             return checkLimitName(limitFiles);
         }

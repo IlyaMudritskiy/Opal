@@ -1,4 +1,5 @@
-﻿using ProcessDashboard.src.Model.Data.TTLine;
+﻿using ProcessDashboard.src.Model.AppConfiguration;
+using ProcessDashboard.src.Model.Data.TTLine;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -9,18 +10,14 @@ namespace ProcessDashboard.src.Controller.TTLine
     {
         private static readonly NLog.Logger Log = NLog.LogManager.GetCurrentClassLogger();
 
+        private static Config config = Config.Instance;
+
         public static void Calculate(TTLUnitData data)
         {
             if (data == null) return;
 
             // Constants
-            double TD = 135.0; // Value (temperature)
-            double t9_const = 0; // Pressure const
-            double P1 = 0; // Value (pressure)
-            double tc = 0; // Time
-            double tHP = 0.7; // Time
-            double tsettle = 0.5; // Time
-            int round = 3;
+            int round = config.EmbossingConstants.RoundTo;
 
             #region DataPoints
             // Time data points with X and Y values that are used to calculate Features
@@ -35,8 +32,8 @@ namespace ProcessDashboard.src.Controller.TTLine
             {
                 Name = "t3",
                 Descritpion = "Time value of measured temperature equals the pre-defined set-value, TD.",
-                X = Math.Round(data.Temperature.FindPointByValue(TD).X, round),
-                Y = TD
+                X = Math.Round(data.Temperature.FindPointByValue(config.EmbossingConstants.TD).X, round),
+                Y = config.EmbossingConstants.TD
             };
 
             DataPoint t4 = new DataPoint()
@@ -51,8 +48,8 @@ namespace ProcessDashboard.src.Controller.TTLine
             {
                 Name = "t5",
                 Descritpion = "t3 + tHP",
-                X = Math.Round(t3.X + tHP),
-                Y = Math.Round(data.HighPressure.FindPointByTime(t3.X + tHP).Y, round)
+                X = Math.Round(t3.X + config.EmbossingConstants.tHP),
+                Y = Math.Round(data.HighPressure.FindPointByTime(t3.X + config.EmbossingConstants.tHP).Y, round)
             };
 
             DataPoint t6 = new DataPoint()
@@ -75,24 +72,24 @@ namespace ProcessDashboard.src.Controller.TTLine
             {
                 Name = "t8",
                 Descritpion = "t7 + tc",
-                X = Math.Round(t7.X + tc, round),
-                Y = Math.Round(data.Temperature.FindPointByTime(t7.X + tc).Y, round)
+                X = Math.Round(t7.X + config.EmbossingConstants.tc, round),
+                Y = Math.Round(data.Temperature.FindPointByTime(t7.X + config.EmbossingConstants.tc).Y, round)
             };
 
             DataPoint t9 = new DataPoint()
             {
                 Name = "t9",
                 Descritpion = "Time value of measured temperature equals the pre-defined set-value",
-                X = Math.Round(data.Temperature.FindPointByValue(t9_const).X, round),
-                Y = Math.Round(t9_const, round)
+                X = Math.Round(data.Temperature.FindPointByValue(config.EmbossingConstants.t9const).X, round),
+                Y = Math.Round(config.EmbossingConstants.t9const, round)
             };
 
             DataPoint t10 = new DataPoint()
             {
                 Name = "t10",
                 Descritpion = "Time value of measured pressure equals the pre-defined pressure value, P1",
-                X = Math.Round(data.HighPressure.FindPointByValue(P1).X, round),
-                Y = Math.Round(P1, round)
+                X = Math.Round(data.HighPressure.FindPointByValue(config.EmbossingConstants.P1).X, round),
+                Y = Math.Round(config.EmbossingConstants.P1, round)
             };
 
             DataPoint Tmax = new DataPoint()
@@ -107,8 +104,8 @@ namespace ProcessDashboard.src.Controller.TTLine
             {
                 Name = "P3",
                 Descritpion = "Pressure Value at (t6 + tsettle)",
-                X = Math.Round(t6.X + tsettle, round),
-                Y = Math.Round(data.HighPressure.FindPointByTime(t6.X + tsettle).Y, round)
+                X = Math.Round(t6.X + config.EmbossingConstants.tsettle, round),
+                Y = Math.Round(data.HighPressure.FindPointByTime(t6.X + config.EmbossingConstants.tsettle).Y, round)
             };
 
             DataPoint P4 = new DataPoint()
@@ -213,7 +210,7 @@ namespace ProcessDashboard.src.Controller.TTLine
                 ID = "tp1",
                 Name = "PF1",
                 Description = "(t6 + tsettle) - t5",
-                Value = Math.Round(t6.X + tsettle - t5.X, round)
+                Value = Math.Round(t6.X + config.EmbossingConstants.tsettle - t5.X, round)
             });
 
             data.PressFeatures.Add(new Feature()
@@ -221,7 +218,7 @@ namespace ProcessDashboard.src.Controller.TTLine
                 ID = "tp2",
                 Name = "PF2",
                 Description = "t9 - (t6 + tsettle)",
-                Value = Math.Round(t9.X - (t6.X + tsettle))
+                Value = Math.Round(t9.X - (t6.X + config.EmbossingConstants.tsettle))
             });
 
             data.PressFeatures.Add(new Feature()
@@ -269,7 +266,7 @@ namespace ProcessDashboard.src.Controller.TTLine
                 ID = "PresDiff1",
                 Name = "PF8",
                 Description = "P2 - P1",
-                Value = Math.Round(t6.Y - P1)
+                Value = Math.Round(t6.Y - config.EmbossingConstants.P1)
             });
 
             data.PressFeatures.Add(new Feature()
@@ -293,7 +290,7 @@ namespace ProcessDashboard.src.Controller.TTLine
                 ID = "PresDiff4",
                 Name = "PF11",
                 Description = "P4 – P1",
-                Value = Math.Round(P4.Y - P1)
+                Value = Math.Round(P4.Y - config.EmbossingConstants.P1)
             });
             #endregion
         }

@@ -84,7 +84,7 @@ namespace ProcessDashboard.src.Model.Screen.TTLine
             fillAcousticData();
             renameProcessHeaders();
             renameAcousticHeaders();
-            addLimits();
+            addLimits(ScreenData.ProductID.ToString());
         }
 
         private void prepareProcessTabs()
@@ -111,11 +111,11 @@ namespace ProcessDashboard.src.Model.Screen.TTLine
             Tabs.TabPages.Add(IMP.Tab);
         }
 
-        private void addLimits()
+        private void addLimits(string typeID)
         {
             if (!config.Acoustic.Enabled) return;
 
-            var limits = AcousticDataProcessor.OpenLimitFiles();
+            var limits = AcousticDataProcessor.OpenLimitFiles(typeID);
 
             FR.AddLimits(
                 upper: limits["FRUpper"],
