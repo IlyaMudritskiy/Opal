@@ -50,6 +50,9 @@ namespace ProcessDashboard.src.Model.Data.Acoustic
         [JsonProperty(PropertyName = "stepname")]
         public string StepName { get; set; }
 
+        [JsonProperty(PropertyName = "steppass")]
+        public bool StepPass { get; set; }
+
         [JsonProperty(PropertyName = "measurement")]
         public List<double[]> Measurement { get; set; }
     }
