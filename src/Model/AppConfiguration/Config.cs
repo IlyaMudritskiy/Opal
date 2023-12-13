@@ -10,6 +10,7 @@ namespace ProcessDashboard.src.Model.AppConfiguration
     [JsonObject(MemberSerialization.OptIn)]
     public partial class Config
     {
+        public string PrductID { get; set; }
         [JsonProperty(PropertyName = "DataDriveLetter")]
         public string DataDriveLetter { get; set; }
 

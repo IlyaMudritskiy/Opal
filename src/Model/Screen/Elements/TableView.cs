@@ -1,4 +1,6 @@
 ﻿using ProcessDashboard.src.Model.Data.TTLine;
+using ProcessDashboard.src.Utils.Design;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
@@ -10,7 +12,10 @@ namespace ProcessDashboard.src.Model.Screen.Elements
         public Label Title { get; set; }
         public DataGridView Table { get; set; }
         public BindingSource DataSource { get; set; }
+        public CheckBox CheckBox { get; set; }
         public TableLayoutPanel Layout { get; set; }
+
+        public event EventHandler<EventArgs> CheckboxStateChanged;
 
         private string title;
 
@@ -39,12 +44,13 @@ namespace ProcessDashboard.src.Model.Screen.Elements
             Layout = new TableLayoutPanel()
             {
                 ColumnCount = 1,
-                RowCount = 1,
+                RowCount = 3,
                 Dock = DockStyle.Fill,
                 //CellBorderStyle = TableLayoutPanelCellBorderStyle.Single,
                 ColumnStyles = { new ColumnStyle(SizeType.Percent, 100F) },
                 RowStyles =
                 {
+                    new RowStyle(SizeType.Absolute, 30),
                     new RowStyle(SizeType.Absolute, 30),
                     new RowStyle(SizeType.Percent, 100F)
                 }
@@ -66,10 +72,32 @@ namespace ProcessDashboard.src.Model.Screen.Elements
 
             Table.DataSource = DataSource;
 
+            CheckBox = new CheckBox()
+            {
+                Text = "Show",
+                Checked = true,
+                Font = Fonts.Sennheiser.M
+            };
+
+            CheckBox.CheckedChanged += CheckBox_CheckedChanged;
+
             Layout.SuspendLayout();
-            Layout.Controls.Add(Title, 0, 0);
-            Layout.Controls.Add(Table, 0, 1);
+            Layout.Controls.Add(CheckBox, 0, 0);
+            Layout.Controls.Add(Title, 0, 1);
+            Layout.Controls.Add(Table, 0, 2);
             Layout.ResumeLayout();
+        }
+
+        private void CheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            // Raise the custom event when the checkbox state changes
+            OnCheckboxStateChanged();
+        }
+
+        protected virtual void OnCheckboxStateChanged()
+        {
+            // Raise the event
+            CheckboxStateChanged?.Invoke(this, EventArgs.Empty);
         }
     }
 }

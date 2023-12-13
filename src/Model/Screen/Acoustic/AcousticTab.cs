@@ -1,8 +1,6 @@
 ﻿using ProcessDashboard.src.Model.Data.Acoustic;
-using ProcessDashboard.src.Model.Data.TTLine;
 using ProcessDashboard.src.Model.Screen.Elements;
 using ProcessDashboard.src.Utils.Design;
-using ScottPlot;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -13,8 +11,6 @@ namespace ProcessDashboard.src.Model.Screen.Acoustic
 {
     public class AcousticTab : AbsTab
     {
-        //public TabPage Tab { get; set; }
-        //public Label Header { get; set; }
         public PlotView DS11 { get; set; }
         public PlotView DS12 { get; set; }
         public PlotView DS21 { get; set; }
@@ -35,29 +31,32 @@ namespace ProcessDashboard.src.Model.Screen.Acoustic
             createLayout(title);
         }
 
-        public override void AddScatter(double[] x, double[] y, Color color, string flag = "")
+        public override void AddScatter(int track, int press, double[] x, double[] y, Color color, string flag = "")
         {
             double[] xs = x.Select(xx => Math.Log10(xx)).ToArray();
-            switch (flag)
+            if (track == 1 && press == 1)
             {
-                case "DS 1-1":
-                    DS11.AddScatter(xs, y, color);
-                    ds11Mean.Add(new AcousticMeasurement() { X = xs, Y = y });
-                    break;
-                case "DS 1-2":
-                    DS12.AddScatter(xs, y, color);
-                    ds12Mean.Add(new AcousticMeasurement() { X = xs, Y = y });
-                    break;
-                case "DS 2-1":
-                    DS21.AddScatter(xs, y, color);
-                    ds21Mean.Add(new AcousticMeasurement() { X = xs, Y = y });
-                    break;
-                case "DS 2-2":
-                    DS22.AddScatter(xs, y, color);
-                    ds22Mean.Add(new AcousticMeasurement() { X = xs, Y = y });
-                    break;
+                DS11.AddScatter(xs, y, color);
+                ds11Mean.Add(new AcousticMeasurement() { X = xs, Y = y });
             }
-            FitPlots();
+                    
+            if (track == 1 && press == 2)
+            {
+                DS12.AddScatter(xs, y, color);
+                ds12Mean.Add(new AcousticMeasurement() { X = xs, Y = y });
+            }
+                
+            if (track == 2 && press == 1)
+            {
+                DS21.AddScatter(xs, y, color);
+                ds21Mean.Add(new AcousticMeasurement() { X = xs, Y = y });
+            }
+                
+            if (track == 2 && press == 2)
+            {
+                DS22.AddScatter(xs, y, color);
+                ds22Mean.Add(new AcousticMeasurement() { X = xs, Y = y });
+            }
         }
 
         public void AddLimits(Limit upper, Limit lower, Limit reference)
@@ -65,7 +64,6 @@ namespace ProcessDashboard.src.Model.Screen.Acoustic
             addLimit(upper, Colors.Green);
             addLimit(lower, Colors.Green);
             addLimit(reference, Colors.Red, 1, 1);
-            FitPlots();
         }
 
         public void PlotMean()
@@ -87,6 +85,15 @@ namespace ProcessDashboard.src.Model.Screen.Acoustic
             if (ds22 != null)
                 AcousticMean.AddScatter(ds22.X, ds22.Y, Colors.DS22C, 2);
             FitPlots();
+            Refresh();
+        }
+
+        public void Refresh()
+        {
+            DS11.Plot.Refresh();
+            DS12.Plot.Refresh();
+            DS21.Plot.Refresh();
+            DS22.Plot.Refresh();
         }
 
         private AcousticMeasurement getMean(List<AcousticMeasurement> dsMeasurements)
@@ -149,6 +156,7 @@ namespace ProcessDashboard.src.Model.Screen.Acoustic
             DS21.Fit();
             DS22.Fit();
             AcousticMean.Fit();
+            Refresh();
         }
 
         protected override void createLayout(string title)

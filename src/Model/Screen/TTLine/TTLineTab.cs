@@ -2,7 +2,11 @@
 using ProcessDashboard.src.Utils.Design;
 using ScottPlot;
 using ScottPlot.Plottable;
+using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Drawing;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace ProcessDashboard.src.Model.Screen.TTLine
@@ -15,6 +19,11 @@ namespace ProcessDashboard.src.Model.Screen.TTLine
         public TableView DS21 { get; set; }
         public TableView DS22 { get; set; }
 
+        private ConcurrentBag<ScatterPlot> DS11Curves { get; set; } = new ConcurrentBag<ScatterPlot>();
+        private ConcurrentBag<ScatterPlot> DS12Curves { get; set; } = new ConcurrentBag<ScatterPlot>();
+        private ConcurrentBag<ScatterPlot> DS21Curves { get; set; } = new ConcurrentBag<ScatterPlot>();
+        private ConcurrentBag<ScatterPlot> DS22Curves { get; set; } = new ConcurrentBag<ScatterPlot>();
+
         private Label XLabel { get; set; }
         private Label YLabel { get; set; }
         private Label XCoordLabel { get; set; }
@@ -25,18 +34,20 @@ namespace ProcessDashboard.src.Model.Screen.TTLine
         public TTLineTab(string title)
         {
             createLayout(title);
+            WireUpEvents();
             Fit();
         }
 
-        public override void AddScatter(double[] x, double[] y, Color color, string flag = "")
+        public override void AddScatter(int track, int press, double[] x, double[] y, Color color, string flag = "")
         {
-            Plot.Plot.AddScatter(
-                xs: x,
-                ys: y,
-                color: color,
-                markerSize: 0,
-                lineWidth: 1);
-            Fit();
+            if (track == 1 && press == 1)
+                addCurve(DS11Curves, x, y, color);
+            if (track == 1 && press == 2)
+                addCurve(DS12Curves, x, y, color);
+            if (track == 2 && press == 1)
+                addCurve(DS21Curves, x, y, color);
+            if (track == 2 && press == 2)
+                addCurve(DS22Curves, x, y, color);
         }
 
         public override void Clear()
@@ -60,7 +71,6 @@ namespace ProcessDashboard.src.Model.Screen.TTLine
                 ColumnCount = 4,
                 RowCount = 1,
                 Dock = DockStyle.Fill,
-                //CellBorderStyle = TableLayoutPanelCellBorderStyle.Single,
                 ColumnStyles =
                 {
                     new ColumnStyle(SizeType.Percent, 25F),
@@ -128,6 +138,61 @@ namespace ProcessDashboard.src.Model.Screen.TTLine
             Fit();
         }
 
+        private void WireUpEvents()
+        {
+            // Subscribe to the CheckboxStateChanged event for each GenericControl
+            DS11.CheckboxStateChanged += TableView_CheckboxStateChanged_DS11;
+            DS12.CheckboxStateChanged += TableView_CheckboxStateChanged_DS12;
+            DS21.CheckboxStateChanged += TableView_CheckboxStateChanged_DS21;
+            DS22.CheckboxStateChanged += TableView_CheckboxStateChanged_DS22;
+        }
+        
+        private void TableView_CheckboxStateChanged_DS11(object sender, EventArgs e)
+        {
+            toggleCurvesVisibility(DS11Curves, sender);
+        }
+
+        private void TableView_CheckboxStateChanged_DS12(object sender, EventArgs e)
+        {
+            toggleCurvesVisibility(DS12Curves, sender);
+        }
+
+        private void TableView_CheckboxStateChanged_DS21(object sender, EventArgs e)
+        {
+            toggleCurvesVisibility(DS21Curves, sender);
+        }
+
+        private void TableView_CheckboxStateChanged_DS22(object sender, EventArgs e)
+        {
+            toggleCurvesVisibility(DS22Curves, sender);
+        }
+
+        private void toggleCurvesVisibility(ConcurrentBag<ScatterPlot> list, object sender)
+        {
+            if (list == null && list.Count == 0) return;
+
+            if (sender is TableView control)
+            {
+                Parallel.ForEach(list, curve =>
+                {
+                    curve.IsVisible = !curve.IsVisible;
+                });
+                Fit();
+                Refresh();
+            }
+        }
+
+        private void addCurve(ConcurrentBag<ScatterPlot> list, double[] x, double[] y, Color color)
+        {
+            list.Add(
+                   Plot.Plot.AddScatter(
+                       xs: x,
+                       ys: y,
+                       color: color,
+                       markerSize: 0,
+                       lineWidth: 1));
+        }
+
         private void Plot_MouseMoved(object sender, MouseEventArgs e)
         {
             (double coordinateX, double coordinateY) = Plot.GetMouseCoordinates();
@@ -144,12 +209,13 @@ namespace ProcessDashboard.src.Model.Screen.TTLine
             Plot.Refresh(lowQuality: false, skipIfCurrentlyRendering: true);
         }
 
-        private void Fit()
+        public void Fit()
         {
-            Plot.Refresh();
             Plot.Plot.AxisAuto();
-            Plot.Refresh();
-            Plot.Plot.AxisAuto();
+        }
+
+        public void Refresh()
+        {
             Plot.Refresh();
         }
     }

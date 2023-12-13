@@ -34,18 +34,9 @@ namespace ProcessDashboard.src.Model.Screen.Elements
             Plot.Refresh();
         }
 
-        public void AddHorizontalLine(double value, float width)
-        {
-            Plot.Plot.AddHorizontalLine(value, color: Colors.Black, width);
-        }
-
         public void Fit()
         {
-            Plot.Refresh();
             Plot.Plot.AxisAuto();
-            Plot.Refresh();
-            Plot.Plot.AxisAuto();
-            Plot.Refresh();
         }
 
         private void createLayout(string title, Color color, string unitx = "", string unity = "", bool log = false)
@@ -55,7 +46,8 @@ namespace ProcessDashboard.src.Model.Screen.Elements
             Title.BackColor = color;
 
             Plot = CommonElements.Plot();
-            Plot.Plot.ManualDataArea(new PixelPadding(52, 1, 42, 1));
+            Plot.Plot.ManualDataArea(new PixelPadding(54, 7, 44, 7));
+            Plot.BackColor = Colors.Default.Grey;
             Plot.Refresh();
 
             TableLayoutPanel panel = new TableLayoutPanel()
@@ -69,8 +61,9 @@ namespace ProcessDashboard.src.Model.Screen.Elements
                     new RowStyle(SizeType.Absolute, 30),
                     new RowStyle(SizeType.Percent, 100)
                 },
-                //CellBorderStyle = TableLayoutPanelCellBorderStyle.Single
             };
+
+            panel.BackColor = color;
 
             Plot.Plot.XLabel(unitx);
             Plot.Plot.YLabel(unity);

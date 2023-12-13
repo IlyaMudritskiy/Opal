@@ -84,7 +84,8 @@ namespace ProcessDashboard.src.Model.Screen.TTLine
             fillAcousticData();
             renameProcessHeaders();
             renameAcousticHeaders();
-            addLimits(ScreenData.ProductID.ToString());
+            addLimits();
+            addMeanAcoustic();
         }
 
         public string ProductID()
@@ -116,7 +117,15 @@ namespace ProcessDashboard.src.Model.Screen.TTLine
             Tabs.TabPages.Add(IMP.Tab);
         }
 
-        private void addLimits(string typeID)
+        private void addMeanAcoustic()
+        {
+            FR.PlotMean();
+            THD.PlotMean();
+            RNB.PlotMean();
+            IMP.PlotMean();
+        }
+
+        private void addLimits()
         {
             if (!config.Acoustic.Enabled) return;
 
@@ -129,28 +138,24 @@ namespace ProcessDashboard.src.Model.Screen.TTLine
                 lower: limits["FRLower"],
                 reference: limits["FRReference"]
                 );
-            FR.PlotMean();
-
+            
             THD.AddLimits(
                 upper: limits["THDUpper"],
                 lower: limits["THDLower"],
                 reference: limits["THDReference"]
                 );
-            THD.PlotMean();
-
+            
             RNB.AddLimits(
                 upper: limits["RNBUpper"],
                 lower: limits["RNBLower"],
                 reference: limits["RNBReference"]
                 );
-            RNB.PlotMean();
-
+            
             IMP.AddLimits(
                 upper: limits["IMPUpper"],
                 lower: limits["IMPLower"],
                 reference: limits["IMPReference"]
                 );
-            IMP.PlotMean();
         }
 
         private void renameProcessHeaders()
@@ -201,7 +206,9 @@ namespace ProcessDashboard.src.Model.Screen.TTLine
                 tv.AddData(ds.TempFeaturesMean, color, ds.Amount);
 
                 foreach (var item in ds.Temperature)
-                    Temperature.AddScatter(item.TimeOffset, item.Values, color, label);
+                    Temperature.AddScatter(ds.Track, ds.Press, item.TimeOffset, item.Values, color, label);
+                Temperature.Refresh();
+                Temperature.Fit();
             }
 
             lineID = ds.LineID;
@@ -217,7 +224,9 @@ namespace ProcessDashboard.src.Model.Screen.TTLine
                 tv.AddData(ds.PressFeaturesMean, color, ds.Amount);
 
                 foreach (var item in ds.Pressure)
-                    Pressure.AddScatter(item.TimeOffset, item.Values, color, label);
+                    Pressure.AddScatter(ds.Track, ds.Press, item.TimeOffset, item.Values, color, label);
+                Pressure.Refresh();
+                Pressure.Fit();
             }
 
             lineID = ds.LineID;
@@ -239,7 +248,9 @@ namespace ProcessDashboard.src.Model.Screen.TTLine
             {
                 string ds = $"DS{data.Track}{data.Press}";
                 var step = file.Steps.Where(x => x.StepName == stepname).FirstOrDefault();
-                tab.AddScatter(step.Measurement[0], step.Measurement[1], Colors.Grey, label);
+                tab.AddScatter(data.Track, data.Press, step.Measurement[0], step.Measurement[1], Colors.Grey, label);
+                tab.Refresh();
+                tab.FitPlots();
             }
         }
 

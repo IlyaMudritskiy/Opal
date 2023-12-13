@@ -19,5 +19,10 @@ namespace ProcessDashboard.src.Utils.Design
         public static Color DS12C { get; } = Cyan;
         public static Color DS21C { get; } = Blue;
         public static Color DS22C { get; } = Purple;
+
+        internal static class Default
+        {
+            public static Color Grey { get; } = SystemColors.Control;
+        }
     }
 }
