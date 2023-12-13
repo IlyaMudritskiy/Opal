@@ -11,8 +11,12 @@ namespace ProcessDashboard.src.Model.AppConfiguration
     public partial class Config
     {
         public string PrductID { get; set; }
+
         [JsonProperty(PropertyName = "DataDriveLetter")]
         public string DataDriveLetter { get; set; }
+
+        [JsonProperty(PropertyName = "CrosshairOn")]
+        public bool CrosshairOn { get; set; }
 
         [JsonProperty(PropertyName = "Acoustic")]
         public Acoustic Acoustic { get; set; }
