@@ -1,4 +1,5 @@
-﻿using ProcessDashboard.src.Model.Screen.Elements;
+﻿using ProcessDashboard.src.Model.AppConfiguration;
+using ProcessDashboard.src.Model.Screen.Elements;
 using ProcessDashboard.src.Utils.Design;
 using ScottPlot;
 using ScottPlot.Plottable;
@@ -28,6 +29,8 @@ namespace ProcessDashboard.src.Model.Screen.TTLine
         private Label YLabel { get; set; }
         private Label XCoordLabel { get; set; }
         private Label YCoordLabel { get; set; }
+
+        private Config config = Config.Instance;
 
         private Crosshair Crosshair;
 
@@ -99,8 +102,6 @@ namespace ProcessDashboard.src.Model.Screen.TTLine
 
             Tab.Controls.Add(tabBase);
 
-            Crosshair = Plot.Plot.AddCrosshair(0, 0);
-
             XLabel = new Label()
             {
                 AutoSize = true,
@@ -133,7 +134,11 @@ namespace ProcessDashboard.src.Model.Screen.TTLine
                 Name = "YCoordLabel"
             };
 
-            Plot.MouseMove += Plot_MouseMoved;
+            if (config.CrosshairOn)
+            {
+                Crosshair = Plot.Plot.AddCrosshair(0, 0);
+                Plot.MouseMove += Plot_MouseMoved;
+            }
 
             Fit();
         }
