@@ -15,14 +15,14 @@ namespace ProcessDashboard.src.Model.Screen.Acoustic
         public PlotView DS12 { get; set; }
         public PlotView DS21 { get; set; }
         public PlotView DS22 { get; set; }
-        public PlotView AcousticMean { get; set; }
+        public PlotView ComparisonPlot { get; set; }
 
         public string UnitX { get; set; }
         public string UnitY { get; set; }
-        private List<AcousticMeasurement> ds11Mean = new List<AcousticMeasurement>();
-        private List<AcousticMeasurement> ds12Mean = new List<AcousticMeasurement>();
-        private List<AcousticMeasurement> ds21Mean = new List<AcousticMeasurement>();
-        private List<AcousticMeasurement> ds22Mean = new List<AcousticMeasurement>();
+        private List<AcousticMeasurement> ds11Measurements = new List<AcousticMeasurement>();
+        private List<AcousticMeasurement> ds12Measurements = new List<AcousticMeasurement>();
+        private List<AcousticMeasurement> ds21Measurements = new List<AcousticMeasurement>();
+        private List<AcousticMeasurement> ds22Measurements = new List<AcousticMeasurement>();
 
         public AcousticTab(string title, string unitX, string unitY)
         {
@@ -37,25 +37,25 @@ namespace ProcessDashboard.src.Model.Screen.Acoustic
             if (track == 1 && press == 1)
             {
                 DS11.AddScatter(xs, y, color);
-                ds11Mean.Add(new AcousticMeasurement() { X = xs, Y = y });
+                ds11Measurements.Add(new AcousticMeasurement() { X = xs, Y = y });
             }
                     
             if (track == 1 && press == 2)
             {
                 DS12.AddScatter(xs, y, color);
-                ds12Mean.Add(new AcousticMeasurement() { X = xs, Y = y });
+                ds12Measurements.Add(new AcousticMeasurement() { X = xs, Y = y });
             }
                 
             if (track == 2 && press == 1)
             {
                 DS21.AddScatter(xs, y, color);
-                ds21Mean.Add(new AcousticMeasurement() { X = xs, Y = y });
+                ds21Measurements.Add(new AcousticMeasurement() { X = xs, Y = y });
             }
                 
             if (track == 2 && press == 2)
             {
                 DS22.AddScatter(xs, y, color);
-                ds22Mean.Add(new AcousticMeasurement() { X = xs, Y = y });
+                ds22Measurements.Add(new AcousticMeasurement() { X = xs, Y = y });
             }
         }
 
@@ -68,22 +68,22 @@ namespace ProcessDashboard.src.Model.Screen.Acoustic
 
         public void PlotMean()
         {
-            var ds11 = getMean(ds11Mean);
-            var ds12 = getMean(ds12Mean);
-            var ds21 = getMean(ds21Mean);
-            var ds22 = getMean(ds22Mean);
+            var ds11Mean = getMean(ds11Measurements);
+            var ds12Mean = getMean(ds12Measurements);
+            var ds21Mean = getMean(ds21Measurements);
+            var ds22Mean = getMean(ds22Measurements);
 
-            if (ds11 != null) 
-                AcousticMean.AddScatter(ds11.X, ds11.Y, Colors.DS11C, 2);
+            if (ds11Mean != null) 
+                ComparisonPlot.AddScatter(ds11Mean.X, ds11Mean.Y, Colors.DS11C, 2);
 
-            if (ds12 != null)
-                AcousticMean.AddScatter(ds12.X, ds12.Y, Colors.DS12C, 2);
+            if (ds12Mean != null)
+                ComparisonPlot.AddScatter(ds12Mean.X, ds12Mean.Y, Colors.DS12C, 2);
 
-            if (ds21 != null)
-                AcousticMean.AddScatter(ds21.X, ds21.Y, Colors.DS21C, 2);
+            if (ds21Mean != null)
+                ComparisonPlot.AddScatter(ds21Mean.X, ds21Mean.Y, Colors.DS21C, 2);
 
-            if (ds22 != null)
-                AcousticMean.AddScatter(ds22.X, ds22.Y, Colors.DS22C, 2);
+            if (ds22Mean != null)
+                ComparisonPlot.AddScatter(ds22Mean.X, ds22Mean.Y, Colors.DS22C, 2);
             FitPlots();
             Refresh();
         }
@@ -136,7 +136,7 @@ namespace ProcessDashboard.src.Model.Screen.Acoustic
             DS12.AddScatter(xs, limit.Y.ToArray(), color, line, marker);
             DS21.AddScatter(xs, limit.Y.ToArray(), color, line, marker);
             DS22.AddScatter(xs, limit.Y.ToArray(), color, line, marker);
-            AcousticMean.AddScatter(xs, limit.Y.ToArray(), color, line, marker);
+            ComparisonPlot.AddScatter(xs, limit.Y.ToArray(), color, line, marker);
             FitPlots();
         }
 
@@ -146,7 +146,7 @@ namespace ProcessDashboard.src.Model.Screen.Acoustic
             DS12.Clear();
             DS21.Clear();
             DS22.Clear();
-            AcousticMean.Clear();
+            ComparisonPlot.Clear();
         }
 
         public void FitPlots()
@@ -155,7 +155,7 @@ namespace ProcessDashboard.src.Model.Screen.Acoustic
             DS12.Fit();
             DS21.Fit();
             DS22.Fit();
-            AcousticMean.Fit();
+            ComparisonPlot.Fit();
             Refresh();
         }
 
@@ -167,7 +167,7 @@ namespace ProcessDashboard.src.Model.Screen.Acoustic
             DS12 = new PlotView("Die-Side 1-2", Colors.DS12C, UnitX, UnitY, true);
             DS21 = new PlotView("Die-Side 2-1", Colors.DS21C, UnitX, UnitY, true);
             DS22 = new PlotView("Die-Side 2-2", Colors.DS22C, UnitX, UnitY, true);
-            AcousticMean = new PlotView("Mean Plots", Colors.Black, UnitX, UnitY, true);
+            ComparisonPlot = new PlotView("Mean Plots", Colors.Black, UnitX, UnitY, true);
 
             TableLayoutPanel tabBase = new TableLayoutPanel()
             {
@@ -205,7 +205,7 @@ namespace ProcessDashboard.src.Model.Screen.Acoustic
             plotArea.Controls.Add(DS12.Layout, 1, 0);
             plotArea.Controls.Add(DS21.Layout, 0, 1);
             plotArea.Controls.Add(DS22.Layout, 1, 1);
-            plotArea.Controls.Add(AcousticMean.Layout, 0, 2);
+            plotArea.Controls.Add(ComparisonPlot.Layout, 0, 2);
             plotArea.ResumeLayout();
 
             tabBase.SuspendLayout();

@@ -1,5 +1,4 @@
-﻿using NLog.Fluent;
-using ProcessDashboard.src.Model.AppConfiguration;
+﻿using ProcessDashboard.src.Model.AppConfiguration;
 using ProcessDashboard.src.Model.Data;
 using ProcessDashboard.src.Model.Data.Acoustic;
 using System;
