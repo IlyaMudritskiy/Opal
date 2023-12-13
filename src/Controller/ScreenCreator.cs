@@ -1,4 +1,5 @@
-﻿using ProcessDashboard.src.Model.Data;
+﻿using ProcessDashboard.src.Model.AppConfiguration;
+using ProcessDashboard.src.Model.Data;
 using ProcessDashboard.src.Model.Screen;
 using ProcessDashboard.src.Model.Screen.TTLine;
 using System.Collections.Generic;
@@ -7,10 +8,14 @@ namespace ProcessDashboard.src.Controller
 {
     public static class ScreenCreator
     {
+        private static Config config = Config.Instance;
+
         public static IScreen GetIScreen(ref List<JsonFile> selectedFiles)
         {
             string line = checkLine(ref selectedFiles);
             string product = checkProduct(ref selectedFiles);
+
+            config.ProductID = product;
 
             switch (line)
             {

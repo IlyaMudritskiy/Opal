@@ -66,6 +66,7 @@ namespace ProcessDashboard.src.Model.AppConfiguration
         private static readonly NLog.Logger Log = NLog.LogManager.GetCurrentClassLogger();
 
         private string path = $"{Directory.GetCurrentDirectory()}\\config.json";
+        public string ProductID { get; set; }
 
         private Config()
         {

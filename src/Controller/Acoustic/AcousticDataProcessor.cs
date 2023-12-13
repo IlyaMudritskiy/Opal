@@ -1,4 +1,5 @@
-﻿using ProcessDashboard.src.Model.AppConfiguration;
+﻿using NLog.Fluent;
+using ProcessDashboard.src.Model.AppConfiguration;
 using ProcessDashboard.src.Model.Data;
 using ProcessDashboard.src.Model.Data.Acoustic;
 using System;
@@ -11,35 +12,39 @@ namespace ProcessDashboard.src.Controller.Acoustic
 {
     public static class AcousticDataProcessor
     {
-        public static List<AcousticFile> OpenFiles(ref List<JsonFile> files, string typeID, OpenFileDialog dialog = null)
+        private static readonly NLog.Logger Log = NLog.LogManager.GetCurrentClassLogger();
+        private static Config config = Config.Instance;
+
+        public static List<AcousticFile> OpenFiles(ref List<JsonFile> files, OpenFileDialog dialog = null)
         {
             if (files == null) return null;
-
-            //List<string> acousticFiles = new List<string>();
-
-            Config config = Config.Instance;
 
             if (config.Acoustic.ManualSelection && dialog != null)
                 if (dialog.ShowDialog() == DialogResult.OK)
                     return manualSelected(ref files, dialog.FileNames.ToList());
                 
             if (!config.Acoustic.ManualSelection)
-                return fromDefaultLocation(ref files, typeID);
+                return fromDefaultLocation(ref files);
             else
                 return null;
         }
 
-        public static Dictionary<string, Limit> OpenLimitFiles(string typeID)
+        public static Dictionary<string, Limit> OpenLimitFiles()
         {
-            string path = $"{Directory.GetCurrentDirectory()}\\Limits\\{typeID}";
-            if (!Directory.Exists(path)) return null;
+            string path = $"{Directory.GetCurrentDirectory()}\\Limits\\{config.ProductID}";
 
-            string[] limitFiles = Directory.GetFiles($"{Directory.GetCurrentDirectory()}\\Limits\\{typeID}");
+            if (!Directory.Exists(path))
+            {
+                Log.Error($"Directory for limits does not exist ({path})");
+                return null;
+            }
+
+            string[] limitFiles = Directory.GetFiles(path);
 
             return checkLimitName(limitFiles);
         }
 
-        private static List<AcousticFile> fromDefaultLocation(ref List<JsonFile> processFiles, string typeID)
+        private static List<AcousticFile> fromDefaultLocation(ref List<JsonFile> processFiles)
         {
             Config config = Config.Instance;
 
@@ -52,7 +57,7 @@ namespace ProcessDashboard.src.Controller.Acoustic
             for (int i = -1; i < 3; i++)
             {
                 string date = dt.AddDays(i).ToString("yyyyMMdd");
-                string path = $"{config.DataDriveLetter}:\\autolines\\ttl\\acoustic\\{typeID}\\{date}";
+                string path = $"{config.DataDriveLetter}:\\autolines\\ttl\\acoustic\\{config.ProductID}\\{date}";
 
                 if (!Directory.Exists(path)) continue;
 

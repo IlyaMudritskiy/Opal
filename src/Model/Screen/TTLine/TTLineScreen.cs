@@ -76,7 +76,7 @@ namespace ProcessDashboard.src.Model.Screen.TTLine
             // Transform JsonFile to ready-to-use line object
             List<TTLUnitData> processData = TTLineDataProcessor.LoadFiles(files);
             // Find and open acoustic files
-            List<AcousticFile> acousticData = AcousticDataProcessor.OpenFiles(ref files, files[0].DUT.TypeID, dialog);
+            List<AcousticFile> acousticData = AcousticDataProcessor.OpenFiles(ref files, dialog);
 
             ScreenData = new ScreenData(processData, acousticData);
 
@@ -85,6 +85,11 @@ namespace ProcessDashboard.src.Model.Screen.TTLine
             renameProcessHeaders();
             renameAcousticHeaders();
             addLimits(ScreenData.ProductID.ToString());
+        }
+
+        public string ProductID()
+        {
+            return typeID.ToString();
         }
 
         private void prepareProcessTabs()
@@ -115,7 +120,9 @@ namespace ProcessDashboard.src.Model.Screen.TTLine
         {
             if (!config.Acoustic.Enabled) return;
 
-            var limits = AcousticDataProcessor.OpenLimitFiles(typeID);
+            var limits = AcousticDataProcessor.OpenLimitFiles();
+
+            if (limits == null) return;
 
             FR.AddLimits(
                 upper: limits["FRUpper"],
