@@ -39,19 +39,19 @@ namespace ProcessDashboard.src.Model.Screen.Acoustic
                 DS11.AddScatter(xs, y, color);
                 ds11Measurements.Add(new AcousticMeasurement() { X = xs, Y = y });
             }
-                    
+
             if (track == 1 && press == 2)
             {
                 DS12.AddScatter(xs, y, color);
                 ds12Measurements.Add(new AcousticMeasurement() { X = xs, Y = y });
             }
-                
+
             if (track == 2 && press == 1)
             {
                 DS21.AddScatter(xs, y, color);
                 ds21Measurements.Add(new AcousticMeasurement() { X = xs, Y = y });
             }
-                
+
             if (track == 2 && press == 2)
             {
                 DS22.AddScatter(xs, y, color);
@@ -73,7 +73,7 @@ namespace ProcessDashboard.src.Model.Screen.Acoustic
             var ds21Mean = getMean(ds21Measurements);
             var ds22Mean = getMean(ds22Measurements);
 
-            if (ds11Mean != null) 
+            if (ds11Mean != null)
                 ComparisonPlot.AddScatter(ds11Mean.X, ds11Mean.Y, Colors.DS11C, 2);
 
             if (ds12Mean != null)

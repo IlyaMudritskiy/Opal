@@ -36,7 +36,7 @@ namespace ProcessDashboard.src.Model.Data.TTLine
             Temperature = new Measurements(file.Steps.Where(x => x.StepName == "ps01_temperature_actual").FirstOrDefault().Measurements);
             HighPressure = new Measurements(file.Steps.Where(x => x.StepName == "ps01_high_pressure_actual").FirstOrDefault().Measurements);
 
-            if (Temperature.MaxTime() > 22 || HighPressure.MaxTime() > 22) return;
+            if (Temperature.MaxTime() > 30 || HighPressure.MaxTime() > 30) return;
 
             HoldPressure = file.Steps.Where(x => x.StepName == "ps01_hold_pressure_actual")
                 .FirstOrDefault().Measurements

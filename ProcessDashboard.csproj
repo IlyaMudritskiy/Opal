@@ -47,10 +47,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MainForm.cs">
+    <Compile Include="src\Controller\FileProcessors\CommonFileManager.cs" />
+    <Compile Include="src\Forms\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MainForm.Designer.cs">
+    <Compile Include="src\Forms\MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
@@ -60,6 +61,8 @@
     <Compile Include="src\Controller\ILineChecker.cs" />
     <Compile Include="src\Controller\ScreenCreator.cs" />
     <Compile Include="src\Controller\TTLine\FeatureCalculations.cs" />
+    <Compile Include="src\Controller\UI\SettingsController.cs" />
+    <Compile Include="src\Controller\UI\UIController.cs" />
     <Compile Include="src\Model\AppConfiguration\Config.cs" />
     <Compile Include="src\Model\Data\Acoustic\AcousticFile.cs" />
     <Compile Include="src\Model\Data\Acoustic\Limit.cs" />
@@ -85,7 +88,7 @@
     <Compile Include="src\Model\Screen\Elements\CommonElements.cs" />
     <Compile Include="src\Model\Screen\TTLine\TTLineScreen.cs" />
     <Compile Include="src\Controller\JsonReader.cs" />
-    <EmbeddedResource Include="MainForm.resx">
+    <EmbeddedResource Include="src\Forms\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">

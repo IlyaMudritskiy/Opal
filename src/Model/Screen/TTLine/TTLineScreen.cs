@@ -1,4 +1,5 @@
-﻿using ProcessDashboard.src.Controller.Acoustic;
+﻿using Newtonsoft.Json.Linq;
+using ProcessDashboard.src.Controller.Acoustic;
 using ProcessDashboard.src.Controller.TTLine;
 using ProcessDashboard.src.Model.AppConfiguration;
 using ProcessDashboard.src.Model.Data;
@@ -42,10 +43,9 @@ namespace ProcessDashboard.src.Model.Screen.TTLine
         private string lineID;
         private string typeID;
 
-        public void Create(ref Panel panel, OpenFileDialog dialog)
+        public void Create(ref Panel panel, ref List<JObject> processFiles)
         {
             Tabs = new TabControl() { Dock = DockStyle.Fill };
-            this.dialog = dialog;
 
             prepareProcessTabs();
             prepareAcousticTabs();
@@ -55,7 +55,7 @@ namespace ProcessDashboard.src.Model.Screen.TTLine
             panel.ResumeLayout();
         }
 
-        public void Update(ref List<JsonFile> files)
+        public void Update(ref List<JsonFile> processFiles)
         {
             clear(Temperature);
             clear(Pressure);
@@ -71,7 +71,7 @@ namespace ProcessDashboard.src.Model.Screen.TTLine
             LoadData(ref files);
         }
 
-        public void LoadData(ref List<JsonFile> files)
+        public void LoadData(ref List<JObject> processFiles)
         {
             // Transform JsonFile to ready-to-use line object
             List<TTLUnitData> processData = TTLineDataProcessor.LoadFiles(files);

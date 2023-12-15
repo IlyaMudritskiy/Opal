@@ -1,4 +1,6 @@
-﻿namespace ProcessDashboard
+﻿using ProcessDashboard.src.Controller.UI;
+
+namespace ProcessDashboard
 {
     partial class MainForm
     {
@@ -29,14 +31,14 @@
         private void InitializeComponent()
         {
             this.MainMenuStrip = new System.Windows.Forms.MenuStrip();
-            this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.saveProcessedDataToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.FileMenuButton = new System.Windows.Forms.ToolStripMenuItem();
+            this.FileSaveMenuButton = new System.Windows.Forms.ToolStripMenuItem();
             this.processedDataToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.pDFReportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.PDFReportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dataAndReportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.SelectFilesMenuButton = new System.Windows.Forms.ToolStripMenuItem();
-            this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.SettingsMenuButton = new System.Windows.Forms.ToolStripMenuItem();
+            this.SettingsAcousticMenuButton = new System.Windows.Forms.ToolStripMenuItem();
             this.OnOffAcousticPlotsMenuButton = new System.Windows.Forms.ToolStripMenuItem();
             this.FileSelectionTypeMenuButton = new System.Windows.Forms.ToolStripMenuItem();
             this.MainFormPanel = new System.Windows.Forms.Panel();
@@ -47,49 +49,49 @@
             // MainMenuStrip
             // 
             this.MainMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.fileToolStripMenuItem,
+            this.FileMenuButton,
             this.SelectFilesMenuButton,
-            this.settingsToolStripMenuItem});
+            this.SettingsMenuButton});
             this.MainMenuStrip.Location = new System.Drawing.Point(0, 0);
             this.MainMenuStrip.Name = "MainMenuStrip";
             this.MainMenuStrip.Size = new System.Drawing.Size(1584, 24);
             this.MainMenuStrip.TabIndex = 0;
             this.MainMenuStrip.Text = "MainMenuStrip";
             // 
-            // fileToolStripMenuItem
+            // FileMenuButton
             // 
-            this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.saveProcessedDataToolStripMenuItem});
-            this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
-            this.fileToolStripMenuItem.Text = "File";
+            this.FileMenuButton.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.FileSaveMenuButton});
+            this.FileMenuButton.Name = "FileMenuButton";
+            this.FileMenuButton.Size = new System.Drawing.Size(37, 20);
+            this.FileMenuButton.Text = "File";
             // 
-            // saveProcessedDataToolStripMenuItem
+            // FileSaveMenuButton
             // 
-            this.saveProcessedDataToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.FileSaveMenuButton.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.processedDataToolStripMenuItem,
-            this.pDFReportToolStripMenuItem,
+            this.PDFReportToolStripMenuItem,
             this.dataAndReportToolStripMenuItem});
-            this.saveProcessedDataToolStripMenuItem.Name = "saveProcessedDataToolStripMenuItem";
-            this.saveProcessedDataToolStripMenuItem.Size = new System.Drawing.Size(98, 22);
-            this.saveProcessedDataToolStripMenuItem.Text = "Save";
+            this.FileSaveMenuButton.Name = "FileSaveMenuButton";
+            this.FileSaveMenuButton.Size = new System.Drawing.Size(180, 22);
+            this.FileSaveMenuButton.Text = "Save";
             // 
             // processedDataToolStripMenuItem
             // 
             this.processedDataToolStripMenuItem.Name = "processedDataToolStripMenuItem";
-            this.processedDataToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
+            this.processedDataToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.processedDataToolStripMenuItem.Text = "Processed Data";
             // 
             // pDFReportToolStripMenuItem
             // 
-            this.pDFReportToolStripMenuItem.Name = "pDFReportToolStripMenuItem";
-            this.pDFReportToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
-            this.pDFReportToolStripMenuItem.Text = "PDF Report";
+            this.PDFReportToolStripMenuItem.Name = "pDFReportToolStripMenuItem";
+            this.PDFReportToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.PDFReportToolStripMenuItem.Text = "PDF Report";
             // 
             // dataAndReportToolStripMenuItem
             // 
             this.dataAndReportToolStripMenuItem.Name = "dataAndReportToolStripMenuItem";
-            this.dataAndReportToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
+            this.dataAndReportToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.dataAndReportToolStripMenuItem.Text = "Data and Report";
             // 
             // SelectFilesMenuButton
@@ -99,36 +101,36 @@
             this.SelectFilesMenuButton.Text = "Select File(s)";
             this.SelectFilesMenuButton.Click += new System.EventHandler(this.SelectFilesMenuButton_Click);
             // 
-            // settingsToolStripMenuItem
+            // SettingsMenuButton
             // 
-            this.settingsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItem1});
-            this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
-            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
-            this.settingsToolStripMenuItem.Text = "Settings";
+            this.SettingsMenuButton.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.SettingsAcousticMenuButton});
+            this.SettingsMenuButton.Name = "SettingsMenuButton";
+            this.SettingsMenuButton.Size = new System.Drawing.Size(61, 20);
+            this.SettingsMenuButton.Text = "Settings";
             // 
-            // toolStripMenuItem1
+            // SettingsAcousticMenuButton
             // 
-            this.toolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.SettingsAcousticMenuButton.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.OnOffAcousticPlotsMenuButton,
             this.FileSelectionTypeMenuButton});
-            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
-            this.toolStripMenuItem1.Text = "Acoustic";
+            this.SettingsAcousticMenuButton.Name = "SettingsAcousticMenuButton";
+            this.SettingsAcousticMenuButton.Size = new System.Drawing.Size(180, 22);
+            this.SettingsAcousticMenuButton.Text = "Acoustic";
             // 
             // OnOffAcousticPlotsMenuButton
             // 
             this.OnOffAcousticPlotsMenuButton.Name = "OnOffAcousticPlotsMenuButton";
             this.OnOffAcousticPlotsMenuButton.Size = new System.Drawing.Size(235, 22);
             this.OnOffAcousticPlotsMenuButton.Text = "Show Acoustic Tabs";
-            this.OnOffAcousticPlotsMenuButton.Click += new System.EventHandler(this.OnOffAcousticPlotsMenuButton_Click);
+            this.OnOffAcousticPlotsMenuButton.Click += new System.EventHandler(UIController.Settings.OnOffAcousticPlotsMenuButton_Click);
             // 
             // FileSelectionTypeMenuButton
             // 
             this.FileSelectionTypeMenuButton.Name = "FileSelectionTypeMenuButton";
             this.FileSelectionTypeMenuButton.Size = new System.Drawing.Size(235, 22);
             this.FileSelectionTypeMenuButton.Text = "Manual Acoustic File Selection";
-            this.FileSelectionTypeMenuButton.Click += new System.EventHandler(this.FileSelectionTypeMenuButton_Click);
+            this.FileSelectionTypeMenuButton.Click += new System.EventHandler(UIController.Settings.FileSelectionTypeMenuButton_Click);
             // 
             // MainFormPanel
             // 
@@ -159,29 +161,24 @@
             this.MainMenuStrip.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
-            //
-            // Custom
-            //
-            this.OnOffAcousticPlotsMenuButton.Checked = config.Acoustic.Enabled;
-            this.FileSelectionTypeMenuButton.Checked = config.Acoustic.ManualSelection;
 
         }
 
         #endregion
 
-        private new System.Windows.Forms.MenuStrip MainMenuStrip;
-        private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem saveProcessedDataToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem processedDataToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem pDFReportToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem dataAndReportToolStripMenuItem;
-        private System.Windows.Forms.Panel MainFormPanel;
-        private System.Windows.Forms.OpenFileDialog JsonFileDialog;
-        private System.Windows.Forms.ToolStripMenuItem SelectFilesMenuButton;
-        private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
-        private System.Windows.Forms.ToolStripMenuItem OnOffAcousticPlotsMenuButton;
-        private System.Windows.Forms.ToolStripMenuItem FileSelectionTypeMenuButton;
+        internal new System.Windows.Forms.MenuStrip MainMenuStrip;
+        internal System.Windows.Forms.ToolStripMenuItem FileMenuButton;
+        internal System.Windows.Forms.ToolStripMenuItem FileSaveMenuButton;
+        internal System.Windows.Forms.ToolStripMenuItem processedDataToolStripMenuItem;
+        internal System.Windows.Forms.ToolStripMenuItem PDFReportToolStripMenuItem;
+        internal System.Windows.Forms.ToolStripMenuItem dataAndReportToolStripMenuItem;
+        internal System.Windows.Forms.Panel MainFormPanel;
+        internal System.Windows.Forms.OpenFileDialog JsonFileDialog;
+        internal System.Windows.Forms.ToolStripMenuItem SelectFilesMenuButton;
+        internal System.Windows.Forms.ToolStripMenuItem SettingsMenuButton;
+        internal System.Windows.Forms.ToolStripMenuItem SettingsAcousticMenuButton;
+        internal System.Windows.Forms.ToolStripMenuItem OnOffAcousticPlotsMenuButton;
+        internal System.Windows.Forms.ToolStripMenuItem FileSelectionTypeMenuButton;
     }
 }
 
