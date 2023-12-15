@@ -10,8 +10,6 @@ namespace ProcessDashboard.src.Controller.FileProcessors
     {
         private static readonly NLog.Logger Log = NLog.LogManager.GetCurrentClassLogger();
 
-        //private List<JObject> files;
-
         public static List<string> GetFilePaths(ref OpenFileDialog dialog)
         {
             if (dialog.ShowDialog() == DialogResult.OK)

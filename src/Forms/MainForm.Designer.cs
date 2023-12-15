@@ -123,14 +123,12 @@ namespace ProcessDashboard
             this.OnOffAcousticPlotsMenuButton.Name = "OnOffAcousticPlotsMenuButton";
             this.OnOffAcousticPlotsMenuButton.Size = new System.Drawing.Size(235, 22);
             this.OnOffAcousticPlotsMenuButton.Text = "Show Acoustic Tabs";
-            this.OnOffAcousticPlotsMenuButton.Click += new System.EventHandler(UIController.Settings.OnOffAcousticPlotsMenuButton_Click);
             // 
             // FileSelectionTypeMenuButton
             // 
             this.FileSelectionTypeMenuButton.Name = "FileSelectionTypeMenuButton";
             this.FileSelectionTypeMenuButton.Size = new System.Drawing.Size(235, 22);
             this.FileSelectionTypeMenuButton.Text = "Manual Acoustic File Selection";
-            this.FileSelectionTypeMenuButton.Click += new System.EventHandler(UIController.Settings.FileSelectionTypeMenuButton_Click);
             // 
             // MainFormPanel
             // 

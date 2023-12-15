@@ -7,8 +7,8 @@ namespace ProcessDashboard
 {
     public partial class MainForm : Form
     {
-        private UIController UIController;
-        private App App;
+        private readonly UIController UIController;
+        private readonly App App;
 
         public MainForm()
         {

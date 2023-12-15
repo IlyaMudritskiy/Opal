@@ -47,7 +47,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="src\Controller\FileProcessors\CommonFileManager.cs" />
+    <Compile Include="src\Controller\FileDataProcessors\CommonFileManager.cs" />
+    <Compile Include="src\Controller\UI\FileController.cs" />
     <Compile Include="src\Forms\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -56,7 +57,7 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="src\Controller\Acoustic\AcousticDataProcessor.cs" />
+    <Compile Include="src\Controller\FileDataProcessors\AcousticDataProcessor.cs" />
     <Compile Include="src\Controller\App\App.cs" />
     <Compile Include="src\Controller\ILineChecker.cs" />
     <Compile Include="src\Controller\ScreenCreator.cs" />
@@ -70,7 +71,7 @@
     <Compile Include="src\Model\Data\TTLine\Heater.cs" />
     <Compile Include="src\Model\Data\TTLine\Measurements.cs" />
     <Compile Include="src\Model\Data\TTLine\JsonFile.cs" />
-    <Compile Include="src\Controller\TTLine\TTLineDataProcessor.cs" />
+    <Compile Include="src\Controller\FileDataProcessors\TTLineDataProcessor.cs" />
     <Compile Include="src\Model\Data\TTLine\DataPoint.cs" />
     <Compile Include="src\Model\Data\TTLine\Point.cs" />
     <Compile Include="src\Model\Data\TTLine\DSXXData.cs" />
