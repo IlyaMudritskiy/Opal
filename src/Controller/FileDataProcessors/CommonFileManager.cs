@@ -9,7 +9,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace ProcessDashboard.src.Controller.FileProcessors
+namespace ProcessDashboard.src.Controller.FileDataProcessors
 {
     public static class CommonFileManager
     {
@@ -35,7 +35,7 @@ namespace ProcessDashboard.src.Controller.FileProcessors
             catch (Exception ex)
             {
                 Log.Warn($"Could not transform file from JObject. Message: {ex.Message}");
-                return default(T);
+                return default;
             }
         }
 
@@ -81,7 +81,7 @@ namespace ProcessDashboard.src.Controller.FileProcessors
             if (!File.Exists(filePath))
             {
                 Log.Error($"The file '{filePath}' does not exist");
-                return default(T);
+                return default;
             }
 
             try
@@ -94,7 +94,7 @@ namespace ProcessDashboard.src.Controller.FileProcessors
             {
                 Log.Error($"Error deserializing JSON: {ex.Message}");
             }
-            return default(T);
+            return default;
         }
 
         /// <summary>
