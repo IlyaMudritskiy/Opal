@@ -1,7 +1,12 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace ProcessDashboard.src.Controller.FileProcessors
@@ -10,7 +15,212 @@ namespace ProcessDashboard.src.Controller.FileProcessors
     {
         private static readonly NLog.Logger Log = NLog.LogManager.GetCurrentClassLogger();
 
-        public static List<string> GetFilePaths(ref OpenFileDialog dialog)
+        #region JObject to <T>
+
+        /// <summary>
+        /// Converts a JSON object (JObject) to the specified type <typeparamref name="T"/>.
+        /// </summary>
+        /// <typeparam name="T">The type to which the JSON object should be converted.</typeparam>
+        /// <param name="file">The JSON object (JObject) to be converted.</param>
+        /// <returns>
+        /// An instance of type <typeparamref name="T"/> representing the converted JSON object.
+        /// If the conversion fails, logs a warning and returns the default value for type <typeparamref name="T"/>.
+        /// </returns>
+        public static T OpenTo<T>(JObject file)
+        {
+            try
+            {
+                return file.ToObject<T>();
+            }
+            catch (Exception ex)
+            {
+                Log.Warn($"Could not transform file from JObject. Message: {ex.Message}");
+                return default(T);
+            }
+        }
+
+        /// <summary>
+        /// Opens and deserializes a list of JSON objects into a list of objects of type <typeparamref name="T"/>.
+        /// </summary>
+        /// <typeparam name="T">The type of objects to deserialize the JSON into.</typeparam>
+        /// <param name="files">The list of JSON objects to open and deserialize.</param>
+        /// <returns>
+        /// A list of objects of type <typeparamref name="T"/> representing the deserialized content of the JSON objects.
+        /// If the input list is null or empty, logs a trace message and returns null.
+        /// </returns>
+        public static List<T> OpenTo<T>(List<JObject> files)
+        {
+            if (files == null || files.Count() == 0)
+            {
+                Log.Trace("Input argument is empty");
+                return null;
+            }
+
+            ConcurrentBag<T> result = new ConcurrentBag<T>();
+
+            Parallel.ForEach(files, f => { result.Add(OpenTo<T>(f)); });
+
+            return result.ToList();
+        }
+
+        #endregion
+
+        #region File path to <T>
+        /// <summary>
+        /// Opens and deserializes a JSON file at the specified file path into an object of type <typeparamref name="T"/>.
+        /// </summary>
+        /// <typeparam name="T">The type of object to deserialize the JSON into.</typeparam>
+        /// <param name="filePath">The path of the JSON file to open and deserialize.</param>
+        /// <returns>
+        /// An instance of type <typeparamref name="T"/> representing the deserialized content of the JSON file.
+        /// If the file does not exist, logs an error and returns the default value for type <typeparamref name="T"/>.
+        /// If there is an error during deserialization, logs an error and returns the default value for type <typeparamref name="T"/>.
+        /// </returns>
+        public static T OpenTo<T>(string filePath)
+        {
+            if (!File.Exists(filePath))
+            {
+                Log.Error($"The file '{filePath}' does not exist");
+                return default(T);
+            }
+
+            try
+            {
+                string json = File.ReadAllText(filePath);
+                T result = JsonConvert.DeserializeObject<T>(json);
+                return result;
+            }
+            catch (JsonSerializationException ex)
+            {
+                Log.Error($"Error deserializing JSON: {ex.Message}");
+            }
+            return default(T);
+        }
+
+        /// <summary>
+        /// Opens and deserializes a collection of JSON files at the specified file paths into a list of objects of type <typeparamref name="T"/>.
+        /// </summary>
+        /// <typeparam name="T">The type of objects to deserialize the JSON files into.</typeparam>
+        /// <param name="filePaths">The collection of file paths for the JSON files to open and deserialize.</param>
+        /// <returns>
+        /// A list of instances of type <typeparamref name="T"/> representing the deserialized content of the JSON files.
+        /// </returns>
+        public static List<T> OpenTo<T>(IEnumerable<string> filePaths)
+        {
+            ConcurrentBag<T> result = new ConcurrentBag<T>();
+
+            Parallel.ForEach(filePaths, f =>
+            {
+                result.Add(OpenTo<T>(f));
+            });
+
+            return result.ToList();
+        }
+
+        #endregion
+
+        #region ZIP content to <T>
+
+        /// <summary>
+        /// Opens and deserializes the content of a JSON file within a ZIP archive into an object of type <typeparamref name="T"/>.
+        /// </summary>
+        /// <typeparam name="T">The type of object to deserialize the JSON content into.</typeparam>
+        /// <param name="zipFilePath">The path of the ZIP file containing a single JSON file entry.</param>
+        /// <returns>
+        /// An instance of type <typeparamref name="T"/> representing the deserialized content of the JSON file.
+        /// If the ZIP file does not contain exactly one entry (JSON file), logs an error and returns the default value for type <typeparamref name="T"/>.
+        /// If there is an error during deserialization or accessing the ZIP file, logs an error and returns the default value for type <typeparamref name="T"/>.
+        /// </returns>
+        public static T OpenZipContentTo<T>(string zipFilePath)
+        {
+            using (FileStream fileStream = new FileStream(zipFilePath, FileMode.Open, FileAccess.Read))
+            using (ZipArchive zipArchive = new ZipArchive(fileStream, ZipArchiveMode.Read))
+            {
+                if (zipArchive.Entries.Count != 1)
+                {
+                    Log.Error("The zip file must contain exactly one entry (JSON file).");
+                }
+
+                ZipArchiveEntry entry = zipArchive.Entries[0];
+
+                using (Stream entryStream = entry.Open())
+                using (StreamReader reader = new StreamReader(entryStream))
+                {
+                    string json = reader.ReadToEnd();
+                    T result = JsonConvert.DeserializeObject<T>(json);
+                    return result;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Opens and deserializes the content of JSON files within ZIP archives at the specified file paths into a list of objects of type <typeparamref name="T"/>.
+        /// </summary>
+        /// <typeparam name="T">The type of objects to deserialize the JSON content into.</typeparam>
+        /// <param name="zipFilePaths">The collection of file paths for the ZIP files containing JSON file entries.</param>
+        /// <returns>
+        /// A list of instances of type <typeparamref name="T"/> representing the deserialized content of the JSON files.
+        /// </returns>
+        public static List<T> OpenZipContentTo<T>(IEnumerable<string> zipFilePaths)
+        {
+            ConcurrentBag<T> result = new ConcurrentBag<T>();
+
+            Parallel.ForEach(zipFilePaths, f =>
+            {
+                result.Add(OpenZipContentTo<T>(f));
+            });
+
+            return result.ToList();
+        }
+
+        #endregion
+
+        #region Parse .json to JObject
+
+        /// <summary>
+        /// Parses the content of a JSON file at the specified file path into a <see cref="JObject"/>.
+        /// </summary>
+        /// <param name="filepath">The path of the JSON file to parse.</param>
+        /// <returns>
+        /// A <see cref="JObject"/> representing the parsed content of the JSON file.
+        /// If the file does not exist, logs an informational message and returns null.
+        /// If there is an error during parsing, returns null.
+        /// </returns>
+        public static JObject ParseJsonFile(string filepath)
+        {
+            if (!File.Exists(filepath))
+            {
+                Log.Info($"File [{filepath}] does not exist.");
+                return null;
+            }
+            return JObject.Parse(filepath);
+        }
+
+        /// <summary>
+        /// Checks for existance and reads all files in filepaths to list of generic JOobject objects.
+        /// </summary>
+        /// <param name="filepaths">List of full paths to files.</param>
+        /// <returns>List of Json Objects of selected files.</returns>
+        public static List<JObject> ParseJsonFiles(List<string> filepaths)
+        {
+            List<JObject> result = new List<JObject>();
+
+            foreach (var file in filepaths)
+                result.Add(ParseJsonFile(file));
+
+            return result;
+        }
+
+        #endregion
+
+        #region File Dialog and Write
+
+        /// <summary>
+        /// Gets the list of selected files using OpenFileDialog.
+        /// </summary>
+        /// <param name="dialog">Dialog in WinForms to select files.</param>
+        /// <returns>List of full paths to selected files.</returns>
+        public static List<string> GetFilesFromDialog(ref OpenFileDialog dialog)
         {
             if (dialog.ShowDialog() == DialogResult.OK)
                 return dialog.FileNames.ToList();
@@ -21,127 +231,25 @@ namespace ProcessDashboard.src.Controller.FileProcessors
             }
         }
 
-        public static List<JObject> GetFiles(List<string> filepaths)
+        /// <summary>
+        /// Writes the serialized JSON representation of an object of type <typeparamref name="T"/> to a file.
+        /// </summary>
+        /// <typeparam name="T">The type of the data to be serialized and written.</typeparam>
+        /// <param name="filePath">The path of the file to write the JSON data to.</param>
+        /// <param name="data">The data of type <typeparamref name="T"/> to be serialized and written.</param>
+        public static void Write<T>(string filePath, T data)
         {
-            List<JObject> result = new List<JObject>();
-
-            foreach (var file in filepaths)
-                result.Add(ParseJson(file));
-
-            return result;
-        }
-
-        public static List<JObject> FilterByLine(List<JObject> files, string lineCode)
-        {
-            if (files == null || files.Count == 0) return null;
-
-            List<JObject> result = new List<JObject>();
-
-            foreach (var file in files)
+            try
             {
-                if (GetLineCode(file) == lineCode)
-                    result.Add(file);
+                string json = JsonConvert.SerializeObject(data, Formatting.Indented);
+                File.WriteAllText(filePath, json);
             }
-            return result;
-        }
-
-        public static List<JObject> FilterByProduct(List<JObject> files, string productCode)
-        {
-            if (files == null || files.Count == 0) return null;
-
-            List<JObject> result = new List<JObject>();
-
-            foreach (var file in files)
+            catch (JsonSerializationException ex)
             {
-                if (GetProductCode(file) == productCode)
-                    result.Add(file);
+                Log.Error($"Error serializing data to JSON: {ex.Message}", ex);
             }
-            return result;
         }
 
-        public static string GetLineCode(IEnumerable<string> filepaths)
-        {
-            if (filepaths == null && filepaths.Count() == 0) return null;
-
-            return getFieldValue(filepaths.First(), "machine_id");
-        }
-
-        public static string GetLineCode(IEnumerable<JObject> filepaths)
-        {
-            if (filepaths == null && filepaths.Count() == 0) return null;
-
-            return getFieldValue(filepaths.First(), "machine_id");
-        }
-
-        public static string GetProductCode(IEnumerable<JObject> filepaths)
-        {
-            if (filepaths == null && filepaths.Count() == 0) return null;
-
-            return getFieldValue(filepaths.First(), "type_id");
-        }
-
-        public static string GetProductCode(IEnumerable<string> filepaths)
-        {
-            if (filepaths == null && filepaths.Count() == 0) return null;
-
-            return getFieldValue(filepaths.First(), "type_id");
-        }
-
-        public static string GetLineCode(JObject file)
-        {
-            if (file == null) return null;
-
-            return getFieldValue(file, "machine_id");
-        }
-
-        public static string GetProductCode(JObject file)
-        {
-            if (file == null) return null;
-
-            return getFieldValue(file, "type_id");
-        }
-
-        public static void CheckProductCode()
-        {
-
-        }
-
-        public static void CheckLineCode()
-        {
-
-        }
-
-        public static JObject ParseJson(string filepath)
-        {
-            if (!File.Exists(filepath))
-            {
-                Log.Info($"File [{filepath}] does not exist.");
-                return null;
-            }
-
-            return JObject.Parse(filepath);
-        }
-
-        private static string getFieldValue(string filepath, string fieldName)
-        {
-            if (!File.Exists(filepath)) return null;
-                
-            return getFieldValue(ParseJson(filepath), fieldName);
-        }
-
-        private static string getFieldValue(JObject file, string fieldName)
-        {
-            if (file == null) return null;
-
-            JToken fieldValue = file["DUT"]?[fieldName];
-
-            if (fieldValue == null)
-            {
-                Log.Info($"File does not contain field {fieldName}.");
-                return null;
-            }
-
-            return fieldValue.ToString();
-        }
+        #endregion
     }
 }
