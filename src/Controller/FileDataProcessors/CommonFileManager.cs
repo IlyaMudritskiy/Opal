@@ -232,6 +232,22 @@ namespace ProcessDashboard.src.Controller.FileDataProcessors
         }
 
         /// <summary>
+        /// Gets the list of selected files using OpenFileDialog.
+        /// </summary>
+        /// <returns>List of full paths to selected files.</returns>
+        public static List<string> GetFilesFromDialog()
+        {
+            OpenFileDialog dialog = new OpenFileDialog() { Multiselect = true };
+            if (dialog.ShowDialog() == DialogResult.OK)
+                return dialog.FileNames.ToList();
+            else
+            {
+                Log.Info("No files were selected in OpenFileDialog");
+                return null;
+            }
+        }
+
+        /// <summary>
         /// Writes the serialized JSON representation of an object of type <typeparamref name="T"/> to a file.
         /// </summary>
         /// <typeparam name="T">The type of the data to be serialized and written.</typeparam>
