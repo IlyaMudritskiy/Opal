@@ -11,6 +11,9 @@ namespace ProcessDashboard.src.Model.Screen.Acoustic
 {
     public class AcousticTab : AbsTab
     {
+        public TabPage Tab { get; set; }
+        public Label Title { get; set; }
+
         public PlotView DS11 { get; set; }
         public PlotView DS12 { get; set; }
         public PlotView DS21 { get; set; }

@@ -1,5 +1,5 @@
 ﻿using Newtonsoft.Json.Linq;
-using ProcessDashboard.src.Controller.FileProcessors;
+using ProcessDashboard.src.Controller.FileDataProcessors;
 using ProcessDashboard.src.Controller.TTLine;
 using ProcessDashboard.src.Model.AppConfiguration;
 using ProcessDashboard.src.Model.Data;
@@ -36,9 +36,9 @@ namespace ProcessDashboard.src.Controller.App
         public void Run(ref OpenFileDialog dialog, ref Panel panel)
         {
             // Get paths of selected files
-            List<string> filepaths = CommonFileManager.GetFilePaths(ref dialog);
+            List<string> filepaths = CommonFileManager.GetFilesFromDialog(ref dialog);
             // Read selected files into JObject (JObject is not tied to a specific screen)
-            List<JObject> files = CommonFileManager.GetFiles(filepaths);
+            List<JObject> files = CommonFileManager.ParseJsonFiles(filepaths);
 
             Log.Trace($"Selected [{filepaths.Count}] files.");
             Log.Trace($"Opened [{files.Count}] files.");

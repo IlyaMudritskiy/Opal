@@ -7,8 +7,8 @@ namespace ProcessDashboard.src.Model.Screen
 {
     public interface IScreen
     {
-        void Create(ref Panel panel, ref List<JObject> processFiles);
-        void Update(ref List<JObject> processFiles);
-        void LoadData(ref List<JObject> processFiles);
+        void Create(ref Panel panel, ref List<JObject> files);
+        void Update(ref List<ProcessFile> data);
+        void LoadData(ref List<ProcessFile> data);
     }
 }

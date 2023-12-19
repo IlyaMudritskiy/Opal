@@ -12,7 +12,7 @@ namespace ProcessDashboard.src.Controller.TTLine
 
         private static Config config = Config.Instance;
 
-        public static void Calculate(TTLUnitData data)
+        public static void Calculate(TTLUnitDataOld data)
         {
             if (data == null) return;
 

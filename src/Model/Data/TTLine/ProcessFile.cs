@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace ProcessDashboard.src.Model.Data
 {
     [JsonObject(MemberSerialization.OptIn)]
-    public class JsonFile
+    public class ProcessFile
     {
         [JsonProperty(PropertyName = "DUT")]
         public DUT DUT { get; set; }
@@ -32,13 +32,7 @@ namespace ProcessDashboard.src.Model.Data
         public string TrackNumber { get; set; }
 
         [JsonProperty(PropertyName = "ps01_press_nr")]
-        public string PS01PressNumber { get; set; }
-
-        [JsonProperty(PropertyName = "wpc_number")]
-        public string WPCNumber { get; set; }
-
-        [JsonProperty(PropertyName = "wpc_height")]
-        public string WPCHeight { get; set; }
+        public string PressNumber { get; set; }
 
         [JsonProperty(PropertyName = "machine_id")]
         public string MachineID { get; set; }

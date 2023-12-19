@@ -55,7 +55,7 @@ namespace ProcessDashboard.src.Model.Screen.TTLine
             panel.ResumeLayout();
         }
 
-        public void Update(ref List<JsonFile> processFiles)
+        public void Update(ref List<ProcessFile> processFiles)
         {
             clear(Temperature);
             clear(Pressure);
@@ -74,7 +74,7 @@ namespace ProcessDashboard.src.Model.Screen.TTLine
         public void LoadData(ref List<JObject> processFiles)
         {
             // Transform JsonFile to ready-to-use line object
-            List<TTLUnitData> processData = TTLineDataProcessor.LoadFiles(files);
+            List<TTLUnitDataOld> processData = TTLDataProcessor.LoadFiles(files);
             // Find and open acoustic files
             List<AcousticFile> acousticData = AcousticDataProcessor.OpenFiles(ref files, dialog);
 

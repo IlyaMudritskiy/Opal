@@ -1,4 +1,5 @@
-﻿using ProcessDashboard.src.Model.AppConfiguration;
+﻿using ProcessDashboard.src.Controller.FileDataProcessors;
+using ProcessDashboard.src.Model.AppConfiguration;
 using ProcessDashboard.src.Model.Data;
 using ProcessDashboard.src.Model.Data.Acoustic;
 using System;
@@ -14,18 +15,17 @@ namespace ProcessDashboard.src.Controller.Acoustic
         private static readonly NLog.Logger Log = NLog.LogManager.GetCurrentClassLogger();
         private static Config config = Config.Instance;
 
-        public static List<AcousticFile> OpenFiles(ref List<JsonFile> files, OpenFileDialog dialog = null)
+        public static List<AcousticFile> OpenFiles(ref List<ProcessFile> files)
         {
-            if (files == null) return null;
+            if (files == null || files.Count == 0) return null;
 
-            if (config.Acoustic.ManualSelection && dialog != null)
-                if (dialog.ShowDialog() == DialogResult.OK)
-                    return manualSelected(ref files, dialog.FileNames.ToList());
+            if (config.Acoustic.ManualSelection)
+                return manualSelected(ref files, CommonFileManager.GetFilesFromDialog());
                 
             if (!config.Acoustic.ManualSelection)
                 return fromDefaultLocation(ref files);
-            else
-                return null;
+
+            return null;
         }
 
         public static Dictionary<string, Limit> OpenLimitFiles()
@@ -43,10 +43,8 @@ namespace ProcessDashboard.src.Controller.Acoustic
             return checkLimitName(limitFiles);
         }
 
-        private static List<AcousticFile> fromDefaultLocation(ref List<JsonFile> processFiles)
+        private static List<AcousticFile> fromDefaultLocation(ref List<ProcessFile> processFiles)
         {
-            Config config = Config.Instance;
-
             List<string> matchingFiles = new List<string>();
             List<string> acousticFiles = new List<string>();
             List<AcousticFile> result = new List<AcousticFile>();
@@ -69,14 +67,13 @@ namespace ProcessDashboard.src.Controller.Acoustic
                 }
             }
 
-            foreach (var f in JsonReader.ReadFromZip<AcousticFile>(matchingFiles))
-                if (f.DUT.Pass)
-                    result.Add(f);
+            foreach (var f in CommonFileManager.OpenZipContentTo<AcousticFile>(matchingFiles))
+                result.Add(f);
 
             return result;
         }
 
-        private static List<AcousticFile> manualSelected(ref List<JsonFile> processFiles, IEnumerable<string> acousticFiles)
+        private static List<AcousticFile> manualSelected(ref List<ProcessFile> processFiles, IEnumerable<string> acousticFiles)
         {
             if (acousticFiles == null || acousticFiles.Count() == 0) return null;
 
@@ -84,9 +81,8 @@ namespace ProcessDashboard.src.Controller.Acoustic
 
             List<string> matchingFiles = findMatchingFileNames(ref processFiles, acousticFiles);
 
-            foreach (var f in JsonReader.ReadFromZip<AcousticFile>(matchingFiles))
-                if (f.DUT.Pass)
-                    result.Add(f);
+            foreach (var f in CommonFileManager.OpenZipContentTo<AcousticFile>(matchingFiles))
+                result.Add(f);
 
             return result;
         }
@@ -146,7 +142,7 @@ namespace ProcessDashboard.src.Controller.Acoustic
             return (null, null);
         }
 
-        private static List<string> findMatchingFileNames(ref List<JsonFile> files, IEnumerable<string> fileNames)
+        private static List<string> findMatchingFileNames(ref List<ProcessFile> files, IEnumerable<string> fileNames)
         {
             List<string> matchingFileNames = new List<string>();
 

@@ -15,7 +15,7 @@ namespace ProcessDashboard.src.Model.Data.TTLine
 
         private static readonly NLog.Logger Log = NLog.LogManager.GetCurrentClassLogger();
 
-        public ScreenData(List<TTLUnitData> data, List<AcousticFile> acousticFiles)
+        public ScreenData(List<TTLUnitDataOld> data, List<AcousticFile> acousticFiles)
         {
             try
             {

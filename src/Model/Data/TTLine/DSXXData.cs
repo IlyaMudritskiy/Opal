@@ -29,7 +29,7 @@ namespace ProcessDashboard.src.Model.Data.TTLine
         public List<AcousticFile> AcousticFiles { get; set; }
         public Dictionary<string, Dictionary<string, List<double>>> AcousticMean { get; set; }
 
-        public DSXXData(List<TTLUnitData> DSXX, List<AcousticFile> acousticFiles)
+        public DSXXData(List<TTLUnitDataOld> DSXX, List<AcousticFile> acousticFiles)
         {
             TypeID = DSXX[0].TypeID;
             LineID = DSXX[0].LineID;

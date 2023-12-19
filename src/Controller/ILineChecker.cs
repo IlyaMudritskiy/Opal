@@ -7,7 +7,7 @@ namespace ProcessDashboard.src.Controller
 {
     public interface ILineScreen
     {
-        bool CheckFiles(List<JsonFile> loadedFiles);
-        IScreen GetScreen(List<JsonFile> loadedFiles, ref Panel panel);
+        bool CheckFiles(List<ProcessFile> loadedFiles);
+        IScreen GetScreen(List<ProcessFile> loadedFiles, ref Panel panel);
     }
 }

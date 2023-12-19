@@ -5,18 +5,6 @@ using Newtonsoft.Json.Linq;
 
 namespace ProcessDashboard.src.Model.Data.TTLine
 {
-    public enum ArrayToSearch
-    {
-        Time,
-        Value
-    }
-
-    enum Precision
-    {
-        High,
-        Default
-    }
-
     public class Measurements
     {
         public double[] TimeOffset { get; set; }

@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace ProcessDashboard.src.Model.Data.TTLine
 {
-    public class TTLUnitData
+    public class TTLUnitDataOld
     {
         public int TypeID { get; set; }
         public int Track { get; set; }
@@ -23,13 +23,13 @@ namespace ProcessDashboard.src.Model.Data.TTLine
 
         private static readonly NLog.Logger Log = NLog.LogManager.GetCurrentClassLogger();
 
-        public TTLUnitData(JsonFile file)
+        public TTLUnitDataOld(ProcessFile file)
         {
             TempFeatures = new List<Feature>();
             PressFeatures = new List<Feature>();
             TypeID = int.Parse(file.DUT.TypeID);
             Track = int.Parse(file.DUT.TrackNumber);
-            Press = int.Parse(file.DUT.PS01PressNumber);
+            Press = int.Parse(file.DUT.PressNumber);
             LineID = file.DUT.MachineID;
             DataPoints = new List<DataPoint>();
 
