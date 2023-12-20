@@ -3,6 +3,7 @@ using ProcessDashboard.src.Controller.FileDataProcessors.TTL;
 using ProcessDashboard.src.Controller.TTLine;
 using ProcessDashboard.src.Model.AppConfiguration;
 using ProcessDashboard.src.Model.Data;
+using ProcessDashboard.src.Model.Data.TTLine.Process;
 using ProcessDashboard.src.Model.Screen.Acoustic;
 using ProcessDashboard.src.Model.Screen.TTLine;
 using ProcessDashboard.src.Model.TTL;
@@ -57,12 +58,11 @@ namespace ProcessDashboard.src.Model.Screen
             panel.ResumeLayout();
         }
 
-        public void LoadData(ref List<JObject> files)
+        public void LoadData(List<JObject> files)
         {
-            List<ProcessFile> jsonFiles = TTLDataProcessor.LoadFiles(files);
-            // Get process files
-            // Get acoustic files
-            // Process them and get list of unified ibjects with all data
+            List<TTLUnit> data = TTLDataProcessor.LoadFiles(files);
+
+            TemperatureTab.LoadData();
         }
 
         public void Update(ref List<ProcessFile> data)

@@ -1,5 +1,6 @@
 ﻿using ProcessDashboard.src.Utils.Design;
 using ScottPlot;
+using ScottPlot.Plottable;
 using System;
 using System.Drawing;
 using System.Linq;
@@ -28,6 +29,11 @@ namespace ProcessDashboard.src.Model.Screen.Elements
             Plot.Refresh();
         }
 
+        public ScatterPlot AddGetScatter(double[] x, double[] y, Color color, int lineWidth = 1)
+        {
+            return Plot.Plot.AddScatter(x, y, color, lineWidth, 0);
+        }
+
         public void Clear()
         {
             Plot.Plot.Clear();
@@ -37,6 +43,11 @@ namespace ProcessDashboard.src.Model.Screen.Elements
         public void Fit()
         {
             Plot.Plot.AxisAuto();
+        }
+
+        public void Refresh()
+        {
+            Plot.Refresh();
         }
 
         private void createLayout(string title, Color color, string unitx = "", string unity = "", bool log = false)

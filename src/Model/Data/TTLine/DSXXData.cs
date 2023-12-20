@@ -1,8 +1,6 @@
 ﻿using ProcessDashboard.src.Model.Data.Acoustic;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Remoting.Metadata.W3cXsd2001;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrackBar;
 
 namespace ProcessDashboard.src.Model.Data.TTLine
 {

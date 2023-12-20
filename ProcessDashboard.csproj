@@ -81,6 +81,7 @@
     <Compile Include="src\Model\Data\TTLine\DataPoint.cs" />
     <Compile Include="src\Model\Data\TTLine\Point.cs" />
     <Compile Include="src\Model\Data\TTLine\DSXXData.cs" />
+    <Compile Include="src\Model\Data\TTLine\Process\ProcessSteps.cs" />
     <Compile Include="src\Model\Data\TTLine\Process\TTLProcess.cs" />
     <Compile Include="src\Model\Data\TTLine\TTLUnit.cs" />
     <Compile Include="src\Model\Data\TTLine\ScreenData.cs" />

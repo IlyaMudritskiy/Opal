@@ -15,12 +15,19 @@ namespace ProcessDashboard.src.Controller.Acoustic
         private static readonly NLog.Logger Log = NLog.LogManager.GetCurrentClassLogger();
         private static Config config = Config.Instance;
 
-        public static List<AcousticFile> OpenFiles(ref List<ProcessFile> files)
+        public static List<AcousticFile> GetAcousticFiles(ref List<ProcessFile> files)
         {
             if (files == null || files.Count == 0) return null;
 
             if (config.Acoustic.ManualSelection)
+            {
+                List<string> filepaths = CommonFileManager.GetFilesFromDialog();
+                if (filepaths == null || filepaths.Count == 0) return null;
+            }
+            else
+            {
                 return manualSelected(ref files, CommonFileManager.GetFilesFromDialog());
+            }
                 
             if (!config.Acoustic.ManualSelection)
                 return fromDefaultLocation(ref files);

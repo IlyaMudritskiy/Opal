@@ -1,6 +1,4 @@
-﻿using NLog.Fluent;
-using ProcessDashboard.src.Model.Common;
-using System;
+﻿using ProcessDashboard.src.Model.Common;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -15,8 +13,6 @@ namespace ProcessDashboard.src.Model.Data.TTLine.Process
         public List<Feature> TempFeatures { get; set; }
         public List<Feature> PressFeatures { get; set; }
         public List<DataPoint> DataPoints { get; set; }
-
-        private static readonly NLog.Logger Log = NLog.LogManager.GetCurrentClassLogger();
 
         public TTLProcess(ProcessFile file)
         {
