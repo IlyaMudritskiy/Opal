@@ -1,11 +1,10 @@
 ﻿using Newtonsoft.Json.Linq;
-using ProcessDashboard.src.Controller.FileDataProcessors.TTL;
 using ProcessDashboard.src.Controller.TTLine;
 using ProcessDashboard.src.Model.AppConfiguration;
-using ProcessDashboard.src.Model.Data;
+using ProcessDashboard.src.Model.Data.TTLine.General;
 using ProcessDashboard.src.Model.Data.TTLine.Process;
+using ProcessDashboard.src.Model.Misc;
 using ProcessDashboard.src.Model.Screen.Acoustic;
-using ProcessDashboard.src.Model.Screen.TTLine;
 using ProcessDashboard.src.Model.TTL;
 using System;
 using System.Collections.Generic;
@@ -22,23 +21,25 @@ namespace ProcessDashboard.src.Model.Screen
 
         private TabControl Tabs { get; set; }
 
-        private ProcessTab TemperatureTab { get; set; }
-        private ProcessTab PressureTab { get; set; }
+        private ProcessTab Temperature { get; set; }
+        private ProcessTab Pressure { get; set; }
 
         private AcousticTab FR  { get; set; }
         private AcousticTab THD { get; set; }
         private AcousticTab RNB { get; set; }
         private AcousticTab IMP { get; set; }
 
+        private TTLData TTLData { get; set; }
+
         public void Create(ref Panel panel)
         {
             Tabs = new TabControl() { Dock = DockStyle.Fill };
 
-            TemperatureTab = new ProcessTab();
-            PressureTab = new ProcessTab();
+            Temperature = new ProcessTab("Temperature", ProcessStep.Temperature);
+            Pressure = new ProcessTab("Pressure", ProcessStep.HighPressure);
 
-            Tabs.Controls.Add(TemperatureTab.Tab);
-            Tabs.Controls.Add(PressureTab.Tab);
+            Tabs.Controls.Add(Temperature.Tab);
+            Tabs.Controls.Add(Pressure.Tab);
 
             if (Config.Acoustic.Enabled)
             {
@@ -58,16 +59,46 @@ namespace ProcessDashboard.src.Model.Screen
             panel.ResumeLayout();
         }
 
-        public void LoadData(List<JObject> files)
+        public void Update(ref List<JObject> data)
         {
-            List<TTLUnit> data = TTLDataProcessor.LoadFiles(files);
-
-            TemperatureTab.LoadData();
+            Clear();
+            LoadData(ref data);
         }
 
-        public void Update(ref List<ProcessFile> data)
+        public void LoadData(ref List<JObject> data)
         {
-            throw new NotImplementedException();
+            List<TTLUnit> processedData = TTLDataProcessor.LoadFiles(data);
+            if (TTLData != null)
+                TTLData = null;
+
+            TTLData = new TTLData(processedData);
+
+            Temperature.AddData(TTLData);
+            Pressure.AddData(TTLData);
+
+            if (Config.Acoustic.Enabled)
+            {
+                FR.AddData(TTLData);
+                THD.AddData(TTLData);
+                RNB.AddData(TTLData);
+                IMP.AddData(TTLData);
+            }
+        }
+
+        public void Clear()
+        {
+            Temperature.Clear();
+            Pressure.Clear();
+
+            if (Config.Acoustic.Enabled)
+            {
+                FR.Clear();
+                THD.Clear();
+                RNB.Clear();
+                IMP.Clear();
+            }
+
+            TTLData = null;
         }
     }
 }
