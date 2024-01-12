@@ -1,21 +1,20 @@
-﻿using Newtonsoft.Json.Linq;
-using ProcessDashboard.src.Controller.TTLine;
-using ProcessDashboard.src.Model.AppConfiguration;
-using ProcessDashboard.src.Model.Data.TTLine.General;
-using ProcessDashboard.src.Model.Data.TTLine.Process;
-using ProcessDashboard.src.Model.Misc;
-using ProcessDashboard.src.Model.Screen.Acoustic;
-using ProcessDashboard.src.Model.TTL;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using Newtonsoft.Json.Linq;
+using ProcessDashboard.Controller.FileDataProcessors.TTL;
+using ProcessDashboard.Model.AppConfiguration;
+using ProcessDashboard.Model.Data.TTLine;
+using ProcessDashboard.Model.Misc;
+using ProcessDashboard.Model.Screen.Tabs;
+using ProcessDashboard.Model.TTL.DataContainers;
 
-namespace ProcessDashboard.src.Model.Screen
+namespace ProcessDashboard.Model.Screen
 {
     internal partial class TTLScreen : IScreen
     {
-        private static readonly Lazy<TTLScreen> lazy = new Lazy<TTLScreen>(() => new TTLScreen());
-        public static TTLScreen Instance => lazy.Value;
+        private static readonly Lazy<TTLScreen> Lazy = new Lazy<TTLScreen>(() => new TTLScreen());
+        public static TTLScreen Instance => Lazy.Value;
 
         private Config Config = Config.Instance;
 
@@ -28,6 +27,8 @@ namespace ProcessDashboard.src.Model.Screen
         private AcousticTab THD { get; set; }
         private AcousticTab RNB { get; set; }
         private AcousticTab IMP { get; set; }
+
+        // Tab with other information
 
         private TTLData TTLData { get; set; }
 
@@ -43,10 +44,10 @@ namespace ProcessDashboard.src.Model.Screen
 
             if (Config.Acoustic.Enabled)
             {
-                FR = new AcousticTab("FR", "Hz", "dB SPL");
-                THD = new AcousticTab("THD", "Hz", "%");
-                RNB = new AcousticTab("RNB", "Hz", "dB SPL");
-                IMP = new AcousticTab("IMP", "Hz", "Ω");
+                FR = new AcousticTab("FR", "Hz", "dB SPL", ProcessStep.FR);
+                THD = new AcousticTab("THD", "Hz", "%", ProcessStep.THD);
+                RNB = new AcousticTab("RNB", "Hz", "dB SPL", ProcessStep.RNB);
+                IMP = new AcousticTab("IMP", "Hz", "Ω", ProcessStep.IMP);
 
                 Tabs.TabPages.Add(FR.Tab);
                 Tabs.TabPages.Add(THD.Tab);
@@ -73,8 +74,8 @@ namespace ProcessDashboard.src.Model.Screen
 
             TTLData = new TTLData(processedData);
 
-            Temperature.AddData(TTLData);
-            Pressure.AddData(TTLData);
+            Temperature.AddData(TTLData, ProcessStep.Temperature);
+            Pressure.AddData(TTLData, ProcessStep.HighPressure);
 
             if (Config.Acoustic.Enabled)
             {
