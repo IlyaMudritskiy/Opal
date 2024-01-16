@@ -13,37 +13,41 @@ namespace ProcessDashboard.Model.TTL.DataContainers
         public DSContainer<List<Feature>> MeanFeatures { get; set; }
         public DSContainer<List<List<Feature>>> Features { get; set; }
 
+        private ProcessStep Step { get; set; }
+
         public ProcessData(List<TTLUnit> units, ProcessStep step)
         {
             if (units == null || units.Count == 0) return;
 
-            SeparateProcessFeatures(units, step);
-            AddCurves(units, step);
+            Step = step;
+
+            SeparateProcessFeatures(units);
+            AddCurves(units);
             CalculateMeanFeatures();
         }
 
         #region Separate data by DS
 
-        private void SeparateProcessFeatures(List<TTLUnit> units, ProcessStep step)
+        private void SeparateProcessFeatures(List<TTLUnit> units)
         {
             Features.DS11 = units
                 .Where(x => x.TrackNumber == 1 && x.PressNumber == 1)
-                .Select(x => GetStepMeasurements(x, step)).ToList();
+                .Select(x => GetStepMeasurements(x)).ToList();
             Features.DS12 = units
                 .Where(x => x.TrackNumber == 1 && x.PressNumber == 2)
-                .Select(x => GetStepMeasurements(x, step)).ToList();
+                .Select(x => GetStepMeasurements(x)).ToList();
             Features.DS21 = units
                 .Where(x => x.TrackNumber == 2 && x.PressNumber == 1)
-                .Select(x => GetStepMeasurements(x, step)).ToList();
+                .Select(x => GetStepMeasurements(x)).ToList();
             Features.DS22 = units
                 .Where(x => x.TrackNumber == 2 && x.PressNumber == 2)
-                .Select(x => GetStepMeasurements(x, step)).ToList();
+                .Select(x => GetStepMeasurements(x)).ToList();
         }
 
-        private List<Feature> GetStepMeasurements(TTLUnit unit, ProcessStep step)
+        private List<Feature> GetStepMeasurements(TTLUnit unit)
         {
-            if (step == ProcessStep.Temperature) return unit.Process.TempFeatures;
-            if (step == ProcessStep.HighPressure) return unit.Process.PressFeatures;
+            if (Step == ProcessStep.Temperature) return unit.Process.TempFeatures;
+            if (Step == ProcessStep.HighPressure) return unit.Process.PressFeatures;
             else return null;
         }
 
@@ -51,26 +55,26 @@ namespace ProcessDashboard.Model.TTL.DataContainers
 
         #region Add process Curves by DS
 
-        private void AddCurves(List<TTLUnit> units, ProcessStep step)
+        private void AddCurves(List<TTLUnit> units)
         {
             Curves.DS11 = units
                 .Where(x => x.TrackNumber == 1 && x.PressNumber == 1)
-                .Select(x => GetStepCurves(x, step)).ToList();
+                .Select(x => GetStepCurves(x)).ToList();
             Curves.DS12 = units
                 .Where(x => x.TrackNumber == 1 && x.PressNumber == 2)
-                .Select(x => GetStepCurves(x, step)).ToList();
+                .Select(x => GetStepCurves(x)).ToList();
             Curves.DS21 = units
                 .Where(x => x.TrackNumber == 2 && x.PressNumber == 1)
-                .Select(x => GetStepCurves(x, step)).ToList();
+                .Select(x => GetStepCurves(x)).ToList();
             Curves.DS22 = units
                 .Where(x => x.TrackNumber == 2 && x.PressNumber == 2)
-                .Select(x => GetStepCurves(x, step)).ToList();
+                .Select(x => GetStepCurves(x)).ToList();
         }
 
-        private ScatterPlot GetStepCurves(TTLUnit unit, ProcessStep step)
+        private ScatterPlot GetStepCurves(TTLUnit unit)
         {
-            if (step == ProcessStep.Temperature) return unit.Process.TemperatureCurve;
-            if (step == ProcessStep.HighPressure) return unit.Process.PressureCurve;
+            if (Step == ProcessStep.Temperature) return unit.Process.TemperatureCurve;
+            if (Step == ProcessStep.HighPressure) return unit.Process.PressureCurve;
             else return null;
         }
 

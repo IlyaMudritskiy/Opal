@@ -17,40 +17,44 @@ namespace ProcessDashboard.Model.TTL.DataContainers
         public DSContainer<List<ScatterPlot>> Curves { get; set; }
         public DSContainer<ScatterPlot> MeanCurves { get; set; }
 
+        private ProcessStep Step { get; set; }
+
         public AcousticData(List<TTLUnit> units, ProcessStep step)
         {
             if (units == null || units.Count == 0) return;
 
-            SeparateAcousticMeasurements(units, step);
-            AddCurves(units, step);
+            Step = step;
+
+            SeparateAcousticMeasurements(units);
+            AddCurves(units);
             CalculateMeanAcoustic();
             AddMeanAcousticCurves();
         }
 
         #region Separate data by DS
 
-        private void SeparateAcousticMeasurements(List<TTLUnit> units, ProcessStep step)
+        private void SeparateAcousticMeasurements(List<TTLUnit> units)
         {
             SeparatedData.DS11 = units
                 .Where(x => x.TrackNumber == 1 && x.PressNumber == 1)
-                .Select(x => GetStepMeasurements(x, step)).ToList();
+                .Select(x => GetStepMeasurements(x)).ToList();
             SeparatedData.DS12 = units
                 .Where(x => x.TrackNumber == 1 && x.PressNumber == 2)
-                .Select(x => GetStepMeasurements(x, step)).ToList();
+                .Select(x => GetStepMeasurements(x)).ToList();
             SeparatedData.DS21 = units
                 .Where(x => x.TrackNumber == 2 && x.PressNumber == 1)
-                .Select(x => GetStepMeasurements(x, step)).ToList();
+                .Select(x => GetStepMeasurements(x)).ToList();
             SeparatedData.DS22 = units
                 .Where(x => x.TrackNumber == 2 && x.PressNumber == 2)
-                .Select(x => GetStepMeasurements(x, step)).ToList();
+                .Select(x => GetStepMeasurements(x)).ToList();
         }
 
-        private Measurements2DExt GetStepMeasurements(TTLUnit unit, ProcessStep step)
+        private Measurements2DExt GetStepMeasurements(TTLUnit unit)
         {
-            if (step == ProcessStep.FR) return unit.Acoustic.FR;
-            if (step == ProcessStep.THD) return unit.Acoustic.THD;
-            if (step == ProcessStep.RNB) return unit.Acoustic.RNB;
-            if (step == ProcessStep.IMP) return unit.Acoustic.IMP;
+            if (Step == ProcessStep.FR) return unit.Acoustic.FR;
+            if (Step == ProcessStep.THD) return unit.Acoustic.THD;
+            if (Step == ProcessStep.RNB) return unit.Acoustic.RNB;
+            if (Step == ProcessStep.IMP) return unit.Acoustic.IMP;
             else return null;
         }
 
@@ -58,28 +62,28 @@ namespace ProcessDashboard.Model.TTL.DataContainers
 
         #region Add acoustic Curves by DS
 
-        private void AddCurves(List<TTLUnit> units, ProcessStep step)
+        private void AddCurves(List<TTLUnit> units)
         {
             Curves.DS11 = units
                 .Where(x => x.TrackNumber == 1 && x.PressNumber == 1)
-                .Select(x => GetStepCurves(x, step)).ToList();
+                .Select(x => GetStepCurves(x)).ToList();
             Curves.DS12 = units
                 .Where(x => x.TrackNumber == 1 && x.PressNumber == 2)
-                .Select(x => GetStepCurves(x, step)).ToList();
+                .Select(x => GetStepCurves(x)).ToList();
             Curves.DS21 = units
                 .Where(x => x.TrackNumber == 2 && x.PressNumber == 1)
-                .Select(x => GetStepCurves(x, step)).ToList();
+                .Select(x => GetStepCurves(x)).ToList();
             Curves.DS22 = units
                 .Where(x => x.TrackNumber == 2 && x.PressNumber == 2)
-                .Select(x => GetStepCurves(x, step)).ToList();
+                .Select(x => GetStepCurves(x)).ToList();
         }
 
-        private ScatterPlot GetStepCurves(TTLUnit unit, ProcessStep step)
+        private ScatterPlot GetStepCurves(TTLUnit unit)
         {
-            if (step == ProcessStep.FR) return unit.Acoustic.FRCurve;
-            if (step == ProcessStep.THD) return unit.Acoustic.THDCurve;
-            if (step == ProcessStep.RNB) return unit.Acoustic.RNBCurve;
-            if (step == ProcessStep.IMP) return unit.Acoustic.IMPCurve;
+            if (Step == ProcessStep.FR) return unit.Acoustic.FRCurve;
+            if (Step == ProcessStep.THD) return unit.Acoustic.THDCurve;
+            if (Step == ProcessStep.RNB) return unit.Acoustic.RNBCurve;
+            if (Step == ProcessStep.IMP) return unit.Acoustic.IMPCurve;
             else return null;
         }
 
