@@ -15,7 +15,7 @@ namespace ProcessDashboard.Model.Data.Acoustic
         public List<double> X { get; set; } = new List<double>();
         public List<double> Y { get; set; } = new List<double>();
 
-        public ScatterPlot LimitCurve { get; set; }
+        public ScatterPlot Curve { get; set; }
 
         public Limit(string filepath)
         {
@@ -45,7 +45,7 @@ namespace ProcessDashboard.Model.Data.Acoustic
                 Log.Error(ex.Message);
             }
 
-            LimitCurve = new ScatterPlot(X.ToArray(), Y.ToArray()) { Color = GetLimitColor(filepath) };
+            Curve = new ScatterPlot(X.ToArray(), Y.ToArray()) { Color = GetLimitColor(filepath) };
         }
 
         private Color GetLimitColor(string filepath)

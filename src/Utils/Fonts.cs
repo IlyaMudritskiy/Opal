@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 
-namespace ProcessDashboard.src.Utils.Design
+namespace ProcessDashboard.src.Utils
 {
     /// <summary>
     /// Contains Font objects with default fonts for application

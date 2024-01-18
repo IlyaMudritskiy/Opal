@@ -1,9 +1,9 @@
-﻿using ProcessDashboard.src.Controller.App;
-using ProcessDashboard.src.Controller.UI;
-using System;
+﻿using System;
 using System.Windows.Forms;
+using ProcessDashboard.src.App;
+using ProcessDashboard.src.TTL.UI.EventControllers;
 
-namespace ProcessDashboard
+namespace ProcessDashboard.Forms
 {
     public partial class MainForm : Form
     {
@@ -12,9 +12,10 @@ namespace ProcessDashboard
 
         public MainForm()
         {
+            InitializeComponent();
             UIController = new UIController(this);
             App = App.Instance;
-            InitializeComponent();
+            
         }
 
         public void SelectFilesMenuButton_Click(object sender, EventArgs e)

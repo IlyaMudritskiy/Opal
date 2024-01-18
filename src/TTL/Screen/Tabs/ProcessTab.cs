@@ -25,6 +25,7 @@ namespace ProcessDashboard.Model.Screen.Tabs
         public ProcessTab(string title, ProcessStep step)
         {
             Step = step;
+            FeatureTables = new DSContainer<TableView>();
             CreateLayout(title);
             RegisterCurveVisibilityEvents();
         }
@@ -33,8 +34,7 @@ namespace ProcessDashboard.Model.Screen.Tabs
         {
             Clear();
             Data = data;
-            AddData();
-
+            FillScreen();
         }
 
         public void Clear()
@@ -49,7 +49,7 @@ namespace ProcessDashboard.Model.Screen.Tabs
             ResetCheckBoxes();
         }
 
-        private void AddData()
+        private void FillScreen()
         {
             PlotView.AddScatter(
                Data.Curves.DS11,

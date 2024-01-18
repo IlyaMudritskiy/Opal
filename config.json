@@ -2,7 +2,7 @@
   "DataDriveLetter": "Z",
   "CrosshairOn":  false,
   "Acoustic": {
-    "Enabled": true,
+    "Enabled": false,
     "ManualSelection": false
   },
   "EmbossingConstants": {

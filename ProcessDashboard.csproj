@@ -47,10 +47,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="src\Controller\FileDataProcessors\CommonFileContentManager.cs" />
-    <Compile Include="src\Controller\FileDataProcessors\CommonFileManager.cs" />
-    <Compile Include="src\Controller\FileDataProcessors\TTL\ProcessDataProcessor.cs" />
-    <Compile Include="src\Controller\UI\FileController.cs" />
+    <Compile Include="src\CommonClasses\Processing\CommonFileContentManager.cs" />
+    <Compile Include="src\CommonClasses\Processing\CommonFileManager.cs" />
+    <Compile Include="src\TTL\Processing\ProcessDataProcessor.cs" />
+    <Compile Include="src\TTL\UI\EventControllers\FileController.cs" />
     <Compile Include="src\Forms\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -59,46 +59,43 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="src\Controller\FileDataProcessors\TTL\AcousticDataProcessor.cs" />
-    <Compile Include="src\Controller\App\App.cs" />
-    <Compile Include="src\Controller\ILineChecker.cs" />
-    <Compile Include="src\Controller\ScreenCreator.cs" />
-    <Compile Include="src\Controller\TTLine\FeatureCalculations.cs" />
-    <Compile Include="src\Controller\UI\SettingsController.cs" />
-    <Compile Include="src\Controller\UI\UIController.cs" />
-    <Compile Include="src\Model\AppConfiguration\Config.cs" />
-    <Compile Include="src\Model\Common\Measurement2D.cs" />
-    <Compile Include="src\Model\Common\Measurements2D.cs" />
-    <Compile Include="src\Model\Common\Measurements2DExt.cs" />
-    <Compile Include="src\Model\Data\Acoustic\AcousticFile.cs" />
-    <Compile Include="src\Model\Data\Acoustic\Limit.cs" />
-    <Compile Include="src\Model\Data\TTLine\Acoustic\TTLAcoustic.cs" />
-    <Compile Include="src\Model\Data\TTLine\Feature.cs" />
-    <Compile Include="src\Model\Data\TTLine\Heater.cs" />
-    <Compile Include="src\Model\Data\TTLine\Measurements.cs" />
-    <Compile Include="src\Model\Data\TTLine\ProcessFile.cs" />
-    <Compile Include="src\Controller\FileDataProcessors\TTL\TTLDataProcessor.cs" />
-    <Compile Include="src\Model\Data\TTLine\DataPoint.cs" />
-    <Compile Include="src\Model\Data\TTLine\Point.cs" />
-    <Compile Include="src\Model\Data\TTLine\DSXXData.cs" />
-    <Compile Include="src\Model\Data\TTLine\Process\ProcessSteps.cs" />
-    <Compile Include="src\Model\Data\TTLine\Process\TTLProcess.cs" />
-    <Compile Include="src\Model\Data\TTLine\TTLUnit.cs" />
-    <Compile Include="src\Model\Data\TTLine\ScreenData.cs" />
-    <Compile Include="src\Model\Data\TTLine\TTLUnitDataOld.cs" />
-    <Compile Include="src\Model\Data\Acoustic\AcousticMeasurement.cs" />
-    <Compile Include="src\Model\Screen\IScreen.cs" />
-    <Compile Include="src\Model\Screen\Tabs\AcousticTab.cs" />
-    <Compile Include="src\Model\Screen\Elements\PlotView.cs" />
-    <Compile Include="src\Model\Screen\Tabs\TTLineTab.cs" />
-    <Compile Include="src\Model\Screen\Elements\TableView.cs" />
-    <Compile Include="src\Model\Screen\Tabs\ProcessTab.cs" />
-    <Compile Include="src\Model\Screen\TTLScreen.cs" />
+    <Compile Include="src\TTL\Processing\AcousticDataProcessor.cs" />
+    <Compile Include="src\App\App.cs" />
+    <Compile Include="src\REWORK\ScreenCreator_no_idea.cs" />
+    <Compile Include="src\TTL\Processing\FeatureCalculations.cs" />
+    <Compile Include="src\TTL\UI\EventControllers\SettingsController.cs" />
+    <Compile Include="src\TTL\UI\EventControllers\UIController.cs" />
+    <Compile Include="src\Config.cs" />
+    <Compile Include="src\CommonClasses\Containers\Measurements2D.cs" />
+    <Compile Include="src\CommonClasses\Containers\Measurements2DExt.cs" />
+    <Compile Include="src\TTL\Containers\FileContent\AcousticFile.cs" />
+    <Compile Include="src\TTL\Containers\FileContent\Limit.cs" />
+    <Compile Include="src\TTL\Containers\ScreenData\PassFailUnits.cs" />
+    <Compile Include="src\TTL\Containers\ScreenData\AcousticData.cs" />
+    <Compile Include="src\TTL\Containers\Common\DSContainer.cs" />
+    <Compile Include="src\TTL\Containers\ScreenData\ProcessData.cs" />
+    <Compile Include="src\TTL\Containers\ScreenData\TTLData.cs" />
+    <Compile Include="src\TTL\Containers\ScreenData\TTLAcoustic.cs" />
+    <Compile Include="src\TTL\Containers\Common\Feature.cs" />
+    <Compile Include="src\TTL\Containers\Common\Heater.cs" />
+    <Compile Include="src\REWORK\Measurements_OLD.cs" />
+    <Compile Include="src\TTL\Containers\FileContent\ProcessFile.cs" />
+    <Compile Include="src\TTL\Processing\TTLDataProcessor.cs" />
+    <Compile Include="src\TTL\Containers\Common\DataPoint.cs" />
+    <Compile Include="src\CommonClasses\Containers\Point.cs" />
+    <Compile Include="src\TTL\Misc\ProcessStep.cs" />
+    <Compile Include="src\TTL\Containers\ScreenData\TTLProcess.cs" />
+    <Compile Include="src\TTL\Containers\ScreenData\TTLUnit.cs" />
+    <Compile Include="src\TTL\Misc\FailReason.cs" />
+    <Compile Include="src\CommonClasses\IScreen.cs" />
+    <Compile Include="src\TTL\Screen\Tabs\AcousticTab_OLD.cs" />
+    <Compile Include="src\TTL\UI\UIElements\PlotView.cs" />
+    <Compile Include="src\TTL\UI\UIElements\TableView.cs" />
+    <Compile Include="src\TTL\Screen\Tabs\ProcessTab.cs" />
+    <Compile Include="src\TTL\Screen\TTLScreen.cs" />
     <Compile Include="src\Utils\Colors.cs" />
     <Compile Include="src\Utils\Fonts.cs" />
-    <Compile Include="src\Model\Screen\Elements\CommonElements.cs" />
-    <Compile Include="src\Model\Screen\TTLineScreen.cs" />
-    <Compile Include="System\Collections\Gene.cs" />
+    <Compile Include="src\TTL\Screen\CommonElements_OLD.cs" />
     <EmbeddedResource Include="src\Forms\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>

@@ -1,6 +1,4 @@
-﻿using ProcessDashboard.src.Controller.UI;
-
-namespace ProcessDashboard
+﻿namespace ProcessDashboard.Forms
 {
     partial class MainForm
     {

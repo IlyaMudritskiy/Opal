@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 
-namespace ProcessDashboard.src.Utils.Design
+namespace ProcessDashboard.src.Utils
 {
     internal static class Colors
     {
@@ -15,6 +15,7 @@ namespace ProcessDashboard.src.Utils.Design
         public static Color Cyan { get; } = Color.FromArgb(42, 161, 152);
         public static Color Grey { get; } = Color.FromArgb(151, 151, 151);
 
+
         public static Color DS11C { get; } = Orange;
         public static Color DS12C { get; } = Cyan;
         public static Color DS21C { get; } = Blue;
@@ -23,6 +24,14 @@ namespace ProcessDashboard.src.Utils.Design
         internal static class Default
         {
             public static Color Grey { get; } = SystemColors.Control;
+        }
+
+        internal static class Light
+        {
+            public static Color Grey { get; } = Color.FromArgb(20, Black);
+            public static Color Green { get; } = Color.FromArgb(20, Colors.Green);
+            public static Color Red { get; } = Color.FromArgb(20, Colors.Red);
+            public static Color Purple { get; } = Color.FromArgb(20, Colors.Purple);
         }
     }
 }
