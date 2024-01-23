@@ -28,10 +28,11 @@ namespace ProcessDashboard.src.Utils
 
         internal static class Light
         {
-            public static Color Grey { get; } = Color.FromArgb(20, Black);
-            public static Color Green { get; } = Color.FromArgb(20, Colors.Green);
-            public static Color Red { get; } = Color.FromArgb(20, Colors.Red);
-            public static Color Purple { get; } = Color.FromArgb(20, Colors.Purple);
+            private static int Shade = 80;
+            public static Color Grey { get; } = Color.FromArgb(Shade, Black);
+            public static Color Green { get; } = Color.FromArgb(Shade, Colors.Green);
+            public static Color Red { get; } = Color.FromArgb(Shade, Colors.Red);
+            public static Color Purple { get; } = Color.FromArgb(Shade, Colors.Purple);
         }
     }
 }

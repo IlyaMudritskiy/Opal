@@ -6,7 +6,6 @@ using ProcessDashboard.Model.AppConfiguration;
 using ProcessDashboard.Model.Screen.Tabs;
 using ProcessDashboard.src.CommonClasses;
 using ProcessDashboard.src.TTL.Containers.ScreenData;
-using ProcessDashboard.src.TTL.Misc;
 using ProcessDashboard.src.TTL.Processing;
 
 namespace ProcessDashboard.src.TTL.Screen
@@ -28,26 +27,24 @@ namespace ProcessDashboard.src.TTL.Screen
         private AcousticTab RNB { get; set; }
         private AcousticTab IMP { get; set; }
 
-        // Tab with other information
-
         private TTLData TTLData { get; set; }
 
         public void Create(ref Panel panel)
         {
             Tabs = new TabControl() { Dock = DockStyle.Fill };
 
-            Temperature = new ProcessTab("Temperature", ProcessStep.Temperature);
-            Pressure = new ProcessTab("Pressure", ProcessStep.HighPressure);
+            Temperature = new ProcessTab("Temperature");
+            Pressure = new ProcessTab("Pressure");
 
             Tabs.Controls.Add(Temperature.Tab);
             Tabs.Controls.Add(Pressure.Tab);
 
             if (Config.Acoustic.Enabled)
             {
-                FR = new AcousticTab("FR", "Hz", "dB SPL", ProcessStep.FR);
-                THD = new AcousticTab("THD", "Hz", "%", ProcessStep.THD);
-                RNB = new AcousticTab("RNB", "Hz", "dB SPL", ProcessStep.RNB);
-                IMP = new AcousticTab("IMP", "Hz", "Ω", ProcessStep.IMP);
+                FR = new AcousticTab("FR", "Hz", "dB SPL");
+                THD = new AcousticTab("THD", "Hz", "%");
+                RNB = new AcousticTab("RNB", "Hz", "dB SPL");
+                IMP = new AcousticTab("IMP", "Hz", "Ω");
 
                 Tabs.TabPages.Add(FR.Tab);
                 Tabs.TabPages.Add(THD.Tab);

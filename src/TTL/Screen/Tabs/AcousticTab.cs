@@ -2,7 +2,7 @@
 using ProcessDashboard.Model.Data.Acoustic;
 using ProcessDashboard.src.TTL.Containers.Common;
 using ProcessDashboard.src.TTL.Containers.ScreenData;
-using ProcessDashboard.src.TTL.Misc;
+using ProcessDashboard.src.TTL.Processing;
 using ProcessDashboard.src.TTL.Screen;
 using ProcessDashboard.src.TTL.UI.UIElements;
 using ProcessDashboard.src.Utils;
@@ -22,14 +22,14 @@ namespace ProcessDashboard.Model.Screen.Tabs
         public string UnitY { get; set; }
 
         private AcousticData Data { get; set; }
-        private ProcessStep Step { get; set; }
+        private string TabType { get; set; } = string.Empty;
 
-        public AcousticTab(string title, string unitX, string unitY, ProcessStep step)
+        public AcousticTab(string title, string unitX, string unitY)
         {
             UnitX = unitX;
             UnitY = unitY;
-            Step = step;
             Plots = new DSContainer<PlotView>();
+            TabType = title;
             createLayout(title);
         }
 
@@ -39,6 +39,8 @@ namespace ProcessDashboard.Model.Screen.Tabs
             Clear();
             Data = data;
             FillScreen();
+            SetTitles();
+            AddLimits();
         }
 
         public void Clear()
@@ -48,6 +50,7 @@ namespace ProcessDashboard.Model.Screen.Tabs
             Plots.DS21.Clear();
             Plots.DS22.Clear();
             ComparisonPlot.Clear();
+            Title.Text = string.Empty;
         }
 
         private void FillScreen()
@@ -56,15 +59,26 @@ namespace ProcessDashboard.Model.Screen.Tabs
             Plots.DS12.AddScatter(Data.Curves.DS12);
             Plots.DS21.AddScatter(Data.Curves.DS21);
             Plots.DS22.AddScatter(Data.Curves.DS22);
-            ComparisonPlot.AddScatter(Data.MeanCurves.DS11, Data.MeanCurves.DS12, Data.MeanCurves.DS21, Data.MeanCurves.DS22);
+            ComparisonPlot.AddScatter(Data.MeanCurves);
             Refresh();
         }
 
-        public void AddLimits(Limit upper, Limit lower, Limit reference)
+        private void AddLimits()
         {
-            AddLimitToAllPlots(upper);
-            AddLimitToAllPlots(lower);
-            AddLimitToAllPlots(reference);
+            var limits = AcousticDataProcessor.OpenLimitFiles();
+            if (TabType.Contains("FR"))
+                AddLimit(limits["FRUpper"], limits["FRLower"], limits["FRReference"]);
+            if (TabType.Contains("THD"))
+                AddLimit(limits["THDUpper"], limits["THDLower"], limits["THDReference"]);
+            if (TabType.Contains("RNB"))
+                AddLimit(limits["RNBUpper"], limits["RNBLower"], limits["RNBReference"]);
+            if (TabType.Contains("IMP"))
+                AddLimit(limits["IMPUpper"], limits["IMPLower"], limits["IMPReference"]);
+        }
+
+        private void AddLimit(params Limit[] limits)
+        {
+            foreach (var limit in limits) AddLimitToAllPlots(limit);
             Refresh();
             FitPlots();
         }
@@ -96,6 +110,16 @@ namespace ProcessDashboard.Model.Screen.Tabs
             Plots.DS21.Refresh();
             Plots.DS22.Refresh();
             ComparisonPlot.Refresh();
+        }
+
+        private void SetTitles()
+        {
+            Plots.DS11.Title.Text = "Die-Side 1-1";
+            Plots.DS12.Title.Text = "Die-Side 1-2";
+            Plots.DS21.Title.Text = "Die-Side 2-1";
+            Plots.DS22.Title.Text = "Die-Side 2-2";
+            ComparisonPlot.Title.Text = "Mean Plots";
+            Title.Text = $"{TabType} | {Data.MachineID} - {Data.ProductID}";
         }
 
         private void createLayout(string title)

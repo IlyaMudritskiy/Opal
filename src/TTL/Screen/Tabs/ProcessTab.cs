@@ -4,7 +4,6 @@ using System.Windows.Forms;
 using ProcessDashboard.Model.AppConfiguration;
 using ProcessDashboard.src.TTL.Containers.Common;
 using ProcessDashboard.src.TTL.Containers.ScreenData;
-using ProcessDashboard.src.TTL.Misc;
 using ProcessDashboard.src.TTL.UI.UIElements;
 using ProcessDashboard.src.Utils;
 using ScottPlot.Plottable;
@@ -18,16 +17,16 @@ namespace ProcessDashboard.Model.Screen.Tabs
         public DSContainer<TableView> FeatureTables { get; set; }
 
         private Config Config = Config.Instance;
+        private string Title = string.Empty;
 
         private ProcessData Data { get; set; }
-        private ProcessStep Step { get; set; }
 
-        public ProcessTab(string title, ProcessStep step)
+        public ProcessTab(string title)
         {
-            Step = step;
             FeatureTables = new DSContainer<TableView>();
             CreateLayout(title);
             RegisterCurveVisibilityEvents();
+            Title = title;
         }
 
         public void AddData(ProcessData data)
@@ -45,7 +44,6 @@ namespace ProcessDashboard.Model.Screen.Tabs
             FeatureTables.DS21.Clear();
             FeatureTables.DS22.Clear();
             Data = null;
-            Step = ProcessStep.None;
             ResetCheckBoxes();
         }
 
@@ -58,17 +56,18 @@ namespace ProcessDashboard.Model.Screen.Tabs
                Data.Curves.DS22
             );
 
+            PlotView.Title.Text = $"{Title} | {Data.MachineID} - {Data.ProductID}";
+
             FeatureTables.DS11.AddData(Data.MeanFeatures.DS11, Colors.DS11C, Data.Features.DS11.Count);
             FeatureTables.DS12.AddData(Data.MeanFeatures.DS12, Colors.DS12C, Data.Features.DS12.Count);
             FeatureTables.DS21.AddData(Data.MeanFeatures.DS21, Colors.DS21C, Data.Features.DS21.Count);
             FeatureTables.DS22.AddData(Data.MeanFeatures.DS22, Colors.DS22C, Data.Features.DS22.Count);
         }
 
-
         private void CreateLayout(string title)
         {
             Tab = new TabPage() { Text = title };
-            PlotView = new PlotView("", Colors.Black);
+            PlotView = new PlotView(title, Colors.Black);
             FeatureTables.DS11 = new TableView("Die-Side 1-1");
             FeatureTables.DS12 = new TableView("Die-Side 1-2");
             FeatureTables.DS21 = new TableView("Die-Side 2-1");

@@ -71,25 +71,25 @@
             this.PDFReportToolStripMenuItem,
             this.dataAndReportToolStripMenuItem});
             this.FileSaveMenuButton.Name = "FileSaveMenuButton";
-            this.FileSaveMenuButton.Size = new System.Drawing.Size(180, 22);
+            this.FileSaveMenuButton.Size = new System.Drawing.Size(98, 22);
             this.FileSaveMenuButton.Text = "Save";
             // 
             // processedDataToolStripMenuItem
             // 
             this.processedDataToolStripMenuItem.Name = "processedDataToolStripMenuItem";
-            this.processedDataToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.processedDataToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
             this.processedDataToolStripMenuItem.Text = "Processed Data";
             // 
-            // pDFReportToolStripMenuItem
+            // PDFReportToolStripMenuItem
             // 
-            this.PDFReportToolStripMenuItem.Name = "pDFReportToolStripMenuItem";
-            this.PDFReportToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.PDFReportToolStripMenuItem.Name = "PDFReportToolStripMenuItem";
+            this.PDFReportToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
             this.PDFReportToolStripMenuItem.Text = "PDF Report";
             // 
             // dataAndReportToolStripMenuItem
             // 
             this.dataAndReportToolStripMenuItem.Name = "dataAndReportToolStripMenuItem";
-            this.dataAndReportToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.dataAndReportToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
             this.dataAndReportToolStripMenuItem.Text = "Data and Report";
             // 
             // SelectFilesMenuButton
@@ -113,7 +113,7 @@
             this.OnOffAcousticPlotsMenuButton,
             this.FileSelectionTypeMenuButton});
             this.SettingsAcousticMenuButton.Name = "SettingsAcousticMenuButton";
-            this.SettingsAcousticMenuButton.Size = new System.Drawing.Size(180, 22);
+            this.SettingsAcousticMenuButton.Size = new System.Drawing.Size(120, 22);
             this.SettingsAcousticMenuButton.Text = "Acoustic";
             // 
             // OnOffAcousticPlotsMenuButton

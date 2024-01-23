@@ -27,10 +27,14 @@ namespace ProcessDashboard.src.TTL.UI.UIElements
 
         public void AddData(List<Feature> features, Color color, int amount)
         {
-            Title.BackColor = color;
+            Title.BackColor = Colors.Black;
 
-            foreach (Feature feature in features)
-                DataSource.Add(feature);
+            if (features != null && features.Count > 0) {
+                Title.BackColor = color;
+
+                foreach (Feature feature in features)
+                    DataSource.Add(feature);
+            }
 
             Title.Text = $"{title}  |  Amount: {amount}";
         }

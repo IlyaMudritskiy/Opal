@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using ProcessDashboard.src.CommonClasses.Containers;
+using ProcessDashboard.src.TTL.Containers.Common;
 using ProcessDashboard.src.TTL.Screen;
 using ProcessDashboard.src.Utils;
 using ScottPlot;
@@ -40,6 +41,19 @@ namespace ProcessDashboard.src.TTL.UI.UIElements
 
             foreach (var plot in data)
                 Plot.Plot.Add(plot);
+
+            Refresh();
+            Fit();
+        }
+
+        public void AddScatter(DSContainer<ScatterPlot> data)
+        {
+            if (data == null) return;
+
+            if (data.DS11 != null) Plot.Plot.Add(data.DS11);
+            if (data.DS12 != null) Plot.Plot.Add(data.DS12);
+            if (data.DS21 != null) Plot.Plot.Add(data.DS21);
+            if (data.DS22 != null) Plot.Plot.Add(data.DS22);
 
             Refresh();
             Fit();

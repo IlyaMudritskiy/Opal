@@ -15,6 +15,11 @@ namespace ProcessDashboard.src.CommonClasses.Processing
     {
         private static readonly NLog.Logger Log = NLog.LogManager.GetCurrentClassLogger();
 
+        private static JsonSerializerSettings JsonSettings = new JsonSerializerSettings()
+        {
+            DateParseHandling = DateParseHandling.None
+        };
+
         #region JObject to <T>
 
         /// <summary>
@@ -87,7 +92,7 @@ namespace ProcessDashboard.src.CommonClasses.Processing
             try
             {
                 string json = File.ReadAllText(filePath);
-                T result = JsonConvert.DeserializeObject<T>(json);
+                T result = JsonConvert.DeserializeObject<T>(json, JsonSettings);
                 return result;
             }
             catch (JsonSerializationException ex)
@@ -147,7 +152,7 @@ namespace ProcessDashboard.src.CommonClasses.Processing
                 using (StreamReader reader = new StreamReader(entryStream))
                 {
                     string json = reader.ReadToEnd();
-                    T result = JsonConvert.DeserializeObject<T>(json);
+                    T result = JsonConvert.DeserializeObject<T>(json, JsonSettings);
                     return result;
                 }
             }
@@ -199,7 +204,8 @@ namespace ProcessDashboard.src.CommonClasses.Processing
             {
                 content = r.ReadToEnd();
             }
-            return JObject.Parse(content);
+            var res = JObject.Parse(content);
+            return res;
         }
 
         /// <summary>

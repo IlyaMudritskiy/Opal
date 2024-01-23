@@ -48,8 +48,18 @@ namespace ProcessDashboard.src.TTL.Containers.ScreenData
             HighPressure.FromMeasurements(press.Select(x => x.DateTime).ToList(), temp.Select(x => x.MeasurementValue).ToList());
             Heater = new Heater(file.Steps.Where(x => x.StepName == "ps01_heater_on").FirstOrDefault().Measurements);
 
-            TemperatureCurve = new ScatterPlot(Temperature.X.ToArray(), Temperature.Y.ToArray()) { Color = color };
-            PressureCurve = new ScatterPlot(HighPressure.X.ToArray(), HighPressure.Y.ToArray()) { Color = color };
+            TemperatureCurve = new ScatterPlot(Temperature.X.ToArray(), Temperature.Y.ToArray()) 
+            { 
+                Color = color ,
+                MarkerSize = 0,
+                LineWidth = 1
+            };
+            PressureCurve = new ScatterPlot(HighPressure.X.ToArray(), HighPressure.Y.ToArray()) 
+            { 
+                Color = color,
+                MarkerSize = 0,
+                LineWidth = 1
+            };
 
             FeatureCalculations.Calculate(this);
         }

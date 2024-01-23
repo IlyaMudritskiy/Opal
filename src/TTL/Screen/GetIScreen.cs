@@ -1,7 +1,6 @@
 ﻿using ProcessDashboard.src.CommonClasses;
-using ProcessDashboard.src.TTL.Screen;
 
-namespace ProcessDashboard.Controller
+namespace ProcessDashboard.src.TTL.Screen
 {
     public static class ScreenCreator
     {

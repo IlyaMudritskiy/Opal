@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using ProcessDashboard.Model.Data.Acoustic;
@@ -44,10 +45,30 @@ namespace ProcessDashboard.src.TTL.Containers.ScreenData
             RNB = getMeasurement(file, "rnb");
             IMP = getMeasurement(file, "imp");
 
-            FRCurve = new ScatterPlot(FR.X.ToArray(), FR.Y.ToArray()) { Color = GetColor(FR.Pass) };
-            THDCurve = new ScatterPlot(THD.X.ToArray(), THD.Y.ToArray()) { Color = GetColor(THD.Pass) };
-            RNBCurve = new ScatterPlot(RNB.X.ToArray(), RNB.Y.ToArray()) { Color = GetColor(RNB.Pass) };
-            IMPCurve = new ScatterPlot(IMP.X.ToArray(), IMP.Y.ToArray()) { Color = GetColor(IMP.Pass) };
+            FRCurve = new ScatterPlot(ToLogScale(FR.X), FR.Y.ToArray())
+            {
+                Color = GetColor(FR.Pass),
+                LineWidth = 1,
+                MarkerSize = 0
+            };
+            THDCurve = new ScatterPlot(ToLogScale(THD.X), THD.Y.ToArray())
+            {
+                Color = GetColor(THD.Pass),
+                LineWidth = 1,
+                MarkerSize = 0
+            };
+            RNBCurve = new ScatterPlot(ToLogScale(RNB.X), RNB.Y.ToArray())
+            {
+                Color = GetColor(RNB.Pass),
+                LineWidth = 1,
+                MarkerSize = 0
+            };
+            IMPCurve = new ScatterPlot(ToLogScale(IMP.X), IMP.Y.ToArray())
+            {
+                Color = GetColor(IMP.Pass),
+                LineWidth = 1,
+                MarkerSize = 0
+            };
 
             FindFailReasons();
         }
@@ -78,9 +99,14 @@ namespace ProcessDashboard.src.TTL.Containers.ScreenData
 
         private Color GetColor(bool acousticpass)
         {
-            if (!Pass) return Colors.Light.Red;
-            if (!acousticpass) return Colors.Light.Purple;
+            if (!Pass) return Colors.Red;
+            if (!acousticpass) return Colors.Purple;
             return Colors.Light.Grey;
+        }
+
+        private double[] ToLogScale(List<double> X)
+        {
+            return X.Select(xx => Math.Log10(xx)).ToArray();
         }
     }
 }

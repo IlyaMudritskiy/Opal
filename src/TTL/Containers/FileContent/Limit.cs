@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 
 namespace ProcessDashboard.Model.Data.Acoustic
 {
@@ -45,18 +46,28 @@ namespace ProcessDashboard.Model.Data.Acoustic
                 Log.Error(ex.Message);
             }
 
-            Curve = new ScatterPlot(X.ToArray(), Y.ToArray()) { Color = GetLimitColor(filepath) };
+            Curve = new ScatterPlot(ToLogScale(X), Y.ToArray())
+            {
+                Color = GetLimitColor(filepath),
+                LineWidth = 1,
+                MarkerSize = 0
+            };
         }
 
         private Color GetLimitColor(string filepath)
         {
             if (string.IsNullOrEmpty(filepath)) return Colors.Black;
 
-            if (filepath.ToLower().Contains("upper")) return Colors.Red;
-            if (filepath.ToLower().Contains("lower")) return Colors.Red;
+            if (filepath.ToLower().Contains("upper")) return Colors.Purple;
+            if (filepath.ToLower().Contains("lower")) return Colors.Purple;
             if (filepath.ToLower().Contains("reference")) return Colors.Green;
 
             return Colors.Black;
+        }
+
+        private double[] ToLogScale(List<double> X)
+        {
+            return X.Select(xx => Math.Log10(xx)).ToArray();
         }
     }
 }

@@ -23,10 +23,6 @@ namespace ProcessDashboard.src.TTL.Processing
                 List<string> filepaths = CommonFileManager.GetFilesFromDialog();
                 if (filepaths == null || filepaths.Count == 0) return null;
             }
-            /*else
-            {
-                return manualSelected(ref files, CommonFileManager.GetFilesFromDialog());
-            }*/
 
             if (!config.Acoustic.ManualSelection)
                 return fromDefaultLocation(ref files);

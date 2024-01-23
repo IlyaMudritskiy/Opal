@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using ProcessDashboard.src.CommonClasses.Containers;
 using ProcessDashboard.src.TTL.Containers.Common;
@@ -10,6 +12,8 @@ namespace ProcessDashboard.src.TTL.Containers.ScreenData
 {
     public class AcousticData
     {
+        public string MachineID { get; set; }
+        public string ProductID { get; set; }
         private DSContainer<List<Measurements2DExt>> SeparatedData { get; set; }
         public DSContainer<Measurements2D> MeanValues { get; set; }
 
@@ -28,6 +32,9 @@ namespace ProcessDashboard.src.TTL.Containers.ScreenData
             MeanCurves = new DSContainer<ScatterPlot>();
 
             Step = step;
+
+            MachineID = units[0].MachineID;
+            ProductID = units[0].ProductID;
 
             SeparateAcousticMeasurements(units);
             AddCurves(units);
@@ -113,7 +120,7 @@ namespace ProcessDashboard.src.TTL.Containers.ScreenData
 
         private Measurements2D CalcMeanAcoustic(List<Measurements2DExt> data)
         {
-            if (data  == null || data.Count == 0) return null;
+            if (data == null || data.Count == 0) return null;
             Measurements2D mean = data[0];
 
             for (int i = 1; i < data.Count; i++)
@@ -128,12 +135,34 @@ namespace ProcessDashboard.src.TTL.Containers.ScreenData
 
         private void AddMeanAcousticCurves()
         {
-            MeanCurves.DS11 = new ScatterPlot(MeanValues.DS11.X.ToArray(), MeanValues.DS11.Y.ToArray()) { Color = Colors.DS11C };
-            MeanCurves.DS12 = new ScatterPlot(MeanValues.DS12.X.ToArray(), MeanValues.DS12.Y.ToArray()) { Color = Colors.DS12C };
-            MeanCurves.DS21 = new ScatterPlot(MeanValues.DS21.X.ToArray(), MeanValues.DS21.Y.ToArray()) { Color = Colors.DS21C };
-            MeanCurves.DS22 = new ScatterPlot(MeanValues.DS22.X.ToArray(), MeanValues.DS22.Y.ToArray()) { Color = Colors.DS22C };
+            if (MeanValues.DS11 != null)
+                MeanCurves.DS11 = GetScatter(MeanValues.DS11.X, MeanValues.DS11.Y, Colors.DS11C);
+
+            if (MeanValues.DS12 != null)
+                MeanCurves.DS12 = GetScatter(MeanValues.DS12.X, MeanValues.DS12.Y, Colors.DS12C);
+         
+            if (MeanValues.DS21 != null)
+                MeanCurves.DS21 = GetScatter(MeanValues.DS21.X, MeanValues.DS21.Y, Colors.DS21C);
+
+            if (MeanValues.DS22 != null)
+                MeanCurves.DS22 = GetScatter(MeanValues.DS22.X, MeanValues.DS22.Y, Colors.DS22C);
+        }
+
+        private ScatterPlot GetScatter(List<double> x, List<double> y, Color color)
+        {
+            return new ScatterPlot(ToLogScale(x), y.ToArray())
+            {
+                Color = color,
+                LineWidth = 2,
+                MarkerSize = 0
+            };
         }
 
         #endregion
+
+        private double[] ToLogScale(List<double> X)
+        {
+            return X.Select(xx => Math.Log10(xx)).ToArray();
+        }
     }
 }

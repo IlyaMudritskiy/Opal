@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ProcessDashboard.src.TTL.Containers.FileContent;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -17,6 +18,33 @@ namespace ProcessDashboard.src.CommonClasses.Containers
         {
             X = new List<double>();
             Y = new List<double>();
+        }
+
+        public Measurements2D(List<Measurement> measurements)
+        {
+            if (measurements == null)
+                throw new ArgumentNullException(nameof(measurements));
+
+             List<string> dateTime = measurements.Select(m => m.DateTime).ToList();
+            List<string> values = measurements.Select(v => v.MeasurementValue).ToList();
+
+            List<double> resultOffset = new List<double>(dateTime.Count).Select(x => .0).ToList();
+            List<double> resultValues = new List<double>(values.Count).Select(x => .0).ToList();
+
+            for (int i = 0; i < values.Count; i++)
+            {
+                try
+                {
+                    resultOffset.Add((DateTime.Parse(dateTime[i]) - DateTime.Parse(dateTime[0])).TotalSeconds);
+                    resultValues.Add(double.Parse(values[i]));
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex.Message);
+                }
+            }
+            X = resultOffset;
+            Y = resultValues;
         }
 
         public static Measurements2D operator +(Measurements2D a, Measurements2D b)

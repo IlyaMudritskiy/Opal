@@ -8,6 +8,8 @@ namespace ProcessDashboard.src.TTL.Containers.ScreenData
 {
     public class ProcessData
     {
+        public string MachineID { get; set; }
+        public string ProductID { get; set; }
         public DSContainer<List<ScatterPlot>> Curves { get; set; }
         public DSContainer<List<Feature>> MeanFeatures { get; set; }
         public DSContainer<List<List<Feature>>> Features { get; set; }
@@ -21,6 +23,8 @@ namespace ProcessDashboard.src.TTL.Containers.ScreenData
             MeanFeatures = new DSContainer<List<Feature>>();
             Features = new DSContainer<List<List<Feature>>>();
             Step = step;
+            MachineID = units[0].MachineID;
+            ProductID = units[0].ProductID;
 
             SeparateProcessFeatures(units);
             AddCurves(units);

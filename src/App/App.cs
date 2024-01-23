@@ -4,10 +4,10 @@ using System.Globalization;
 using System.Threading;
 using System.Windows.Forms;
 using Newtonsoft.Json.Linq;
-using ProcessDashboard.Controller;
 using ProcessDashboard.Model.AppConfiguration;
 using ProcessDashboard.src.CommonClasses;
 using ProcessDashboard.src.CommonClasses.Processing;
+using ProcessDashboard.src.TTL.Screen;
 
 namespace ProcessDashboard.src.App
 {
@@ -25,7 +25,7 @@ namespace ProcessDashboard.src.App
 
         public App()
         {
-            SetCultureSettings();
+            AppSettings();
         }
 
         /// <summary>
@@ -38,6 +38,8 @@ namespace ProcessDashboard.src.App
             // Get paths of selected files
             List<string> filepaths = CommonFileManager.GetFilesFromDialog(ref dialog);
             // Read selected files into JObject (JObject is not tied to a specific screen)
+            if (filepaths == null || filepaths.Count == 0) return;
+
             List<JObject> files = CommonFileManager.ParseJsonFiles(filepaths);
 
             Log.Trace($"Selected [{filepaths.Count}] files.");
@@ -63,10 +65,22 @@ namespace ProcessDashboard.src.App
             screen.LoadData(ref files);
         }
 
-        private void SetCultureSettings()
+        private void AppSettings()
         {
             Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
             Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
+            SetGlobalDateTimeFormat();
+        }
+
+        static void SetGlobalDateTimeFormat()
+        {
+            CultureInfo cultureInfo = CultureInfo.InvariantCulture;
+            //Type dateTimeInfoType = typeof(DateTimeFormatInfo);
+            DateTimeFormatInfo dtfi = cultureInfo.DateTimeFormat;
+
+            // Use reflection to modify the read-only property
+            typeof(DateTimeFormatInfo).GetField("generalLongTimePattern", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)
+                                     .SetValue(dtfi, "yyyy-MM-dd HH:mm:ss.fff");
         }
     }
 }
