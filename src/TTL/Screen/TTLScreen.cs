@@ -55,6 +55,11 @@ namespace ProcessDashboard.src.TTL.Screen
             panel.SuspendLayout();
             panel.Controls.Add(Tabs);
             panel.ResumeLayout();
+
+            FR.SubscribeToDSNestToggleButtonClick(FRToggleView);
+            THD.SubscribeToDSNestToggleButtonClick(THDToggleView);
+            RNB.SubscribeToDSNestToggleButtonClick(RNBToggleView);
+            IMP.SubscribeToDSNestToggleButtonClick(IMPToggleView);
         }
 
         public void Update(ref List<JObject> data)
@@ -99,6 +104,26 @@ namespace ProcessDashboard.src.TTL.Screen
             }
 
             TTLData = null;
+        }
+
+        private void FRToggleView(object sender, EventArgs e)
+        {
+            FR.ShowPlots();
+        }
+
+        private void THDToggleView(object sender, EventArgs e)
+        {
+            THD.ShowPlots();
+        }
+
+        private void RNBToggleView(object sender, EventArgs e)
+        {
+            RNB.ShowPlots();
+        }
+
+        private void IMPToggleView(object sender, EventArgs e)
+        {
+            IMP.ShowPlots();
         }
     }
 }

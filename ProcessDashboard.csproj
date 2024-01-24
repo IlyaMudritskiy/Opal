@@ -110,6 +110,9 @@
     <None Include="config.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="config.json.example" />
+    <None Include="Configuration\app.json" />
+    <None Include="Configuration\config2.json" />
     <None Include="NLog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -148,4 +151,9 @@
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties configuration_4app_1json__JsonSchema="" />
+    </VisualStudio>
+  </ProjectExtensions>
 </Project>
