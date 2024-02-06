@@ -45,7 +45,7 @@ namespace ProcessDashboard.src.TTL.Containers.ScreenData
             var press = file.Steps.Where(x => x.StepName == "ps01_high_pressure_actual").FirstOrDefault().Measurements;
 
             Temperature.FromMeasurements(temp.Select(x => x.DateTime).ToList(), temp.Select(x => x.MeasurementValue).ToList());
-            HighPressure.FromMeasurements(press.Select(x => x.DateTime).ToList(), temp.Select(x => x.MeasurementValue).ToList());
+            HighPressure.FromMeasurements(press.Select(x => x.DateTime).ToList(), press.Select(x => x.MeasurementValue).ToList());
             Heater = new Heater(file.Steps.Where(x => x.StepName == "ps01_heater_on").FirstOrDefault().Measurements);
 
             TemperatureCurve = new ScatterPlot(Temperature.X.ToArray(), Temperature.Y.ToArray()) 

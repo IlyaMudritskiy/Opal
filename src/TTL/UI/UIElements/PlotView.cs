@@ -29,7 +29,8 @@ namespace ProcessDashboard.src.TTL.UI.UIElements
 
             foreach (var plotSet in data)
                 foreach (var plot in plotSet)
-                    Plot.Plot.Add(plot);
+                    if (plot != null)
+                        Plot.Plot.Add(plot);
 
             Refresh();
             Fit();
@@ -40,7 +41,8 @@ namespace ProcessDashboard.src.TTL.UI.UIElements
             if (data == null || data.Length == 0) return;
 
             foreach (var plot in data)
-                Plot.Plot.Add(plot);
+                if (plot != null)
+                    Plot.Plot.Add(plot);
 
             Refresh();
             Fit();

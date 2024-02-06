@@ -197,10 +197,10 @@ namespace ProcessDashboard.Model.Screen.Tabs
 
         private void ShowDSPlots()
         {
-            Plots.DS11.AddScatter(Data.DSCurvesPass.DS11);
-            Plots.DS12.AddScatter(Data.DSCurvesPass.DS12);
-            Plots.DS21.AddScatter(Data.DSCurvesPass.DS21);
-            Plots.DS22.AddScatter(Data.DSCurvesPass.DS22);
+            Plots.DS11.AddScatter(Data.DSCurvesPass.DS11, Data.DSCurvesFail.DS11);
+            Plots.DS12.AddScatter(Data.DSCurvesPass.DS12, Data.DSCurvesFail.DS12);
+            Plots.DS21.AddScatter(Data.DSCurvesPass.DS21, Data.DSCurvesFail.DS21);
+            Plots.DS22.AddScatter(Data.DSCurvesPass.DS22, Data.DSCurvesFail.DS22);
             ComparisonPlot.AddScatter(Data.MeanDSCurves);
             AddLimits();
             Refresh();
@@ -208,10 +208,10 @@ namespace ProcessDashboard.Model.Screen.Tabs
 
         private void ShowNestPlots()
         {
-            Plots.DS11.AddScatter(Data.NestCurvesPass.DS11);
-            Plots.DS12.AddScatter(Data.NestCurvesPass.DS12);
-            Plots.DS21.AddScatter(Data.NestCurvesPass.DS21);
-            Plots.DS22.AddScatter(Data.NestCurvesPass.DS22);
+            Plots.DS11.AddScatter(Data.NestCurvesPass.DS11, Data.NestCurvesFail.DS11);
+            Plots.DS12.AddScatter(Data.NestCurvesPass.DS12, Data.NestCurvesFail.DS12);
+            Plots.DS21.AddScatter(Data.NestCurvesPass.DS21, Data.NestCurvesFail.DS21);
+            Plots.DS22.AddScatter(Data.NestCurvesPass.DS22, Data.NestCurvesFail.DS22);
             ComparisonPlot.AddScatter(Data.MeanNestCurves);
             AddLimits();
             Refresh();
