@@ -4,7 +4,6 @@ using System.Drawing;
 using System.Linq;
 using ProcessDashboard.src.CommonClasses.Containers;
 using ProcessDashboard.src.TTL.Containers.Common;
-using ProcessDashboard.src.TTL.Containers.FileContent;
 using ProcessDashboard.src.TTL.Misc;
 using ProcessDashboard.src.Utils;
 using ScottPlot.Plottable;
