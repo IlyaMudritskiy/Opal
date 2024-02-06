@@ -23,7 +23,7 @@ namespace ProcessDashboard.Model.Screen.Tabs
         public string UnitY { get; set; }
 
         public event EventHandler DSNestToggleButtonClick;
-        public Button DSNestToggleButton { get; set; }
+        public Button DSNestSortToggleButton { get; set; }
 
         private AcousticData Data { get; set; }
         private string TabType { get; set; } = string.Empty;
@@ -50,20 +50,21 @@ namespace ProcessDashboard.Model.Screen.Tabs
             Plots.DS22 = new PlotView("Die-Side 2-2", Colors.DS22C, UnitX, UnitY, true);
             ComparisonPlot = new PlotView("Mean Plots", Colors.Black, UnitX, UnitY, true);
 
-            TableLayoutPanel tabBase = new TableLayoutPanel()
+            TableLayoutPanel generalLayoutPanel = new TableLayoutPanel()
             {
                 ColumnCount = 1,
-                RowCount = 2,
+                RowCount = 3,
                 Dock = DockStyle.Fill,
                 ColumnStyles = { new ColumnStyle(SizeType.Percent, 100F) },
                 RowStyles =
                 {
                     new RowStyle(SizeType.Absolute, 40),
+                    new RowStyle(SizeType.Absolute, 40),
                     new RowStyle(SizeType.Percent, 100F)
                 }
             };
 
-            TableLayoutPanel plotArea = new TableLayoutPanel()
+            TableLayoutPanel plotPanel = new TableLayoutPanel()
             {
                 ColumnCount = 2,
                 RowCount = 3,
@@ -81,7 +82,24 @@ namespace ProcessDashboard.Model.Screen.Tabs
                 }
             };
 
-            TableLayoutPanel titleArea = new TableLayoutPanel()
+            TableLayoutPanel titlePanel = new TableLayoutPanel()
+            {
+                ColumnCount = 2,
+                RowCount = 1,
+                Dock = DockStyle.Fill,
+                ColumnStyles =
+                {
+                    new ColumnStyle(SizeType.Percent, 100)
+                },
+                RowStyles =
+                {
+                    new RowStyle(SizeType.Percent, 100)
+                },
+                BackColor = Colors.Black,
+                Font = Fonts.Sennheiser.M
+            };
+
+            TableLayoutPanel controlsPanel = new TableLayoutPanel()
             {
                 ColumnCount = 2,
                 RowCount = 1,
@@ -95,38 +113,42 @@ namespace ProcessDashboard.Model.Screen.Tabs
                 {
                     new RowStyle(SizeType.Percent, 100)
                 },
-                BackColor = Colors.Black,
-                Font = Fonts.Sennheiser.M
+                BackColor= Colors.Black
             };
 
-            DSNestToggleButton = new Button()
+            DSNestSortToggleButton = new Button()
             {
                 Text = "BUTTON",
                 Dock = DockStyle.Fill,
-                BackColor = Colors.Default.Grey
+                BackColor = Colors.Default.Grey,
+                Font = Fonts.Sennheiser.M
             };
 
-            DSNestToggleButton.Click += OnDSNestToggleButtonClick;
+            DSNestSortToggleButton.Click += OnDSNestToggleButtonClick;
 
-            titleArea.SuspendLayout();
-            titleArea.Controls.Add(DSNestToggleButton, 0, 0);
-            titleArea.Controls.Add(Title, 1, 0);
-            titleArea.ResumeLayout();
+            titlePanel.SuspendLayout();
+            titlePanel.Controls.Add(Title, 0, 0);
+            titlePanel.ResumeLayout();
 
-            plotArea.SuspendLayout();
-            plotArea.Controls.Add(Plots.DS11.Layout, 0, 0);
-            plotArea.Controls.Add(Plots.DS12.Layout, 1, 0);
-            plotArea.Controls.Add(Plots.DS21.Layout, 0, 1);
-            plotArea.Controls.Add(Plots.DS22.Layout, 1, 1);
-            plotArea.Controls.Add(ComparisonPlot.Layout, 0, 2);
-            plotArea.ResumeLayout();
+            controlsPanel.SuspendLayout();
+            controlsPanel.Controls.Add(DSNestSortToggleButton, 0, 0);
+            controlsPanel.ResumeLayout();
 
-            tabBase.SuspendLayout();
-            tabBase.Controls.Add(titleArea, 0, 0);
-            tabBase.Controls.Add(plotArea, 0, 1);
-            tabBase.ResumeLayout();
+            plotPanel.SuspendLayout();
+            plotPanel.Controls.Add(Plots.DS11.Layout, 0, 0);
+            plotPanel.Controls.Add(Plots.DS12.Layout, 1, 0);
+            plotPanel.Controls.Add(Plots.DS21.Layout, 0, 1);
+            plotPanel.Controls.Add(Plots.DS22.Layout, 1, 1);
+            plotPanel.Controls.Add(ComparisonPlot.Layout, 0, 2);
+            plotPanel.ResumeLayout();
 
-            Tab.Controls.Add(tabBase);
+            generalLayoutPanel.SuspendLayout();
+            generalLayoutPanel.Controls.Add(titlePanel, 0, 0);
+            generalLayoutPanel.Controls.Add(controlsPanel, 0, 1);
+            generalLayoutPanel.Controls.Add(plotPanel, 0, 2);
+            generalLayoutPanel.ResumeLayout();
+
+            Tab.Controls.Add(generalLayoutPanel);
         }
 
         #endregion
@@ -175,10 +197,10 @@ namespace ProcessDashboard.Model.Screen.Tabs
 
         private void ShowDSPlots()
         {
-            Plots.DS11.AddScatter(Data.DSCurves.DS11);
-            Plots.DS12.AddScatter(Data.DSCurves.DS12);
-            Plots.DS21.AddScatter(Data.DSCurves.DS21);
-            Plots.DS22.AddScatter(Data.DSCurves.DS22);
+            Plots.DS11.AddScatter(Data.DSCurvesPass.DS11);
+            Plots.DS12.AddScatter(Data.DSCurvesPass.DS12);
+            Plots.DS21.AddScatter(Data.DSCurvesPass.DS21);
+            Plots.DS22.AddScatter(Data.DSCurvesPass.DS22);
             ComparisonPlot.AddScatter(Data.MeanDSCurves);
             AddLimits();
             Refresh();
@@ -186,10 +208,10 @@ namespace ProcessDashboard.Model.Screen.Tabs
 
         private void ShowNestPlots()
         {
-            Plots.DS11.AddScatter(Data.NestCurves.DS11);
-            Plots.DS12.AddScatter(Data.NestCurves.DS12);
-            Plots.DS21.AddScatter(Data.NestCurves.DS21);
-            Plots.DS22.AddScatter(Data.NestCurves.DS22);
+            Plots.DS11.AddScatter(Data.NestCurvesPass.DS11);
+            Plots.DS12.AddScatter(Data.NestCurvesPass.DS12);
+            Plots.DS21.AddScatter(Data.NestCurvesPass.DS21);
+            Plots.DS22.AddScatter(Data.NestCurvesPass.DS22);
             ComparisonPlot.AddScatter(Data.MeanNestCurves);
             AddLimits();
             Refresh();
@@ -260,7 +282,7 @@ namespace ProcessDashboard.Model.Screen.Tabs
             Plots.DS22.Title.Text = "DS 2-2";
             ComparisonPlot.Title.Text = "Mean Plots";
             Title.Text = $"{TabType} | {Data.MachineID} - {Data.ProductID}";
-            DSNestToggleButton.Text = "Sort by TestBox";
+            DSNestSortToggleButton.Text = "Sort by TestBox";
         }
 
         private void SetNestTitles()
@@ -271,7 +293,7 @@ namespace ProcessDashboard.Model.Screen.Tabs
             Plots.DS22.Title.Text = "TestBox 4";
             ComparisonPlot.Title.Text = "Mean Plots";
             Title.Text = $"{TabType} | {Data.MachineID} - {Data.ProductID}";
-            DSNestToggleButton.Text = "Sort by Die-Side";
+            DSNestSortToggleButton.Text = "Sort by Die-Side";
         }
 
         #endregion
