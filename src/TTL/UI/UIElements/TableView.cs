@@ -27,16 +27,16 @@ namespace ProcessDashboard.src.TTL.UI.UIElements
 
         public void AddData(List<Feature> features, Color color, int amount)
         {
-            Title.BackColor = Colors.Black;
-
+            Layout.BackColor = Colors.Black;
             if (features != null && features.Count > 0) {
+                Layout.BackColor = color;
                 Title.BackColor = color;
 
                 foreach (Feature feature in features)
                     DataSource.Add(feature);
             }
 
-            Title.Text = $"{title}  |  Amount: {amount}";
+            Title.Text = $"{title}  |  Amt: {amount}";
         }
 
         public void Clear()
@@ -53,16 +53,31 @@ namespace ProcessDashboard.src.TTL.UI.UIElements
             Table = CommonElements.DataGridView();
             DataSource = new BindingSource();
 
+            var titleArea = new TableLayoutPanel()
+            {
+                ColumnCount = 2,
+                RowCount = 1,
+                Dock = DockStyle.Fill,
+                ColumnStyles =
+                {
+                    new ColumnStyle(SizeType.Absolute, 70),
+                    new ColumnStyle(SizeType.Percent, 100)
+                },
+                RowStyles =
+                {
+                    new RowStyle(SizeType.Percent, 100)
+                }
+            };
+
             Layout = new TableLayoutPanel()
             {
                 ColumnCount = 1,
-                RowCount = 3,
+                RowCount = 2,
                 Dock = DockStyle.Fill,
                 //CellBorderStyle = TableLayoutPanelCellBorderStyle.Single,
                 ColumnStyles = { new ColumnStyle(SizeType.Percent, 100F) },
                 RowStyles =
                 {
-                    new RowStyle(SizeType.Absolute, 30),
                     new RowStyle(SizeType.Absolute, 30),
                     new RowStyle(SizeType.Percent, 100F)
                 }
@@ -88,15 +103,20 @@ namespace ProcessDashboard.src.TTL.UI.UIElements
             {
                 Text = "Show",
                 Checked = true,
-                Font = Fonts.Sennheiser.M
+                Font = Fonts.Sennheiser.SM,
+                ForeColor = Colors.White
             };
 
             CheckBox.CheckedChanged += CheckBox_CheckedChanged;
 
+            titleArea.SuspendLayout();
+            titleArea.Controls.Add(CheckBox, 0, 0);
+            titleArea.Controls.Add(Title, 1, 0);
+            titleArea.ResumeLayout();
+
             Layout.SuspendLayout();
-            Layout.Controls.Add(CheckBox, 0, 0);
-            Layout.Controls.Add(Title, 0, 1);
-            Layout.Controls.Add(Table, 0, 2);
+            Layout.Controls.Add(titleArea, 0, 0);
+            Layout.Controls.Add(Table, 0, 1);
             Layout.ResumeLayout();
         }
 

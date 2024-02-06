@@ -68,10 +68,10 @@ namespace ProcessDashboard.Model.Screen.Tabs
         {
             Tab = new TabPage() { Text = title };
             PlotView = new PlotView(title, Colors.Black);
-            FeatureTables.DS11 = new TableView("Die-Side 1-1");
-            FeatureTables.DS12 = new TableView("Die-Side 1-2");
-            FeatureTables.DS21 = new TableView("Die-Side 2-1");
-            FeatureTables.DS22 = new TableView("Die-Side 2-2");
+            FeatureTables.DS11 = new TableView("DS 1-1");
+            FeatureTables.DS12 = new TableView("DS 1-2");
+            FeatureTables.DS21 = new TableView("DS 2-1");
+            FeatureTables.DS22 = new TableView("DS 2-2");
 
             // Basic layout for plot and tables
             TableLayoutPanel tabBase = new TableLayoutPanel()
