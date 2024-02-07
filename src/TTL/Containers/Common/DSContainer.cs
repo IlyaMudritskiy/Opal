@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace ProcessDashboard.src.TTL.Containers.Common
 {
@@ -8,8 +9,7 @@ namespace ProcessDashboard.src.TTL.Containers.Common
         public T DS12 { get; set; }
         public T DS21 { get; set; }
         public T DS22 { get; set; }
-
-        private static readonly NLog.Logger Log = NLog.LogManager.GetCurrentClassLogger();
+        public List<T> Elements { get; private set; }
 
         public DSContainer()
         {
@@ -19,18 +19,13 @@ namespace ProcessDashboard.src.TTL.Containers.Common
             DS22 = default;
         }
 
-        public DSContainer(params T[] ds)
+        public void Apply(Action<T> action)
         {
-            if (ds == null || ds.Length != 4)
-            {
-                Log.Trace($"Length of params is [{ds.Length}] instead of [4]");
-                return;
-            }
+            Elements = new List<T> { DS11, DS12, DS21, DS22 };
+            if (action == null) return;
 
-            DS11 = ds[0];
-            DS12 = ds[1];
-            DS21 = ds[2];
-            DS22 = ds[3];
+            foreach (var element in Elements)
+                action(element);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 using ProcessDashboard.Model.Data.Acoustic;
 using ProcessDashboard.src.TTL.Containers.Common;
@@ -7,6 +8,7 @@ using ProcessDashboard.src.TTL.Processing;
 using ProcessDashboard.src.TTL.Screen;
 using ProcessDashboard.src.TTL.UI.UIElements;
 using ProcessDashboard.src.Utils;
+using ScottPlot.Plottable;
 
 namespace ProcessDashboard.Model.Screen.Tabs
 {
@@ -24,6 +26,7 @@ namespace ProcessDashboard.Model.Screen.Tabs
 
         public event EventHandler DSNestToggleButtonClick;
         public Button DSNestSortToggleButton { get; set; }
+        public CheckBox ShowHideFailsChk { get; set; }
 
         private AcousticData Data { get; set; }
         private string TabType { get; set; } = string.Empty;
@@ -38,16 +41,17 @@ namespace ProcessDashboard.Model.Screen.Tabs
             Plots = new DSContainer<PlotView>();
             TabType = title;
             createLayout(title);
+            ShowHideFailsChk.CheckedChanged += OnShowHideFailsChkCheckedChanged;
         }
 
         private void createLayout(string title)
         {
             Tab = new TabPage() { Text = title };
             Title = CommonElements.Header(title);
-            Plots.DS11 = new PlotView("Die-Side 1-1", Colors.DS11C, UnitX, UnitY, true);
-            Plots.DS12 = new PlotView("Die-Side 1-2", Colors.DS12C, UnitX, UnitY, true);
-            Plots.DS21 = new PlotView("Die-Side 2-1", Colors.DS21C, UnitX, UnitY, true);
-            Plots.DS22 = new PlotView("Die-Side 2-2", Colors.DS22C, UnitX, UnitY, true);
+            Plots.DS11 = new PlotView("DS 1-1", Colors.DS11C, UnitX, UnitY, true);
+            Plots.DS12 = new PlotView("DS 1-2", Colors.DS12C, UnitX, UnitY, true);
+            Plots.DS21 = new PlotView("DS 2-1", Colors.DS21C, UnitX, UnitY, true);
+            Plots.DS22 = new PlotView("DS 2-2", Colors.DS22C, UnitX, UnitY, true);
             ComparisonPlot = new PlotView("Mean Plots", Colors.Black, UnitX, UnitY, true);
 
             TableLayoutPanel generalLayoutPanel = new TableLayoutPanel()
@@ -101,11 +105,12 @@ namespace ProcessDashboard.Model.Screen.Tabs
 
             TableLayoutPanel controlsPanel = new TableLayoutPanel()
             {
-                ColumnCount = 2,
+                ColumnCount = 3,
                 RowCount = 1,
                 Dock = DockStyle.Fill,
                 ColumnStyles =
                 {
+                    new ColumnStyle(SizeType.Absolute, 150),
                     new ColumnStyle(SizeType.Absolute, 150),
                     new ColumnStyle(SizeType.Percent, 100)
                 },
@@ -124,6 +129,16 @@ namespace ProcessDashboard.Model.Screen.Tabs
                 Font = Fonts.Sennheiser.M
             };
 
+            ShowHideFailsChk = new CheckBox()
+            {
+                Text = "Show Fail Units",
+                Dock = DockStyle.Fill,
+                BackColor = Colors.Black,
+                ForeColor = Colors.White,
+                Font = Fonts.Sennheiser.M,
+                Checked = true
+            };
+
             DSNestSortToggleButton.Click += OnDSNestToggleButtonClick;
 
             titlePanel.SuspendLayout();
@@ -132,6 +147,7 @@ namespace ProcessDashboard.Model.Screen.Tabs
 
             controlsPanel.SuspendLayout();
             controlsPanel.Controls.Add(DSNestSortToggleButton, 0, 0);
+            controlsPanel.Controls.Add(ShowHideFailsChk, 1, 0);
             controlsPanel.ResumeLayout();
 
             plotPanel.SuspendLayout();
@@ -170,6 +186,7 @@ namespace ProcessDashboard.Model.Screen.Tabs
             Plots.DS22.Clear();
             ComparisonPlot.Clear();
             Title.Text = string.Empty;
+            ShowHideFailsChk.Checked = true;
         }
 
         public void ShowPlots()
@@ -190,6 +207,31 @@ namespace ProcessDashboard.Model.Screen.Tabs
                 return;
             }
         }
+
+        #endregion
+
+        #region Show Hide Fail curves
+
+        public void ShowHideFailCurves(List<ScatterPlot> target)
+        {
+            if (target != null && target.Count > 0)
+                foreach (var curve in target) curve.IsVisible = ShowHideFailsChk.Checked;
+        }
+
+        public void toggleVisibility()
+        {
+            Data.DSCurvesFail.Apply(ShowHideFailCurves);
+            Data.NestCurvesFail.Apply(ShowHideFailCurves);
+            FitPlots();
+            Refresh();
+        }
+
+        private void OnShowHideFailsChkCheckedChanged(object sender, EventArgs e)
+        {
+            toggleVisibility();
+        }
+
+
 
         #endregion
 
