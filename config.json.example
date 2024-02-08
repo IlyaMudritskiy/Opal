@@ -1,0 +1,17 @@
+﻿{
+  "DataDriveLetter": "Z",
+  "CrosshairOn":  false,
+  "Acoustic": {
+    "Enabled": true,
+    "ManualSelection": false
+  },
+  "EmbossingConstants": {
+    "TD": 135.0,
+    "t9const": 0,
+    "tc": 0,
+    "tHP": 0,
+    "tsettle": 0,
+    "P1": 0,
+    "RoundTo": 3
+  }
+}

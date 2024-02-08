@@ -49,6 +49,7 @@
   <ItemGroup>
     <Compile Include="src\CommonClasses\Processing\CommonFileContentManager.cs" />
     <Compile Include="src\CommonClasses\Processing\CommonFileManager.cs" />
+    <Compile Include="src\TTL\Containers\ScreenData\PlotViewDSContainer.cs" />
     <Compile Include="src\TTL\Processing\ProcessDataProcessor.cs" />
     <Compile Include="src\TTL\UI\EventControllers\FileController.cs" />
     <Compile Include="src\Forms\MainForm.cs">
