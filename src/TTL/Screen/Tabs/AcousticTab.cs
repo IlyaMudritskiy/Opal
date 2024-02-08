@@ -17,7 +17,8 @@ namespace ProcessDashboard.Model.Screen.Tabs
         public TabPage Tab { get; set; }
         public Label Title { get; set; }
 
-        public DSContainer<PlotView> Plots { get; set; }
+        //public DSContainer<PlotView> Plots { get; set; }
+        public PlotViewDSContainer Plots { get; set; }
 
         public PlotView ComparisonPlot { get; set; }
 
@@ -38,7 +39,8 @@ namespace ProcessDashboard.Model.Screen.Tabs
         {
             UnitX = unitX;
             UnitY = unitY;
-            Plots = new DSContainer<PlotView>();
+            //Plots = new DSContainer<PlotView>();
+            Plots = new PlotViewDSContainer();
             TabType = title;
             createLayout(title);
             ShowHideFailsChk.CheckedChanged += OnShowHideFailsChkCheckedChanged;
@@ -231,18 +233,13 @@ namespace ProcessDashboard.Model.Screen.Tabs
             toggleVisibility();
         }
 
-
-
         #endregion
 
         #region Toggle Plots view (DS or Nest)
 
         private void ShowDSPlots()
         {
-            Plots.DS11.AddScatter(Data.DSCurvesPass.DS11, Data.DSCurvesFail.DS11);
-            Plots.DS12.AddScatter(Data.DSCurvesPass.DS12, Data.DSCurvesFail.DS12);
-            Plots.DS21.AddScatter(Data.DSCurvesPass.DS21, Data.DSCurvesFail.DS21);
-            Plots.DS22.AddScatter(Data.DSCurvesPass.DS22, Data.DSCurvesFail.DS22);
+            Plots.AddScatter(Data.DSCurvesPass, Data.DSCurvesFail);
             ComparisonPlot.AddScatter(Data.MeanDSCurves);
             AddLimits();
             Refresh();
@@ -250,10 +247,7 @@ namespace ProcessDashboard.Model.Screen.Tabs
 
         private void ShowNestPlots()
         {
-            Plots.DS11.AddScatter(Data.NestCurvesPass.DS11, Data.NestCurvesFail.DS11);
-            Plots.DS12.AddScatter(Data.NestCurvesPass.DS12, Data.NestCurvesFail.DS12);
-            Plots.DS21.AddScatter(Data.NestCurvesPass.DS21, Data.NestCurvesFail.DS21);
-            Plots.DS22.AddScatter(Data.NestCurvesPass.DS22, Data.NestCurvesFail.DS22);
+            Plots.AddScatter(Data.NestCurvesPass, Data.NestCurvesFail);
             ComparisonPlot.AddScatter(Data.MeanNestCurves);
             AddLimits();
             Refresh();

@@ -244,18 +244,23 @@ namespace ProcessDashboard.src.TTL.Containers.ScreenData
 
         private void CalculateMeanAcoustic()
         {
-            MeanDSValues.DS11 = CalcMeanAcoustic(DSDataPass.DS11);
-            MeanDSValues.DS12 = CalcMeanAcoustic(DSDataPass.DS12);
-            MeanDSValues.DS21 = CalcMeanAcoustic(DSDataPass.DS21);
-            MeanDSValues.DS22 = CalcMeanAcoustic(DSDataPass.DS22);
-
-            MeanNestValues.DS11 = CalcMeanAcoustic(NestDataPass.DS11);
-            MeanNestValues.DS12 = CalcMeanAcoustic(NestDataPass.DS12);
-            MeanNestValues.DS21 = CalcMeanAcoustic(NestDataPass.DS21);
-            MeanNestValues.DS22 = CalcMeanAcoustic(NestDataPass.DS22);
+            MeanDSValues = calcMeanAcoustic(DSDataPass);
+            MeanNestValues = calcMeanAcoustic(NestDataPass);
         }
 
-        private Measurements2D CalcMeanAcoustic(List<Measurements2DExt> data)
+        private DSContainer<Measurements2D> calcMeanAcoustic(DSContainer<List<Measurements2DExt>> container)
+        {
+            if (container == null) return null;
+
+            DSContainer<Measurements2D> result = new DSContainer<Measurements2D>();
+
+            for (int i = 0; i < container.Count; i++)
+                result.Set(i, calcMeanAcousticPerDS(container.Elements[i]));
+
+            return result;
+        }
+
+        private Measurements2D calcMeanAcousticPerDS(List<Measurements2DExt> data)
         {
             if (data == null || data.Count == 0) return null;
             int passAmount = 1;
