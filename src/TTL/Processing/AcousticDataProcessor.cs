@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Newtonsoft.Json.Linq;
 using ProcessDashboard.Model.AppConfiguration;
 using ProcessDashboard.Model.Data.Acoustic;
 using ProcessDashboard.src.CommonClasses.Processing;
@@ -26,6 +27,22 @@ namespace ProcessDashboard.src.TTL.Processing
 
             if (!config.Acoustic.ManualSelection)
                 return fromDefaultLocation(ref files);
+
+            return null;
+        }
+
+        public static List<AcousticFile> GetAcousticFiles(ref List<JObject> files)
+        {
+            if (files == null || files.Count == 0) return null;
+
+            if (config.Acoustic.ManualSelection)
+            {
+                List<string> filepaths = CommonFileManager.GetFilesFromDialog();
+                if (filepaths == null || filepaths.Count == 0) return null;
+            }
+
+            if (!config.Acoustic.ManualSelection)
+                return fromDefaultLocation(files);
 
             return null;
         }
@@ -66,6 +83,40 @@ namespace ProcessDashboard.src.TTL.Processing
                 {
                     string[] hourFiles = Directory.GetFiles(dir);
                     matchingFiles.AddRange(findMatchingFileNames(ref processFiles, hourFiles));
+                }
+            }
+
+            foreach (var f in CommonFileManager.OpenZipContentTo<AcousticFile>(matchingFiles))
+                result.Add(f);
+
+            return result;
+        }
+
+        private static List<AcousticFile> fromDefaultLocation(List<JObject> files)
+        {
+            List<string> matchingFiles = new List<string>();
+            List<string> acousticFiles = new List<string>();
+            List<AcousticFile> result = new List<AcousticFile>();
+
+            List<string> serialNumbers = files.Select(x => CommonFileContentManager.GetFieldValue(x, "DUT", "serial_nr").ToString()).ToList();
+
+            DateTime dt = DateTime.Parse(files[0]?["Steps"]?[0]?["Measurements"]?[0]?["Date"].ToString());
+
+            //DateTime dt = DateTime.Parse(files[0].Steps.Where(x => x.StepName == "ps01_high_pressure_actual").FirstOrDefault().Measurements[0].DateTime);
+
+            for (int i = -1; i < 3; i++)
+            {
+                string date = dt.AddDays(i).ToString("yyyyMMdd");
+                string path = $"{config.DataDriveLetter}:\\autolines\\ttl\\acoustic\\{config.ProductID}\\{date}";
+
+                if (!Directory.Exists(path)) continue;
+
+                string[] hourDirs = Directory.GetDirectories(path);
+
+                foreach (var dir in hourDirs)
+                {
+                    string[] hourFiles = Directory.GetFiles(dir);
+                    matchingFiles.AddRange(findMatchingFileNames(serialNumbers, hourFiles));
                 }
             }
 
@@ -153,6 +204,12 @@ namespace ProcessDashboard.src.TTL.Processing
                     matchingFileNames.Add(fileName);
 
             return matchingFileNames;
+        }
+
+        private static List<string> findMatchingFileNames(List<string> serials, IEnumerable<string> fileNames)
+        {
+            return fileNames
+                .Where(filename => serials.Any(serial => filename.Contains(serial))).ToList();
         }
     }
 }

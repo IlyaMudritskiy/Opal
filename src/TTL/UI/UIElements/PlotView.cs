@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Windows.Forms;
+using System.Threading.Tasks;
 using ProcessDashboard.src.CommonClasses.Containers;
 using ProcessDashboard.src.TTL.Containers.Common;
 using ProcessDashboard.src.TTL.Screen;
@@ -23,10 +23,10 @@ namespace ProcessDashboard.src.TTL.UI.UIElements
         {
             if (data == null || data.Length == 0) return;
 
-            foreach (var plotSet in data)
-                foreach (var plot in plotSet)
-                    if (plot != null)
-                        Control.Plot.Add(plot);
+                foreach (var plotSet in data)
+                    foreach (var plot in plotSet)
+                        if (plot != null)
+                            Control.Plot.Add(plot);
 
             Refresh();
             Fit();
@@ -36,7 +36,7 @@ namespace ProcessDashboard.src.TTL.UI.UIElements
         {
             if (data == null || data.Length == 0) return;
 
-            foreach (var plot in data)
+                foreach (var plot in data)
                 if (plot != null)
                     Control.Plot.Add(plot);
 
@@ -87,18 +87,12 @@ namespace ProcessDashboard.src.TTL.UI.UIElements
 
         private void createLayout(string title, Color color, string unitx = "", string unity = "", bool log = false)
         {
-
-
-
-
-            Control = CommonElements.Plot();
+            SetText(title);
+            AddControl(CommonElements.Plot());
+            SetColor(color);
             Control.Plot.ManualDataArea(new PixelPadding(54, 7, 44, 7));
             Control.BackColor = Colors.Default.Grey;
             Control.Refresh();
-
-            
-
-
             Control.Plot.XLabel(unitx);
             Control.Plot.YLabel(unity);
 
@@ -106,9 +100,6 @@ namespace ProcessDashboard.src.TTL.UI.UIElements
                 toLog(Control);
 
             Control.Refresh();
-
-          
-            Layout = panel;
         }
 
         private void toLog(FormsPlot plot)

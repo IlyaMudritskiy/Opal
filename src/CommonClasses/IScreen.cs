@@ -7,8 +7,8 @@ namespace ProcessDashboard.src.CommonClasses
     public interface IScreen
     {
         void Create(ref Panel panel);
-        void Update(ref List<JObject> data);
-        void LoadData(ref List<JObject> data);
+        void Update(List<JObject> data);
+        void LoadData(List<JObject> data);
         void Clear();
     }
 }

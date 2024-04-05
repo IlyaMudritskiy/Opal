@@ -1,5 +1,4 @@
-﻿using ProcessDashboard.src.TTL.Screen;
-using ProcessDashboard.src.Utils;
+﻿using ProcessDashboard.src.Utils;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -36,7 +35,7 @@ namespace ProcessDashboard.src.TTL.UI.UIElements
                 ColumnStyles = { new ColumnStyle(SizeType.Percent, 100) },
                 RowStyles =
                 {
-                    new RowStyle(SizeType.Absolute, 40),
+                    new RowStyle(SizeType.Absolute, 35),
                     new RowStyle(SizeType.Percent, 100)
                 }
             };
@@ -46,7 +45,7 @@ namespace ProcessDashboard.src.TTL.UI.UIElements
             Layout.ResumeLayout();
         }
 
-        public void Color(Color color)
+        public void SetColor(Color color)
         {
             Layout.BackColor = color;
             Title.BackColor = color;

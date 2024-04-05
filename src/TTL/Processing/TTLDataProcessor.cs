@@ -13,12 +13,17 @@ namespace ProcessDashboard.src.TTL.Processing
     {
         private static readonly NLog.Logger Log = NLog.LogManager.GetCurrentClassLogger();
 
-        public static List<TTLUnit> LoadFiles(List<JObject> files)
+        public async static Task<List<TTLUnit>> LoadFiles(List<JObject> files)
         {
             if (files == null || files.Count == 0) return null;
 
-            List<ProcessFile> processFiles = ProcessDataProcessor.GetProcessFiles(ref files);
-            List<AcousticFile> acousticFiles = AcousticDataProcessor.GetAcousticFiles(ref processFiles);
+            Task<List<ProcessFile>> processFilesTask = Task.Run(() => ProcessDataProcessor.GetProcessFiles(ref files));
+            Task<List<AcousticFile>> acousticFilesTask = Task.Run(() => AcousticDataProcessor.GetAcousticFiles(ref files));
+
+            await Task.WhenAll(processFilesTask, acousticFilesTask);
+
+            List<ProcessFile> processFiles = processFilesTask.Result;
+            List<AcousticFile> acousticFiles = acousticFilesTask.Result;
 
             return JoinFiles(processFiles, acousticFiles);
         }
