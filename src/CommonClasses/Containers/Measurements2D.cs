@@ -102,7 +102,7 @@ namespace ProcessDashboard.src.CommonClasses.Containers
             Count = X.Count;
         }
 
-        public Point FindPointByX(double XValue)
+        public Point FindPointByX_old(double XValue)
         {
             int index = X.IndexOf(XValue);
             if (index != -1)
@@ -120,6 +120,50 @@ namespace ProcessDashboard.src.CommonClasses.Containers
                 double y1 = Y[nearestPoints[0].Index];
                 double x2 = X[nearestPoints[1].Index];
                 double y2 = Y[nearestPoints[1].Index];
+
+                double slope = (y2 - y1) / (x2 - x1);
+                double intercept = y1 - slope * x1;
+
+                double exactValue = slope * XValue + intercept;
+
+                return new Point { X = XValue, Y = exactValue };
+            }
+        }
+
+        public Point FindPointByX(double XValue)
+        {
+            int index = X.IndexOf(XValue);
+            if (index != -1)
+            {
+                return new Point { X = X[index], Y = X[index] };
+            }
+            else
+            {
+                int rInd = -1;
+                int lInd = -1;
+
+                for (int i = 0; i < X.Count; i++)
+                {
+                    if (X[i] > XValue)
+                    {
+                        rInd = i;
+                        break;
+                    }
+                }
+
+                for (int i = X.Count; i >= 0; i--)
+                {
+                    if (X[i] < XValue)
+                    {
+                        lInd = i;
+                        break;
+                    }
+                }
+
+                double x1 = X[lInd];
+                double y1 = Y[lInd];
+                double x2 = X[rInd];
+                double y2 = Y[rInd];
 
                 double slope = (y2 - y1) / (x2 - x1);
                 double intercept = y1 - slope * x1;
