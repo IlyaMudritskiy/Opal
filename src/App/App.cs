@@ -62,7 +62,7 @@ namespace ProcessDashboard.src.App
                 screen = ScreenCreator.GetIScreen(lineCode);
                 screen.Create(ref panel);
             }
-            screen.LoadData(ref files);
+            screen.LoadData(files);
         }
 
         private void AppSettings()

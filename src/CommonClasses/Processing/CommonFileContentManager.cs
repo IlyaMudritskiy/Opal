@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Newtonsoft.Json.Linq;
@@ -50,6 +51,23 @@ namespace ProcessDashboard.src.CommonClasses.Processing
             }
 
             return fieldValue.ToString();
+        }
+
+        public static string GetFieldValue(JObject file, string section, string fieldName)
+        {
+            if (file == null) return null;
+
+            try
+            {
+                JToken fieldValue = file[section]?[fieldName];
+                return fieldValue.ToString();
+            }
+            catch (Exception ex)
+            {
+                Log.Error($"[Exception] {ex}\n[Message] {ex.Message}");
+                Log.Info($"File does not contain field {section} -> {fieldName}");
+                return null;
+            }
         }
 
         #endregion

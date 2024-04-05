@@ -49,6 +49,7 @@
   <ItemGroup>
     <Compile Include="src\CommonClasses\Processing\CommonFileContentManager.cs" />
     <Compile Include="src\CommonClasses\Processing\CommonFileManager.cs" />
+    <Compile Include="src\TTL\Containers\ScreenData\PlotViewDSContainer.cs" />
     <Compile Include="src\TTL\Processing\ProcessDataProcessor.cs" />
     <Compile Include="src\TTL\UI\EventControllers\FileController.cs" />
     <Compile Include="src\Forms\MainForm.cs">
@@ -88,6 +89,7 @@
     <Compile Include="src\TTL\Misc\FailReason.cs" />
     <Compile Include="src\CommonClasses\IScreen.cs" />
     <Compile Include="src\TTL\Screen\Tabs\AcousticTab.cs" />
+    <Compile Include="src\TTL\UI\UIElements\HeaderView.cs" />
     <Compile Include="src\TTL\UI\UIElements\PlotView.cs" />
     <Compile Include="src\TTL\UI\UIElements\TableView.cs" />
     <Compile Include="src\TTL\Screen\Tabs\ProcessTab.cs" />

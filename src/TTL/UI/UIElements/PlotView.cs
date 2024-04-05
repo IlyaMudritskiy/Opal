@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Windows.Forms;
+using System.Threading.Tasks;
 using ProcessDashboard.src.CommonClasses.Containers;
 using ProcessDashboard.src.TTL.Containers.Common;
 using ProcessDashboard.src.TTL.Screen;
@@ -12,12 +12,8 @@ using ScottPlot.Plottable;
 
 namespace ProcessDashboard.src.TTL.UI.UIElements
 {
-    public class PlotView
+    public class PlotView : HeaderView<FormsPlot>
     {
-        public Label Title { get; set; }
-        public FormsPlot Plot { get; set; }
-        public TableLayoutPanel Layout { get; set; }
-
         public PlotView(string title, Color color, string unitx = "", string unity = "", bool log = false)
         {
             createLayout(title, color, unitx, unity, log);
@@ -27,10 +23,10 @@ namespace ProcessDashboard.src.TTL.UI.UIElements
         {
             if (data == null || data.Length == 0) return;
 
-            foreach (var plotSet in data)
-                foreach (var plot in plotSet)
-                    if (plot != null)
-                        Plot.Plot.Add(plot);
+                foreach (var plotSet in data)
+                    foreach (var plot in plotSet)
+                        if (plot != null)
+                            Control.Plot.Add(plot);
 
             Refresh();
             Fit();
@@ -40,9 +36,9 @@ namespace ProcessDashboard.src.TTL.UI.UIElements
         {
             if (data == null || data.Length == 0) return;
 
-            foreach (var plot in data)
+                foreach (var plot in data)
                 if (plot != null)
-                    Plot.Plot.Add(plot);
+                    Control.Plot.Add(plot);
 
             Refresh();
             Fit();
@@ -52,10 +48,10 @@ namespace ProcessDashboard.src.TTL.UI.UIElements
         {
             if (data == null) return;
 
-            if (data.DS11 != null) Plot.Plot.Add(data.DS11);
-            if (data.DS12 != null) Plot.Plot.Add(data.DS12);
-            if (data.DS21 != null) Plot.Plot.Add(data.DS21);
-            if (data.DS22 != null) Plot.Plot.Add(data.DS22);
+            if (data.DS11 != null) Control.Plot.Add(data.DS11);
+            if (data.DS12 != null) Control.Plot.Add(data.DS12);
+            if (data.DS21 != null) Control.Plot.Add(data.DS21);
+            if (data.DS22 != null) Control.Plot.Add(data.DS22);
 
             Refresh();
             Fit();
@@ -66,7 +62,7 @@ namespace ProcessDashboard.src.TTL.UI.UIElements
             if (data == null) return;
 
             foreach (var acoustic in data)
-                Plot.Plot.AddScatter(acoustic.X.ToArray(), acoustic.Y.ToArray(), color, 2);
+                Control.Plot.AddScatter(acoustic.X.ToArray(), acoustic.Y.ToArray(), color, 2);
 
             Refresh();
             Fit();
@@ -74,59 +70,36 @@ namespace ProcessDashboard.src.TTL.UI.UIElements
 
         public void Clear()
         {
-            Plot.Plot.Clear();
-            Plot.Refresh();
+            Control.Plot.Clear();
+            Control.Refresh();
             Title.Text = "";
         }
 
         public void Fit()
         {
-            Plot.Plot.AxisAuto();
+            Control.Plot.AxisAuto();
         }
 
         public void Refresh()
         {
-            Plot.Refresh();
+            Control.Refresh();
         }
 
         private void createLayout(string title, Color color, string unitx = "", string unity = "", bool log = false)
         {
-            Title = CommonElements.Header(title);
-            Title.BackColor = color;
-
-            Plot = CommonElements.Plot();
-            Plot.Plot.ManualDataArea(new PixelPadding(54, 7, 44, 7));
-            Plot.BackColor = Colors.Default.Grey;
-            Plot.Refresh();
-
-            TableLayoutPanel panel = new TableLayoutPanel()
-            {
-                ColumnCount = 1,
-                RowCount = 2,
-                Dock = DockStyle.Fill,
-                ColumnStyles = { new ColumnStyle(SizeType.Percent, 100) },
-                RowStyles =
-                {
-                    new RowStyle(SizeType.Absolute, 30),
-                    new RowStyle(SizeType.Percent, 100)
-                },
-            };
-
-            panel.BackColor = color;
-
-            Plot.Plot.XLabel(unitx);
-            Plot.Plot.YLabel(unity);
+            SetText(title);
+            AddControl(CommonElements.Plot());
+            SetColor(color);
+            Control.Plot.ManualDataArea(new PixelPadding(54, 7, 44, 7));
+            Control.BackColor = Colors.Default.Grey;
+            Control.Refresh();
+            Control.Plot.XLabel(unitx);
+            Control.Plot.YLabel(unity);
 
             if (log)
-                toLog(Plot);
+                toLog(Control);
 
-            Plot.Refresh();
-
-            panel.SuspendLayout();
-            panel.Controls.Add(Title, 0, 0);
-            panel.Controls.Add(Plot, 0, 1);
-            panel.ResumeLayout();
-            Layout = panel;
+            Control.Refresh();
         }
 
         private void toLog(FormsPlot plot)

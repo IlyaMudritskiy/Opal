@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using ProcessDashboard.Model.Data.Acoustic;
 using ProcessDashboard.src.TTL.Containers.Common;
@@ -28,6 +29,7 @@ namespace ProcessDashboard.Model.Screen.Tabs
         public event EventHandler DSNestToggleButtonClick;
         public Button DSNestSortToggleButton { get; set; }
         public CheckBox ShowHideFailsChk { get; set; }
+        public CheckBox ShowHidePassChk { get; set; }
 
         private AcousticData Data { get; set; }
         private string TabType { get; set; } = string.Empty;
@@ -44,6 +46,7 @@ namespace ProcessDashboard.Model.Screen.Tabs
             TabType = title;
             createLayout(title);
             ShowHideFailsChk.CheckedChanged += OnShowHideFailsChkCheckedChanged;
+            ShowHidePassChk.CheckedChanged += OnShowHidePassChkCheckedChanged;
         }
 
         private void createLayout(string title)
@@ -107,11 +110,12 @@ namespace ProcessDashboard.Model.Screen.Tabs
 
             TableLayoutPanel controlsPanel = new TableLayoutPanel()
             {
-                ColumnCount = 3,
+                ColumnCount = 4,
                 RowCount = 1,
                 Dock = DockStyle.Fill,
                 ColumnStyles =
                 {
+                    new ColumnStyle(SizeType.Absolute, 150),
                     new ColumnStyle(SizeType.Absolute, 150),
                     new ColumnStyle(SizeType.Absolute, 150),
                     new ColumnStyle(SizeType.Percent, 100)
@@ -137,7 +141,17 @@ namespace ProcessDashboard.Model.Screen.Tabs
                 Dock = DockStyle.Fill,
                 BackColor = Colors.Black,
                 ForeColor = Colors.White,
-                Font = Fonts.Sennheiser.M,
+                Font = Fonts.Sennheiser.ML,
+                Checked = true
+            };
+
+            ShowHidePassChk = new CheckBox()
+            {
+                Text = "Show Pass Units",
+                Dock = DockStyle.Fill,
+                BackColor = Colors.Black,
+                ForeColor = Colors.White,
+                Font = Fonts.Sennheiser.ML,
                 Checked = true
             };
 
@@ -150,6 +164,7 @@ namespace ProcessDashboard.Model.Screen.Tabs
             controlsPanel.SuspendLayout();
             controlsPanel.Controls.Add(DSNestSortToggleButton, 0, 0);
             controlsPanel.Controls.Add(ShowHideFailsChk, 1, 0);
+            controlsPanel.Controls.Add(ShowHidePassChk, 2, 0);
             controlsPanel.ResumeLayout();
 
             plotPanel.SuspendLayout();
@@ -189,6 +204,7 @@ namespace ProcessDashboard.Model.Screen.Tabs
             ComparisonPlot.Clear();
             Title.Text = string.Empty;
             ShowHideFailsChk.Checked = true;
+            ShowHidePassChk.Checked = true;
         }
 
         public void ShowPlots()
@@ -220,7 +236,7 @@ namespace ProcessDashboard.Model.Screen.Tabs
                 foreach (var curve in target) curve.IsVisible = ShowHideFailsChk.Checked;
         }
 
-        public void toggleVisibility()
+        public void toggleFailVisibility()
         {
             Data.DSCurvesFail.Apply(ShowHideFailCurves);
             Data.NestCurvesFail.Apply(ShowHideFailCurves);
@@ -230,7 +246,30 @@ namespace ProcessDashboard.Model.Screen.Tabs
 
         private void OnShowHideFailsChkCheckedChanged(object sender, EventArgs e)
         {
-            toggleVisibility();
+            toggleFailVisibility();
+        }
+
+        #endregion
+
+        #region Show Hide Pass curves
+
+        public void ShowHidePassCurves(List<ScatterPlot> target)
+        {
+            if (target != null && target.Count > 0)
+                foreach (var curve in target) curve.IsVisible = ShowHidePassChk.Checked;
+        }
+
+        public void togglePassVisibility()
+        {
+            Data.DSCurvesPass.Apply(ShowHidePassCurves);
+            Data.NestCurvesPass.Apply(ShowHidePassCurves);
+            FitPlots();
+            Refresh();
+        }
+
+        private void OnShowHidePassChkCheckedChanged(object sender, EventArgs e)
+        {
+            togglePassVisibility();
         }
 
         #endregion
@@ -247,7 +286,7 @@ namespace ProcessDashboard.Model.Screen.Tabs
 
         private void ShowNestPlots()
         {
-            Plots.AddScatter(Data.NestCurvesPass, Data.NestCurvesFail);
+        Plots.AddScatter(Data.NestCurvesPass, Data.NestCurvesFail);
             ComparisonPlot.AddScatter(Data.MeanNestCurves);
             AddLimits();
             Refresh();
@@ -260,6 +299,8 @@ namespace ProcessDashboard.Model.Screen.Tabs
         private void AddLimits()
         {
             var limits = AcousticDataProcessor.OpenLimitFiles();
+            if (limits ==  null) return;
+
             if (TabType.Contains("FR"))
                 AddLimit(limits["FRUpper"], limits["FRLower"], limits["FRReference"]);
             if (TabType.Contains("THD"))

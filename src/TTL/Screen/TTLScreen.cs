@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using Newtonsoft.Json.Linq;
 using ProcessDashboard.Model.AppConfiguration;
@@ -62,17 +63,22 @@ namespace ProcessDashboard.src.TTL.Screen
             IMP.SubscribeToDSNestToggleButtonClick(IMPToggleView);
         }
 
-        public void Update(ref List<JObject> data)
+        public void Update(List<JObject> data)
         {
             Clear();
-            LoadData(ref data);
+            LoadData(data);
         }
 
-        public void LoadData(ref List<JObject> data)
+        public async void LoadData(List<JObject> data)
         {
             Clear();
 
-            List<TTLUnit> processedData = TTLDataProcessor.LoadFiles(data);
+            Task<List<TTLUnit>> processedDataTask = Task.Run(() => TTLDataProcessor.LoadFiles(data));
+
+            await Task.WhenAll(processedDataTask);
+
+            List<TTLUnit> processedData = processedDataTask.Result;
+
             if (TTLData != null)
                 TTLData = null;
 
