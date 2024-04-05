@@ -21,6 +21,7 @@ namespace ProcessDashboard.src.TTL.Processing
         {
             if (files == null || files.Count == 0) return null;
 
+            // Maybe use concurrency here
             List<ProcessFile> result = new List<ProcessFile>();
 
             foreach (var file in files)

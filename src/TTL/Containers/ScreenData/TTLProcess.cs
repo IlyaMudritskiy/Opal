@@ -18,6 +18,7 @@ namespace ProcessDashboard.src.TTL.Containers.ScreenData
         public Measurements2D HighPressure { get; set; }
         public Measurements2D Temperature { get; set; }
         public Heater Heater { get; set; }
+        public JSONPoints JsonPoints { get; set; }
 
         public ScatterPlot TemperatureCurve { get; set; }
         public ScatterPlot PressureCurve { get; set; }
@@ -35,6 +36,7 @@ namespace ProcessDashboard.src.TTL.Containers.ScreenData
             DataPoints = new List<DataPoint>();
             Temperature = new Measurements2D();
             HighPressure = new Measurements2D();
+            JsonPoints = new JSONPoints(file);
 
             TrackNumber = int.Parse(file.DUT.TrackNumber);
             PressNumber = int.Parse(file.DUT.PressNumber);
