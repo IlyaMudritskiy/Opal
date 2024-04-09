@@ -15,7 +15,6 @@ namespace ProcessDashboard.Forms
             InitializeComponent();
             UIController = new UIController(this);
             App = App.Instance;
-            
         }
 
         public void SelectFilesMenuButton_Click(object sender, EventArgs e)

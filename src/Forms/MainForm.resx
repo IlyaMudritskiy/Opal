@@ -120,6 +120,17 @@
   <metadata name="MainMenuStrip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="DataViewer_MenuStripBtn.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAACIAAAAiCAYAAAA6RwvCAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
+        vwAADr8BOAVTJAAAAOtJREFUWEftltEJwzAMRDNapup3B+hgXaHTtLrAlVjIPopl04AfHDQ+Vbov2Zux
+        m26mp+mdLPREb8yQPExRk0xhhuRlQvHdhOSZQk/0xgwJU+OP2aAn+0tWEM/oIJRkZJCfUEFwPmXP8LAW
+        ZNqe4UctyLQ9o4Iovwf0ZH85SPk9rCCeawcZre+PywSBHynLLwojevxiUMAK4vnPILzeo0sNsNB7VJZ/
+        vAf4cRaKQOSN0DEQ7wFe99T0IAoWMpin5eOMfoTyC1i4ghAWriCktWfOjSIPavl8PGOGpLZnMoUZEiSP
+        9kyG0NN6b/sHg3jZrCWSTs8AAAAASUVORK5CYII=
+</value>
+  </data>
   <metadata name="JsonFileDialog.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>153, 17</value>
   </metadata>
