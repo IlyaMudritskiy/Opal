@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.MainMenuStrip = new System.Windows.Forms.MenuStrip();
             this.FileMenuButton = new System.Windows.Forms.ToolStripMenuItem();
             this.FileSaveMenuButton = new System.Windows.Forms.ToolStripMenuItem();
@@ -39,6 +40,7 @@
             this.SettingsAcousticMenuButton = new System.Windows.Forms.ToolStripMenuItem();
             this.OnOffAcousticPlotsMenuButton = new System.Windows.Forms.ToolStripMenuItem();
             this.FileSelectionTypeMenuButton = new System.Windows.Forms.ToolStripMenuItem();
+            this.DataViewer_MenuStripBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.MainFormPanel = new System.Windows.Forms.Panel();
             this.JsonFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.MainMenuStrip.SuspendLayout();
@@ -46,13 +48,16 @@
             // 
             // MainMenuStrip
             // 
+            this.MainMenuStrip.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.MainMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.FileMenuButton,
             this.SelectFilesMenuButton,
-            this.SettingsMenuButton});
+            this.SettingsMenuButton,
+            this.DataViewer_MenuStripBtn});
             this.MainMenuStrip.Location = new System.Drawing.Point(0, 0);
             this.MainMenuStrip.Name = "MainMenuStrip";
-            this.MainMenuStrip.Size = new System.Drawing.Size(1584, 24);
+            this.MainMenuStrip.ShowItemToolTips = true;
+            this.MainMenuStrip.Size = new System.Drawing.Size(1584, 28);
             this.MainMenuStrip.TabIndex = 0;
             this.MainMenuStrip.Text = "MainMenuStrip";
             // 
@@ -61,7 +66,7 @@
             this.FileMenuButton.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.FileSaveMenuButton});
             this.FileMenuButton.Name = "FileMenuButton";
-            this.FileMenuButton.Size = new System.Drawing.Size(37, 20);
+            this.FileMenuButton.Size = new System.Drawing.Size(44, 24);
             this.FileMenuButton.Text = "File";
             // 
             // FileSaveMenuButton
@@ -71,31 +76,31 @@
             this.PDFReportToolStripMenuItem,
             this.dataAndReportToolStripMenuItem});
             this.FileSaveMenuButton.Name = "FileSaveMenuButton";
-            this.FileSaveMenuButton.Size = new System.Drawing.Size(98, 22);
+            this.FileSaveMenuButton.Size = new System.Drawing.Size(109, 24);
             this.FileSaveMenuButton.Text = "Save";
             // 
             // processedDataToolStripMenuItem
             // 
             this.processedDataToolStripMenuItem.Name = "processedDataToolStripMenuItem";
-            this.processedDataToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
+            this.processedDataToolStripMenuItem.Size = new System.Drawing.Size(188, 24);
             this.processedDataToolStripMenuItem.Text = "Processed Data";
             // 
             // PDFReportToolStripMenuItem
             // 
             this.PDFReportToolStripMenuItem.Name = "PDFReportToolStripMenuItem";
-            this.PDFReportToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
+            this.PDFReportToolStripMenuItem.Size = new System.Drawing.Size(188, 24);
             this.PDFReportToolStripMenuItem.Text = "PDF Report";
             // 
             // dataAndReportToolStripMenuItem
             // 
             this.dataAndReportToolStripMenuItem.Name = "dataAndReportToolStripMenuItem";
-            this.dataAndReportToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
+            this.dataAndReportToolStripMenuItem.Size = new System.Drawing.Size(188, 24);
             this.dataAndReportToolStripMenuItem.Text = "Data and Report";
             // 
             // SelectFilesMenuButton
             // 
             this.SelectFilesMenuButton.Name = "SelectFilesMenuButton";
-            this.SelectFilesMenuButton.Size = new System.Drawing.Size(84, 20);
+            this.SelectFilesMenuButton.Size = new System.Drawing.Size(104, 24);
             this.SelectFilesMenuButton.Text = "Select File(s)";
             this.SelectFilesMenuButton.Click += new System.EventHandler(this.SelectFilesMenuButton_Click);
             // 
@@ -104,7 +109,7 @@
             this.SettingsMenuButton.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.SettingsAcousticMenuButton});
             this.SettingsMenuButton.Name = "SettingsMenuButton";
-            this.SettingsMenuButton.Size = new System.Drawing.Size(61, 20);
+            this.SettingsMenuButton.Size = new System.Drawing.Size(74, 24);
             this.SettingsMenuButton.Text = "Settings";
             // 
             // SettingsAcousticMenuButton
@@ -113,20 +118,31 @@
             this.OnOffAcousticPlotsMenuButton,
             this.FileSelectionTypeMenuButton});
             this.SettingsAcousticMenuButton.Name = "SettingsAcousticMenuButton";
-            this.SettingsAcousticMenuButton.Size = new System.Drawing.Size(120, 22);
+            this.SettingsAcousticMenuButton.Size = new System.Drawing.Size(134, 24);
             this.SettingsAcousticMenuButton.Text = "Acoustic";
             // 
             // OnOffAcousticPlotsMenuButton
             // 
             this.OnOffAcousticPlotsMenuButton.Name = "OnOffAcousticPlotsMenuButton";
-            this.OnOffAcousticPlotsMenuButton.Size = new System.Drawing.Size(235, 22);
+            this.OnOffAcousticPlotsMenuButton.Size = new System.Drawing.Size(279, 24);
             this.OnOffAcousticPlotsMenuButton.Text = "Show Acoustic Tabs";
             // 
             // FileSelectionTypeMenuButton
             // 
             this.FileSelectionTypeMenuButton.Name = "FileSelectionTypeMenuButton";
-            this.FileSelectionTypeMenuButton.Size = new System.Drawing.Size(235, 22);
+            this.FileSelectionTypeMenuButton.Size = new System.Drawing.Size(279, 24);
             this.FileSelectionTypeMenuButton.Text = "Manual Acoustic File Selection";
+            // 
+            // DataViewer_MenuStripBtn
+            // 
+            this.DataViewer_MenuStripBtn.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.DataViewer_MenuStripBtn.AutoToolTip = true;
+            this.DataViewer_MenuStripBtn.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.DataViewer_MenuStripBtn.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.DataViewer_MenuStripBtn.Image = ((System.Drawing.Image)(resources.GetObject("DataViewer_MenuStripBtn.Image")));
+            this.DataViewer_MenuStripBtn.Name = "DataViewer_MenuStripBtn";
+            this.DataViewer_MenuStripBtn.Size = new System.Drawing.Size(28, 24);
+            this.DataViewer_MenuStripBtn.ToolTipText = "View additional data";
             // 
             // MainFormPanel
             // 
@@ -175,6 +191,7 @@
         internal System.Windows.Forms.ToolStripMenuItem SettingsAcousticMenuButton;
         internal System.Windows.Forms.ToolStripMenuItem OnOffAcousticPlotsMenuButton;
         internal System.Windows.Forms.ToolStripMenuItem FileSelectionTypeMenuButton;
+        internal System.Windows.Forms.ToolStripMenuItem DataViewer_MenuStripBtn;
     }
 }
 

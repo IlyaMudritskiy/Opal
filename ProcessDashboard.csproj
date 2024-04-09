@@ -47,12 +47,25 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="src\CommonClasses\Processing\CommonFileContentManager.cs" />
     <Compile Include="src\CommonClasses\Processing\CommonFileManager.cs" />
-    <Compile Include="src\TTL\Containers\ScreenData\JSONPoint.cs" />
-    <Compile Include="src\TTL\Containers\ScreenData\JSONPoints.cs" />
+    <Compile Include="src\Forms\DataViewer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="src\Forms\DataViewer.Designer.cs">
+      <DependentUpon>DataViewer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="src\TTL\Containers\Common\DataPointsRow.cs" />
+    <Compile Include="src\TTL\Containers\ScreenData\SinglePointMeasurement.cs" />
+    <Compile Include="src\TTL\Containers\ScreenData\JSONSinglePoins.cs" />
     <Compile Include="src\TTL\Containers\ScreenData\PlotViewDSContainer.cs" />
     <Compile Include="src\TTL\Processing\ProcessDataProcessor.cs" />
+    <Compile Include="src\TTL\UI\EventControllers\DataViewerController.cs" />
     <Compile Include="src\TTL\UI\EventControllers\FileController.cs" />
     <Compile Include="src\Forms\MainForm.cs">
       <SubType>Form</SubType>
@@ -66,6 +79,7 @@
     <Compile Include="src\App\App.cs" />
     <Compile Include="src\TTL\Screen\GetIScreen.cs" />
     <Compile Include="src\TTL\Processing\FeatureCalculations.cs" />
+    <Compile Include="src\TTL\UI\EventControllers\MenuStripButtonsController.cs" />
     <Compile Include="src\TTL\UI\EventControllers\SettingsController.cs" />
     <Compile Include="src\TTL\UI\EventControllers\UIController.cs" />
     <Compile Include="src\Config.cs" />
@@ -99,18 +113,17 @@
     <Compile Include="src\Utils\Colors.cs" />
     <Compile Include="src\Utils\Fonts.cs" />
     <Compile Include="src\TTL\Screen\CommonElements.cs" />
+    <EmbeddedResource Include="src\Forms\DataViewer.resx">
+      <DependentUpon>DataViewer.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="src\Forms\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
     <None Include="config.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -136,7 +149,9 @@
   <ItemGroup>
     <Content Include=".gitignore" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Assets\" />
+  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="DotNetZip">
       <Version>1.16.0</Version>

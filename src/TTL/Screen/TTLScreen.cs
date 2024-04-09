@@ -82,7 +82,7 @@ namespace ProcessDashboard.src.TTL.Screen
             if (TTLData != null)
                 TTLData = null;
 
-            TTLData = new TTLData(processedData);
+            TTLData = TTLData.GetInstance(processedData);
 
             Temperature.AddData(TTLData.Temperature);
             Pressure.AddData(TTLData.Pressure);

@@ -6,6 +6,8 @@ namespace ProcessDashboard.src.TTL.UI.EventControllers
     {
         public FileController File { get; private set; }
         public SettingsController Settings { get; private set; }
+        public MenuStripButtonsController Menu { get; private set; }
+        public DataViewerController DataViewer { get; private set; }
 
         private MainForm mainForm;
 
@@ -19,6 +21,8 @@ namespace ProcessDashboard.src.TTL.UI.EventControllers
         {
             File = new FileController(mainForm);
             Settings = new SettingsController(mainForm);
+            Menu = new MenuStripButtonsController(mainForm);
+            DataViewer = new DataViewerController(mainForm);
         }
     }
 }

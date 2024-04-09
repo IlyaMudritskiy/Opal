@@ -95,6 +95,7 @@ namespace ProcessDashboard.src.TTL.Containers.ScreenData
             MeanFeatures.DS22 = CalcMeanFeaturesOneDS(Features.DS22);
         }
 
+        /*
         private List<Feature> CalcMeanFeaturesOneDS(List<List<Feature>> source)
         {
             if (source == null || source.Count == 0) return null;
@@ -103,14 +104,50 @@ namespace ProcessDashboard.src.TTL.Containers.ScreenData
 
             foreach (var featureList in source)
                 for (int i = 1; i < featureList.Count; i++)
-                    mean[i] += featureList[i];
+                    mean[i] +=  featureList[i];
 
             for (int i = 0; i < mean.Count; i++)
                 mean[i] /= source.Count;
 
             return mean;
         }
+        */
+        private List<Feature> CalcMeanFeaturesOneDS(List<List<Feature>> source)
+        {
+            if (source == null || source.Count == 0) return null;
 
+            List<Feature> mean = new List<Feature>();
+
+            for (int i = 0; i < source[0].Count; i++)
+            {
+                Feature sum = new Feature();
+                foreach (var featureList in source)
+                {
+                    sum += featureList[i];
+                }
+                mean.Add(sum / source.Count); // Divide by the number of lists in source to get the mean
+            }
+
+            return mean;
+        }
+
+        /*
+        private List<List<Feature>> CheckFeatures(List<List<Feature>> features)
+        {
+            List<List<Feature>> result = new List<List<Feature>>();
+            for (int i = 0; i <  features.Count; i++)
+            {
+                List<Feature> f = new List<Feature>();
+                List<Feature> featureList = features[i];
+
+                foreach (var feature in featureList)
+                {
+                    //if (feature)
+                }
+                
+            }
+        }
+        */
         #endregion
     }
 }

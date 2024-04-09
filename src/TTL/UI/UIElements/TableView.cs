@@ -12,7 +12,7 @@ namespace ProcessDashboard.src.TTL.UI.UIElements
     {
         public Label Title { get; set; }
         public DataGridView Table { get; set; }
-        public BindingSource DataSource { get; set; }
+        //public BindingSource DataSource { get; set; }
         public CheckBox CheckBox { get; set; }
         public TableLayoutPanel Layout { get; set; }
 
@@ -25,6 +25,7 @@ namespace ProcessDashboard.src.TTL.UI.UIElements
             _createLayout(title);
         }
 
+        /*
         public void AddData(List<Feature> features, Color color, int amount)
         {
             Layout.BackColor = Colors.Black;
@@ -38,10 +39,25 @@ namespace ProcessDashboard.src.TTL.UI.UIElements
 
             Title.Text = $"{title}  |  Amt: {amount}";
         }
+        */
+
+        public void AddData(List<Feature> features, Color color, int amount)
+        {
+            Layout.BackColor = Colors.Black;
+            if (features != null && features.Count > 0)
+            {
+                Layout.BackColor = color;
+                Title.BackColor = color;
+
+                Table.DataSource = features;
+            }
+            Title.Text = $"{title}  |  Amt: {amount}";
+        }
 
         public void Clear()
         {
-            DataSource.Clear();
+            //DataSource.Clear();
+            Table.DataSource = null;
             CheckBox.Checked = true;
             Title.Text = "";
         }
@@ -50,8 +66,34 @@ namespace ProcessDashboard.src.TTL.UI.UIElements
         {
             Title = CommonElements.Header(title);
             this.title = title;
-            Table = CommonElements.DataGridView();
-            DataSource = new BindingSource();
+            Table = new DataGridView()
+            {
+                Dock = DockStyle.Fill,
+                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill,
+                AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells,
+                Font = Fonts.Sennheiser.M,
+                AutoGenerateColumns = false,
+                RowHeadersVisible = false,
+                Columns =
+                {
+                    new DataGridViewTextBoxColumn
+                    {
+                        DataPropertyName = "ID",
+                        HeaderText = "Feature",
+                        CellTemplate = new DataGridViewTextBoxCell()
+                    },
+                    new DataGridViewTextBoxColumn
+                    {
+                        DataPropertyName = "Value",
+                        HeaderText = "Value",
+                        CellTemplate = new DataGridViewTextBoxCell()
+                    }
+                }
+            };
+
+            Table.CellMouseEnter += Table_CellMouseEnter;
+
+            //DataSource = new BindingSource();
 
             var titleArea = new TableLayoutPanel()
             {
@@ -83,8 +125,7 @@ namespace ProcessDashboard.src.TTL.UI.UIElements
                 }
             };
 
-            Table.AutoGenerateColumns = false;
-
+            /*
             var cell1 = new DataGridViewTextBoxColumn();
             cell1.DataPropertyName = "ID";
             cell1.HeaderText = "Feature";
@@ -96,8 +137,8 @@ namespace ProcessDashboard.src.TTL.UI.UIElements
             Table.Columns.Add(cell1);
 
             Table.Columns.Add(cell2);
-
-            Table.DataSource = DataSource;
+            */
+            //Table.DataSource = DataSource;
 
             CheckBox = new CheckBox()
             {
@@ -130,6 +171,20 @@ namespace ProcessDashboard.src.TTL.UI.UIElements
         {
             // Raise the event
             CheckboxStateChanged?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void Table_CellMouseEnter(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex >= 0 && e.RowIndex < Table.Rows.Count) // Ensure it's a valid row
+            {
+                var row = Table.Rows[e.RowIndex];
+                var data = row.DataBoundItem as Feature;
+                if (data != null && e.ColumnIndex >= 0)
+                {
+                    // Set the tooltip text to the Description property
+                    Table.Rows[e.RowIndex].Cells[e.ColumnIndex].ToolTipText = data.Description;
+                }
+            }
         }
     }
 }
