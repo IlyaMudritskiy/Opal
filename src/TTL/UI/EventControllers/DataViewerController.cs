@@ -11,16 +11,15 @@ namespace ProcessDashboard.src.TTL.UI.EventControllers
 {
     public class DataViewerController
     {
-        private MainForm mainForm;
+        //private MainForm mainForm;
         private DataViewer DV;
         private DataGridView DGV;
 
-        public static List<DataPointsRow> DataPointsRows { get; set; }
         private TTLData TTLData { get; set; }
 
         public DataViewerController(MainForm mainForm)
         {
-            this.mainForm = mainForm;
+            //this.mainForm = mainForm;
             DV = new DataViewer();
             DGV = DV.DataViewerMainTable;
             DGV.AutoGenerateColumns = false;
@@ -37,11 +36,15 @@ namespace ProcessDashboard.src.TTL.UI.EventControllers
             this.TTLData = data;
         }
 
-        public void AddDataToTable(List<DataPointsRow> data)
+        private void ClearData()
         {
             DGV.Columns.Clear();
             DGV.DataSource = null;
+            DGV.Refresh();
+        }
 
+        private void AddSerialColumn()
+        {
             var serialColumn = new DataGridViewTextBoxColumn
             {
                 Name = "Serial",
@@ -49,6 +52,14 @@ namespace ProcessDashboard.src.TTL.UI.EventControllers
                 ToolTipText = "Serial number"
             };
             DGV.Columns.Add(serialColumn);
+        }
+
+        private void ShowData(List<DataPointsRow<IValueDescription>> data)
+        {
+            if (data == null) return;
+            //Data = data;
+            ClearData();
+            AddSerialColumn();
 
             int maxValuesCount = data.Max(row => row.Values.Count);
 
@@ -58,7 +69,7 @@ namespace ProcessDashboard.src.TTL.UI.EventControllers
                 {
                     Name = data.First().Values[i].Name,
                     HeaderText = data.First().Values[i].Name,
-                    ToolTipText = data.First().Values[i].Descritpion
+                    ToolTipText = data.First().Values[i].Description
                 };
                 DGV.Columns.Add(valueColumn);
             }
@@ -69,10 +80,11 @@ namespace ProcessDashboard.src.TTL.UI.EventControllers
                 rowValues[0] = row.Serial;
                 for (int i = 0; i < row.Values.Count; i++)
                 {
-                    rowValues[i + 1] = row.Values[i].ToString(); // +1 to skip the Serial column
+                    rowValues[i + 1] = row.Values[i].sValue; // +1 to skip the Serial column
                 }
                 DGV.Rows.Add(rowValues);
             }
+            DGV.Refresh();
         }
 
         private void FindRow()
@@ -127,7 +139,17 @@ namespace ProcessDashboard.src.TTL.UI.EventControllers
 
             if (comboBox.SelectedItem != null && comboBox.SelectedItem.ToString() == "Data Points")
             {
-                AddDataToTable(TTLData.DataPoints);
+                ShowData(TTLData.DataPoints);
+            }
+
+            if (comboBox.SelectedItem != null && comboBox.SelectedItem.ToString() == "Temperature Features")
+            {
+                ShowData(TTLData.TempFeatures);
+            }
+
+            if (comboBox.SelectedItem != null && comboBox.SelectedItem.ToString() == "Pressure Features")
+            {
+                ShowData(TTLData.PressFeatures);
             }
         }
 
