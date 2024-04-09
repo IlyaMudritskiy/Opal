@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DataViewer));
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.DataViewerMenuStrip = new System.Windows.Forms.MenuStrip();
             this.SelectObjectDropDown = new System.Windows.Forms.ToolStripComboBox();
             this.DataViewerInputField = new System.Windows.Forms.ToolStripTextBox();
@@ -78,9 +79,10 @@
             // DataViewerPanel
             // 
             this.DataViewerPanel.Controls.Add(this.DataViewerMainTable);
-            this.DataViewerPanel.Location = new System.Drawing.Point(0, 31);
+            this.DataViewerPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.DataViewerPanel.Location = new System.Drawing.Point(0, 27);
             this.DataViewerPanel.Name = "DataViewerPanel";
-            this.DataViewerPanel.Size = new System.Drawing.Size(1400, 717);
+            this.DataViewerPanel.Size = new System.Drawing.Size(1400, 723);
             this.DataViewerPanel.TabIndex = 1;
             // 
             // DataViewerMainTable
@@ -89,13 +91,18 @@
             this.DataViewerMainTable.AllowUserToDeleteRows = false;
             this.DataViewerMainTable.AllowUserToOrderColumns = true;
             this.DataViewerMainTable.AllowUserToResizeRows = false;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            this.DataViewerMainTable.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+            this.DataViewerMainTable.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.DataViewerMainTable.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.DataViewerMainTable.Dock = System.Windows.Forms.DockStyle.Fill;
             this.DataViewerMainTable.Location = new System.Drawing.Point(0, 0);
             this.DataViewerMainTable.Name = "DataViewerMainTable";
             this.DataViewerMainTable.ReadOnly = true;
             this.DataViewerMainTable.RowHeadersVisible = false;
-            this.DataViewerMainTable.Size = new System.Drawing.Size(1400, 717);
+            this.DataViewerMainTable.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.AutoSizeToAllHeaders;
+            this.DataViewerMainTable.Size = new System.Drawing.Size(1400, 723);
             this.DataViewerMainTable.TabIndex = 0;
             // 
             // DataViewer

@@ -12,7 +12,6 @@ namespace ProcessDashboard.src.TTL.UI.UIElements
     {
         public Label Title { get; set; }
         public DataGridView Table { get; set; }
-        //public BindingSource DataSource { get; set; }
         public CheckBox CheckBox { get; set; }
         public TableLayoutPanel Layout { get; set; }
 
@@ -24,22 +23,6 @@ namespace ProcessDashboard.src.TTL.UI.UIElements
         {
             _createLayout(title);
         }
-
-        /*
-        public void AddData(List<Feature> features, Color color, int amount)
-        {
-            Layout.BackColor = Colors.Black;
-            if (features != null && features.Count > 0) {
-                Layout.BackColor = color;
-                Title.BackColor = color;
-
-                foreach (Feature feature in features)
-                    DataSource.Add(feature);
-            }
-
-            Title.Text = $"{title}  |  Amt: {amount}";
-        }
-        */
 
         public void AddData(List<Feature> features, Color color, int amount)
         {
@@ -78,7 +61,7 @@ namespace ProcessDashboard.src.TTL.UI.UIElements
                 {
                     new DataGridViewTextBoxColumn
                     {
-                        DataPropertyName = "ID",
+                        DataPropertyName = "Name",
                         HeaderText = "Feature",
                         CellTemplate = new DataGridViewTextBoxCell()
                     },
@@ -124,21 +107,6 @@ namespace ProcessDashboard.src.TTL.UI.UIElements
                     new RowStyle(SizeType.Percent, 100F)
                 }
             };
-
-            /*
-            var cell1 = new DataGridViewTextBoxColumn();
-            cell1.DataPropertyName = "ID";
-            cell1.HeaderText = "Feature";
-
-            var cell2 = new DataGridViewTextBoxColumn();
-            cell2.DataPropertyName = "Value";
-            cell2.HeaderText = "Val";
-
-            Table.Columns.Add(cell1);
-
-            Table.Columns.Add(cell2);
-            */
-            //Table.DataSource = DataSource;
 
             CheckBox = new CheckBox()
             {
