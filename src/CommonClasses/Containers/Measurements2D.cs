@@ -139,9 +139,10 @@ namespace ProcessDashboard.src.CommonClasses.Containers
             }
             else
             {
-                int rInd = -1;
-                int lInd = -1;
+                int rInd = 0;
+                int lInd = 0;
 
+                // Find point on the right of X
                 for (int i = 0; i < X.Count; i++)
                 {
                     if (X[i] > XValue)
@@ -151,15 +152,17 @@ namespace ProcessDashboard.src.CommonClasses.Containers
                     }
                 }
 
-                for (int i = X.Count; i >= 0; i--)
+                // Find point on the left of X
+                for (int j = X.Count-1; j >= 0; j--)
                 {
-                    if (X[i] < XValue)
+                    if (X[j] < XValue)
                     {
-                        lInd = i;
+                        lInd = j;
                         break;
                     }
                 }
 
+                // Build line function through 2 points
                 double x1 = X[lInd];
                 double y1 = Y[lInd];
                 double x2 = X[rInd];

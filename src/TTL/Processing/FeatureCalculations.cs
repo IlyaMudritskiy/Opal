@@ -22,28 +22,34 @@ namespace ProcessDashboard.src.TTL.Processing
 
             #region DataPoints
 
-            DataPoint t2 = new DataPoint() // Correct
+            DataPoint t2 = new DataPoint()
             {
                 Name = "t2",
                 Descritpion = "Time value of Heater turning ON",
                 X = Math.Round(unit.Heater.On, round),
-                Y = Math.Round(unit.Temperature.FindPointByX(unit.Heater.On).Y, round)
+                Y = Math.Round(unit.Temperature.FindPointByX(unit.Heater.On).Y, round),
+                UnitX = "s",
+                UnitY = "°C"
             };
 
-            DataPoint t3 = new DataPoint() // Reworked
+            DataPoint t3 = new DataPoint()
             {
                 Name = "t3",
-                Descritpion = "Time value of measured temperature equals the pre-defined set-value, TD.",
+                Descritpion = "Time value of measured temperature equals the pre-defined set-value, TD. X: ps01_t3, Y: from Temperature",
                 X = Math.Round(unit.JsonPoints.PS01_t3.DateOffset, round),
-                Y = Math.Round(unit.Temperature.FindPointByX(unit.JsonPoints.PS01_t3.DateOffset).Y, round)
+                Y = Math.Round(unit.Temperature.FindPointByX(unit.JsonPoints.PS01_t3.DateOffset).Y, round),
+                UnitX = "s",
+                UnitY = "°C"
             };
 
-            DataPoint t4 = new DataPoint() // Correct
+            DataPoint t4 = new DataPoint()
             {
                 Name = "t4",
                 Descritpion = "Time value of Heater turning OFF",
                 X = Math.Round(unit.Heater.Off, round),
-                Y = Math.Round(unit.Temperature.FindPointByX(unit.Heater.Off).Y, round)
+                Y = Math.Round(unit.Temperature.FindPointByX(unit.Heater.Off).Y, round),
+                UnitX = "s",
+                UnitY = "°C"
             };
 
             DataPoint t5 = new DataPoint()
@@ -51,7 +57,9 @@ namespace ProcessDashboard.src.TTL.Processing
                 Name = "t5",
                 Descritpion = "t3 + tHP",
                 X = Math.Round(unit.JsonPoints.PS01_t5.DateOffset, round),
-                Y = Math.Round(unit.HighPressure.FindPointByX(unit.JsonPoints.PS01_t5.DateOffset).Y, round)
+                Y = Math.Round(unit.HighPressure.FindPointByX(unit.JsonPoints.PS01_t5.DateOffset).Y, round),
+                UnitX = "s",
+                UnitY = "bar"
             };
 
             DataPoint t6 = new DataPoint()
@@ -59,7 +67,9 @@ namespace ProcessDashboard.src.TTL.Processing
                 Name = "t6",
                 Descritpion = "Maximum Pressure",
                 X = Math.Round(unit.JsonPoints.PS01_t6.DateOffset, round),
-                Y = Math.Round(unit.HighPressure.FindPointByX(unit.JsonPoints.PS01_t6.DateOffset).Y, round)
+                Y = Math.Round(unit.HighPressure.FindPointByX(unit.JsonPoints.PS01_t6.DateOffset).Y, round),
+                UnitX = "s",
+                UnitY = "bar"
             };
 
             DataPoint t7 = new DataPoint()
@@ -67,7 +77,9 @@ namespace ProcessDashboard.src.TTL.Processing
                 Name = "t7",
                 Descritpion = "Time of pressure intensifier released",
                 X = Math.Round(unit.JsonPoints.PS01_t7.DateOffset, round),
-                Y = Math.Round(unit.HighPressure.FindPointByX(unit.JsonPoints.PS01_t7.DateOffset).Y, round)
+                Y = Math.Round(unit.HighPressure.FindPointByX(unit.JsonPoints.PS01_t7.DateOffset).Y, round),
+                UnitX = "s",
+                UnitY = "bar"
             };
 
             DataPoint t8 = new DataPoint()
@@ -75,7 +87,9 @@ namespace ProcessDashboard.src.TTL.Processing
                 Name = "t8",
                 Descritpion = "t7 + tc",
                 X = Math.Round(unit.JsonPoints.PS01_t8.DateOffset, round),
-                Y = Math.Round(unit.Temperature.FindPointByX(unit.JsonPoints.PS01_t8.DateOffset).Y, round)
+                Y = Math.Round(unit.Temperature.FindPointByX(unit.JsonPoints.PS01_t8.DateOffset).Y, round),
+                UnitX = "s",
+                UnitY = "°C"
             };
 
             DataPoint t9 = new DataPoint()
@@ -83,7 +97,9 @@ namespace ProcessDashboard.src.TTL.Processing
                 Name = "t9",
                 Descritpion = "Time value of measured temperature equals the pre-defined set-value",
                 X = Math.Round(unit.JsonPoints.PS01_t9.DateOffset, round),
-                Y = Math.Round(unit.Temperature.FindPointByX(unit.JsonPoints.PS01_t9.DateOffset).Y, round)
+                Y = Math.Round(unit.Temperature.FindPointByX(unit.JsonPoints.PS01_t9.DateOffset).Y, round),
+                UnitX = "s",
+                UnitY = "°C"
             };
 
             DataPoint t10 = new DataPoint()
@@ -91,7 +107,9 @@ namespace ProcessDashboard.src.TTL.Processing
                 Name = "t10",
                 Descritpion = "Time value of measured pressure equals the pre-defined pressure value, P1",
                 X = Math.Round(unit.JsonPoints.PS01_t10.DateOffset, round),
-                Y = Math.Round(unit.HighPressure.FindPointByX(unit.JsonPoints.PS01_t10.DateOffset).Y, round)
+                Y = Math.Round(unit.HighPressure.FindPointByX(unit.JsonPoints.PS01_t10.DateOffset).Y, round),
+                UnitX = "s",
+                UnitY = "bar"
             };
 
             DataPoint Tmax = new DataPoint()
@@ -99,7 +117,9 @@ namespace ProcessDashboard.src.TTL.Processing
                 Name = "Tmax",
                 Descritpion = "Maximum temperature",
                 X = Math.Round(unit.Temperature.MaxPointX(), round),
-                Y = Math.Round(unit.Temperature.MaxPointY(), round)
+                Y = Math.Round(unit.Temperature.MaxPointY(), round),
+                UnitX = "s",
+                UnitY = "°C"
             };
 
             DataPoint P3 = new DataPoint()
@@ -107,7 +127,9 @@ namespace ProcessDashboard.src.TTL.Processing
                 Name = "P3",
                 Descritpion = "Pressure Value at (t6 + tsettle)",
                 X = Math.Round(t6.X + config.EmbossingConstants.tsettle, round),
-                Y = Math.Round(unit.HighPressure.FindPointByX(t6.X + config.EmbossingConstants.tsettle).Y, round)
+                Y = Math.Round(unit.HighPressure.FindPointByX(t6.X + config.EmbossingConstants.tsettle).Y, round),
+                UnitX = "s",
+                UnitY = "bar"
             };
 
             DataPoint P4 = new DataPoint()
@@ -115,7 +137,9 @@ namespace ProcessDashboard.src.TTL.Processing
                 Name = "P4",
                 Descritpion = "Pressure Value at t9",
                 X = t9.X,
-                Y = Math.Round(unit.HighPressure.FindPointByX(t9.X).Y, round)
+                Y = Math.Round(unit.HighPressure.FindPointByX(t9.X).Y, round),
+                UnitX = "s",
+                UnitY = "bar"
             };
 
             // Value data points used to calculate features
@@ -297,8 +321,9 @@ namespace ProcessDashboard.src.TTL.Processing
             });
             #endregion
         }
-
-        public static void CalculateOld(TTLProcess unit)
+        
+        /*
+        public static void Calculate(TTLProcess unit)
         {
             if (unit == null) return;
 
@@ -583,5 +608,6 @@ namespace ProcessDashboard.src.TTL.Processing
             });
             #endregion
         }
+        */
     }
 }
