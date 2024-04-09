@@ -12,6 +12,14 @@ namespace ProcessDashboard.src.TTL.Containers.Common
 
         private static readonly NLog.Logger Log = NLog.LogManager.GetCurrentClassLogger();
 
+        public Feature()
+        {
+            ID = "__ID__";
+            Name = "__NAME__";
+            Description = "__DESCRIPTION__";
+            Value = double.NaN;
+        }
+
         public override string ToString()
         {
             return $"Feature: {ID}, Name: {Name}, Value: {Value}";
@@ -27,14 +35,16 @@ namespace ProcessDashboard.src.TTL.Containers.Common
 
             if (a.ID != b.ID)
                 Log.Warn($"Attempting to sum different features. Feature 1: ({a.ID} - {a.Name}), Feature 2: ({b.ID} - {b.Name}). Using Feature 1 as template.");
-
-            return new Feature()
+            
+            var result = new Feature()
             {
-                ID = a.ID,
-                Name = a.Name,
-                Description = a.Description,
-                Value = a.Value + b.Value
+                ID = a.ID == "__ID__" ? b.ID : a.ID,
+                Name = a.Name == "__NAME__" ? b.Name : a.Name,
+                Description = a.Description == "__DESCRIPTION__" ? b.Description : a.Description,
+                Value = double.IsNaN(a.Value) ? 0.0 + b.Value : a.Value + b.Value
             };
+
+            return result;
         }
 
         public static Feature operator /(Feature a, double div)
