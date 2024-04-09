@@ -15,9 +15,12 @@
         /// </summary>
         public double Y { get; set; }
 
-        public override string ToString()
+        public string UnitX { get; set; }
+        public string UnitY { get; set; }
+
+        public string ToString()
         {
-            return $"DataPoint: {Name}, X: {X}, Y: {Y}";
+            return $"{X}{UnitX}, {Y}{UnitY}";
         }
     }
 }
