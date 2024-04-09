@@ -2,27 +2,26 @@
 
 namespace ProcessDashboard.src.TTL.Containers.Common
 {
-    public class Feature
+    public class Feature: IValueDescription
     {
-        public string ID { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
+
         private double _value;
-        public double Value { get { return _value; } set { _value = Math.Round(value, 3); } }
+        public double Value { get { return _value; } set { _value = Math.Round(value, 3); Available = true; } }
+        //public bool Available { get; set; }
 
         private static readonly NLog.Logger Log = NLog.LogManager.GetCurrentClassLogger();
 
         public Feature()
         {
-            ID = "__ID__";
-            Name = "__NAME__";
+            Name = "_NAME_";
             Description = "__DESCRIPTION__";
             Value = double.NaN;
+            Available = false;
         }
 
         public override string ToString()
         {
-            return $"Feature: {ID}, Name: {Name}, Value: {Value}";
+            return $"{Value}";
         }
 
         public static Feature operator +(Feature a, Feature b)
@@ -33,13 +32,12 @@ namespace ProcessDashboard.src.TTL.Containers.Common
                 return null;
             }
 
-            if (a.ID != b.ID)
-                Log.Warn($"Attempting to sum different features. Feature 1: ({a.ID} - {a.Name}), Feature 2: ({b.ID} - {b.Name}). Using Feature 1 as template.");
+            if (a.Name != b.Name)
+                Log.Warn($"Attempting to sum different features. Feature 1: ({a.Name}), Feature 2: ({b.Name}). Using Feature 1 as template.");
             
             var result = new Feature()
             {
-                ID = a.ID == "__ID__" ? b.ID : a.ID,
-                Name = a.Name == "__NAME__" ? b.Name : a.Name,
+                Name = a.Name == "_NAME_" ? b.Name : a.Name,
                 Description = a.Description == "__DESCRIPTION__" ? b.Description : a.Description,
                 Value = double.IsNaN(a.Value) ? 0.0 + b.Value : a.Value + b.Value
             };
@@ -57,7 +55,6 @@ namespace ProcessDashboard.src.TTL.Containers.Common
 
             return new Feature()
             {
-                ID = a.ID,
                 Name = a.Name,
                 Description = a.Description,
                 Value = a.Value / div
