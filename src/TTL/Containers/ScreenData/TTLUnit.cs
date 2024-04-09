@@ -33,13 +33,5 @@ namespace ProcessDashboard.src.TTL.Containers.ScreenData
             if (HasAcoustic)
                 Acoustic = new TTLAcoustic(acoustic);
         }
-
-        private void GetColor()
-        {
-            if (TrackNumber == 1 && PressNumber == 1) color = Colors.DS11C;
-            if (TrackNumber == 1 && PressNumber == 2) color = Colors.DS12C;
-            if (TrackNumber == 2 && PressNumber == 1) color = Colors.DS21C;
-            if (TrackNumber == 2 && PressNumber == 2) color = Colors.DS22C;
-        }
     }
 }

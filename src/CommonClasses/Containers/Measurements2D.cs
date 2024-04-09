@@ -135,7 +135,7 @@ namespace ProcessDashboard.src.CommonClasses.Containers
             int index = X.IndexOf(XValue);
             if (index != -1)
             {
-                return new Point { X = X[index], Y = X[index] };
+                return new Point { X = X[index], Y = Y[index] };
             }
             else
             {

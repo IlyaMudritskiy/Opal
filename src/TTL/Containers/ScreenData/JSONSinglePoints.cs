@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace ProcessDashboard.src.TTL.Containers.ScreenData
 {
-    public class JSONSinglePoins
+    public class JSONSinglePoints
     {
         // PS01_t2 is Heater = True (on) from old Json
         public SinglePointMeasurement PS01_t3 { get; set; }
@@ -17,7 +17,7 @@ namespace ProcessDashboard.src.TTL.Containers.ScreenData
         public SinglePointMeasurement PS01_t10 { get; set; }
         public SinglePointMeasurement PS01_HeaterRuntime { get; set; }
 
-        public JSONSinglePoins(ProcessFile file)
+        public JSONSinglePoints(ProcessFile file)
         {
             PS01_t3 = getPoint(file, "ps01_t3");
             PS01_t5 = getPoint(file, "ps01_t5");
@@ -44,7 +44,10 @@ namespace ProcessDashboard.src.TTL.Containers.ScreenData
         private SinglePointMeasurement getPoint(ProcessFile file, string stepname)
         {
             var step = file.Steps.Where(x => x.StepName == stepname).FirstOrDefault();
-            if (step == null) return null;
+            if (step == null)
+            {
+                return new SinglePointMeasurement();
+            }
             return new SinglePointMeasurement(step);
         }
     }

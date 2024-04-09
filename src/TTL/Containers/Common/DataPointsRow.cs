@@ -2,9 +2,9 @@
 
 namespace ProcessDashboard.src.TTL.Containers.Common
 {
-    public class DataPointsRow
+    public class DataPointsRow<T>
     {
         public string Serial { get; set; }
-        public List<DataPoint> Values { get; set; }
+        public List<T> Values { get; set; }
     }
 }
