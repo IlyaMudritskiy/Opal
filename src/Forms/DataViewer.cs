@@ -15,7 +15,8 @@ namespace ProcessDashboard.src.Forms
             this.SelectObjectDropDown.Items.AddRange(new object[] {
             "Data Points",
             "Temperature Features",
-            "Pressure Features"
+            "Pressure Features",
+            "Acoustic Steps Status"
             });
         }
     }
