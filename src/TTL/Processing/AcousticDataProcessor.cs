@@ -196,7 +196,7 @@ namespace ProcessDashboard.src.TTL.Processing
                                     string jsonContent = reader.ReadToEnd();
                                     // Deserialize the JSON content into an AcousticFile object
                                     var acousticFile = JsonConvert.DeserializeObject<AcousticFile>(jsonContent);
-
+                                    acousticFile.DUT.Nest = getNestNumber(zipPath);
                                     // Add the deserialized object to the result list
                                     result.Add(acousticFile);
 
@@ -211,7 +211,16 @@ namespace ProcessDashboard.src.TTL.Processing
 
             return result;
         }
-
+        
+        private static int getNestNumber(string zipPath)
+        {
+            if (zipPath.Contains("TestPC1")) return 1;
+            if (zipPath.Contains("TestPC2")) return 2;
+            if (zipPath.Contains("TestPC3")) return 3;
+            if (zipPath.Contains("TestPC4")) return 4;
+            return 1;
+        }
+        
         private static List<AcousticFile> manualSelected(ref List<ProcessFile> processFiles, IEnumerable<string> acousticFiles)
         {
             if (acousticFiles == null || acousticFiles.Count() == 0) return null;
