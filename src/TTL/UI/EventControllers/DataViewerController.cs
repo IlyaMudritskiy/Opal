@@ -4,6 +4,7 @@ using ProcessDashboard.src.TTL.Containers.Common;
 using ProcessDashboard.src.TTL.Containers.ScreenData;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -54,33 +55,54 @@ namespace ProcessDashboard.src.TTL.UI.EventControllers
             DGV.Columns.Add(serialColumn);
         }
 
+        private void AddWPCColumn()
+        {
+            var WPCcolumn = new DataGridViewTextBoxColumn
+            {
+                Name = "WPC",
+                HeaderText = "WPC",
+                ToolTipText = "Work Piece Carrier"
+            };
+            DGV.Columns.Add(WPCcolumn);
+        }
+
         private void ShowData(List<DataPointsRow<IValueDescription>> data)
         {
             if (data == null) return;
             //Data = data;
             ClearData();
             AddSerialColumn();
+            AddWPCColumn();
 
-            int maxValuesCount = data.Max(row => row.Values.Count);
+            var newRows = new List<DataPointsRow<IValueDescription>>();
+
+            foreach (var dataRow in data)
+            {
+                if (dataRow ==  null) continue;
+                newRows.Add(dataRow);
+            }
+
+            int maxValuesCount = newRows.Max(row => row.Values.Count);
 
             for (int i = 0; i < maxValuesCount; i++)
             {
                 var valueColumn = new DataGridViewTextBoxColumn
                 {
-                    Name = data.First().Values[i].Name,
-                    HeaderText = data.First().Values[i].Name,
-                    ToolTipText = data.First().Values[i].Description
+                    Name = newRows.First().Values[i].Name,
+                    HeaderText = newRows.First().Values[i].Name,
+                    ToolTipText = newRows.First().Values[i].Description
                 };
                 DGV.Columns.Add(valueColumn);
             }
 
-            foreach (var row in data)
+            foreach (var row in newRows)
             {
-                var rowValues = new object[maxValuesCount + 1]; // +1 for the Serial
+                var rowValues = new object[maxValuesCount + 2]; // +1 for the Serial
                 rowValues[0] = row.Serial;
+                rowValues[1] = row.WPC;
                 for (int i = 0; i < row.Values.Count; i++)
                 {
-                    rowValues[i + 1] = row.Values[i].sValue; // +1 to skip the Serial column
+                    rowValues[i + 2] = row.Values[i].sValue; // +1 to skip the Serial column
                 }
                 DGV.Rows.Add(rowValues);
             }
@@ -112,9 +134,9 @@ namespace ProcessDashboard.src.TTL.UI.EventControllers
 
         private void RegisterEvents()
         {
-            DV.DataViewerSearchButton.Click += new EventHandler(DataViewerSearchButton_Click);
-            DV.DataViewerInputField.KeyPress += new KeyPressEventHandler(DataViewerInputField_KeyPress);
-            DV.FormClosing += new FormClosingEventHandler(DataViewer_FormClosing);
+            DV.DataViewerSearchButton.Click += DataViewerSearchButton_Click;
+            DV.DataViewerInputField.KeyPress += DataViewerInputField_KeyPress;
+            DV.FormClosing += DataViewer_FormClosing;
             DV.SelectObjectDropDown.SelectedIndexChanged += SelectObjectDropDown_SelectedIndexChanged;
         }
 
@@ -129,8 +151,7 @@ namespace ProcessDashboard.src.TTL.UI.EventControllers
 
         private void DataViewerSearchButton_Click(object sender, EventArgs e)
         {
-            if (DV.ActiveControl == sender)
-                FindRow();
+            FindRow();
         }
 
         private void SelectObjectDropDown_SelectedIndexChanged(object sender, EventArgs e)
@@ -151,13 +172,18 @@ namespace ProcessDashboard.src.TTL.UI.EventControllers
             {
                 ShowData(TTLData.PressFeatures);
             }
+
+            if (comboBox.SelectedItem != null && comboBox.SelectedItem.ToString() == "Acoustic Steps Status")
+            {
+                ShowData(TTLData.StepsStatus);
+            }
         }
 
         private void DataViewerInputField_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (e.KeyChar == (char)Keys.Enter)
             {
-                if (DV.ActiveControl == sender)
+                if (!string.IsNullOrEmpty(DV.DataViewerInputField.Text))
                 {
                     FindRow();
                     e.Handled = true;

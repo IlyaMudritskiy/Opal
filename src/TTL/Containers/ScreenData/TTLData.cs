@@ -23,6 +23,7 @@ namespace ProcessDashboard.src.TTL.Containers.ScreenData
         public List<DataPointsRow<IValueDescription>> DataPoints { get; set; }
         public List<DataPointsRow<IValueDescription>> TempFeatures { get; set; }
         public List<DataPointsRow<IValueDescription>> PressFeatures { get; set; }
+        public List<DataPointsRow<IValueDescription>> StepsStatus { get; set; }
 
         private Config config = Config.Instance;
         private static readonly object _lock = new object();
@@ -36,6 +37,7 @@ namespace ProcessDashboard.src.TTL.Containers.ScreenData
             DataPoints = new List<DataPointsRow<IValueDescription>>();
             PressFeatures = new List<DataPointsRow<IValueDescription>>();
             TempFeatures = new List<DataPointsRow<IValueDescription>>();
+            StepsStatus = new List<DataPointsRow<IValueDescription>>();
 
             if (config.Acoustic.Enabled)
             {
@@ -72,12 +74,13 @@ namespace ProcessDashboard.src.TTL.Containers.ScreenData
             return new DataPointsRow<IValueDescription>
             {
                 Serial = unit.SerialNumber,
+                WPC = unit.WPC,
                 Values = unit.Process.DataPoints.Select(
                         x => new IValueDescription
                         {
                             Name = x.Name,
                             Description = x.Description,
-                            sValue = x.ToString()
+                            sValue = x.ToString(),
                         }).ToList()
             };
         }
@@ -87,13 +90,38 @@ namespace ProcessDashboard.src.TTL.Containers.ScreenData
             return new DataPointsRow<IValueDescription>
             {
                 Serial = unit.SerialNumber,
+                WPC = unit.WPC,
                 Values = features.Select(
                         x => new IValueDescription
                         {
                             Name = x.Name,
                             Description = x.Description,
-                            sValue = x.ToString()
+                            sValue = x.ToString(),
                         }).ToList()
+            };
+        }
+
+        private DataPointsRow<IValueDescription> GetStepsStatusObj(TTLUnit unit)
+        {
+            if (unit.Acoustic == null) return null;
+            var unitSteps = unit.Acoustic.StepsStatus;
+            var values = new List<IValueDescription>();
+
+            foreach (var step in unitSteps)
+            {
+                values.Add(new IValueDescription
+                {
+                    Name = step.StepName,
+                    Description = "",
+                    sValue = step.StepPass ? "PASS" : "FAIL",
+                    Available = true,
+                });
+            }
+            return new DataPointsRow<IValueDescription>
+            {
+                Serial = unit.SerialNumber,
+                Values = values,
+                WPC = unit.WPC
             };
         }
 
@@ -104,6 +132,7 @@ namespace ProcessDashboard.src.TTL.Containers.ScreenData
                 DataPoints.Add(GetDataPointObj(unit));
                 TempFeatures.Add(GetFeatureObj(unit, unit.Process.TempFeatures));
                 PressFeatures.Add(GetFeatureObj(unit, unit.Process.PressFeatures));
+                StepsStatus.Add(GetStepsStatusObj(unit));
             }
         }
 
