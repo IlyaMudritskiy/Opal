@@ -1,6 +1,7 @@
 {
   "DataDriveLetter": "Z",
-  "CrosshairOn":  false,
+  "CrosshairOn": false,
+  "IsASxReports": true,
   "Acoustic": {
     "Enabled": true,
     "ManualSelection": false
