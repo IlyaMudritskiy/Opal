@@ -40,6 +40,8 @@ namespace ProcessDashboard.src.App
             // Read selected files into JObject (JObject is not tied to a specific screen)
             if (filepaths == null || filepaths.Count == 0) return;
 
+            config.ProcessFilePaths = filepaths;
+
             List<JObject> files = CommonFileManager.ParseJsonFiles(filepaths);
 
             Log.Trace($"Selected [{filepaths.Count}] files.");
