@@ -36,6 +36,9 @@ namespace ProcessDashboard.src.TTL.Containers.FileContent
 
         [JsonProperty(PropertyName = "machine_id")]
         public string MachineID { get; set; }
+
+        [JsonProperty(PropertyName = "wpc_number")]
+        public string WPC { get; set; }
     }
 
     [JsonObject(MemberSerialization.OptIn)]
