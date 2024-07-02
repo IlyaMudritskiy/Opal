@@ -14,6 +14,7 @@ namespace ProcessDashboard.src.TTL.UI.UIElements
         public DataGridView Table { get; set; }
         public CheckBox CheckBox { get; set; }
         public TableLayoutPanel Layout { get; set; }
+        public Feature LastSelectedFeature { get; set; }
 
         public event EventHandler<EventArgs> CheckboxStateChanged;
 
@@ -71,7 +72,8 @@ namespace ProcessDashboard.src.TTL.UI.UIElements
                         HeaderText = "Value",
                         CellTemplate = new DataGridViewTextBoxCell()
                     }
-                }
+                },
+                ReadOnly = true
             };
 
             Table.CellMouseEnter += Table_CellMouseEnter;

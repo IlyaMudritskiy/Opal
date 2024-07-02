@@ -29,6 +29,7 @@ namespace ProcessDashboard.src.TTL.Containers.ScreenData
             SeparateProcessFeatures(units);
             AddCurves(units);
             CalculateMeanFeatures();
+            //GetDataPoints(units);
         }
 
         #region Separate data by DS

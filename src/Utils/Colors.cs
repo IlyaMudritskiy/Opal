@@ -21,6 +21,15 @@ namespace ProcessDashboard.src.Utils
         public static Color DS21C { get; } = Blue;
         public static Color DS22C { get; } = Purple;
 
+        public static Color GetDSColor(int Idx)
+        {
+            if (Idx == 1 || Idx == 11) return DS11C;
+            if (Idx == 2 || Idx == 12) return DS12C;
+            if (Idx == 3 || Idx == 21) return DS21C;
+            if (Idx == 4 || Idx == 22) return DS22C;
+            return Colors.Black;
+        }
+
         internal static class Default
         {
             public static Color Grey { get; } = SystemColors.Control;

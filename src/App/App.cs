@@ -36,7 +36,7 @@ namespace ProcessDashboard.src.App
         public void Run(ref OpenFileDialog dialog, ref Panel panel)
         {
             // Get paths of selected files
-            List<string> filepaths = CommonFileManager.GetFilesFromDialog(ref dialog);
+            List<string> filepaths = CommonFileManager.GetFilesFromDialog();
             // Read selected files into JObject (JObject is not tied to a specific screen)
             if (filepaths == null || filepaths.Count == 0) return;
 

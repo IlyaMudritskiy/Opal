@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Newtonsoft.Json;
@@ -232,7 +233,7 @@ namespace ProcessDashboard.src.CommonClasses.Processing
         /// </summary>
         /// <param name="dialog">Dialog in WinForms to select files.</param>
         /// <returns>List of full paths to selected files.</returns>
-        public static List<string> GetFilesFromDialog(ref OpenFileDialog dialog)
+        public static List<string> GetFilesFromDialog2(ref OpenFileDialog dialog)
         {
             if (dialog.ShowDialog() == DialogResult.OK)
                 return dialog.FileNames.ToList();
@@ -247,7 +248,7 @@ namespace ProcessDashboard.src.CommonClasses.Processing
         /// Gets the list of selected files using OpenFileDialog.
         /// </summary>
         /// <returns>List of full paths to selected files.</returns>
-        public static List<string> GetFilesFromDialog()
+        public static List<string> GetFilesFromDialog2()
         {
             OpenFileDialog dialog = new OpenFileDialog() { Multiselect = true };
             if (dialog.ShowDialog() == DialogResult.OK)
@@ -257,6 +258,50 @@ namespace ProcessDashboard.src.CommonClasses.Processing
                 Log.Info("No files were selected in OpenFileDialog");
                 return null;
             }
+        }
+
+        public static List<string> GetFilesFromDialog()
+        {
+            List<string> result = new List<string>();
+
+            Thread t = new Thread((ThreadStart)(() =>
+            {
+                OpenFileDialog dialog = new OpenFileDialog() { Multiselect = true };
+                if (dialog.ShowDialog() == DialogResult.OK)
+                    result = dialog.FileNames.ToList();
+                else
+                {
+                    Log.Info("No files were selected in OpenFileDialog");
+                }
+            }));
+
+            t.SetApartmentState(ApartmentState.STA);
+            t.Start();
+            t.Join();
+
+            return result;
+        }
+
+        public static string GetFolderFromDialog()
+        {
+            string result = "";
+
+            Thread t = new Thread((ThreadStart)(() =>
+            {
+                FolderBrowserDialog dialog = new FolderBrowserDialog();
+                if (dialog.ShowDialog() == DialogResult.OK)
+                    result = dialog.SelectedPath;
+                else
+                {
+                    Log.Info("No folder was selected on FolderBrowserDialog");
+                }
+            }));
+
+            t.SetApartmentState(ApartmentState.STA);
+            t.Start();
+            t.Join();
+
+            return result;
         }
 
         /// <summary>
