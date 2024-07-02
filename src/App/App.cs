@@ -36,7 +36,6 @@ namespace ProcessDashboard.src.App
         public void Run(ref OpenFileDialog dialog, ref Panel panel)
         {
             // Get paths of selected files
-            //List<string> filepaths = CommonFileManager.GetFilesFromDialog(ref dialog);
             List<string> filepaths = CommonFileManager.GetFilesFromDialog();
             // Read selected files into JObject (JObject is not tied to a specific screen)
             if (filepaths == null || filepaths.Count == 0) return;
@@ -78,11 +77,12 @@ namespace ProcessDashboard.src.App
         static void SetGlobalDateTimeFormat()
         {
             CultureInfo cultureInfo = CultureInfo.InvariantCulture;
+            //Type dateTimeInfoType = typeof(DateTimeFormatInfo);
             DateTimeFormatInfo dtfi = cultureInfo.DateTimeFormat;
 
             // Use reflection to modify the read-only property
             typeof(DateTimeFormatInfo).GetField("generalLongTimePattern", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)
-                                      .SetValue(dtfi, "yyyy-MM-dd HH:mm:ss.fff");
+                                     .SetValue(dtfi, "yyyy-MM-dd HH:mm:ss.fff");
         }
     }
 }
