@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace ProcessDashboard.src.TTL.Containers.Common
 {
@@ -7,6 +8,7 @@ namespace ProcessDashboard.src.TTL.Containers.Common
 
         private double _value;
         public double Value { get { return _value; } set { _value = Math.Round(value, 3); Available = true; } }
+        public List<DataPoint> RelatedDataPoints { get; set; }
         //public bool Available { get; set; }
 
         private static readonly NLog.Logger Log = NLog.LogManager.GetCurrentClassLogger();
@@ -17,6 +19,7 @@ namespace ProcessDashboard.src.TTL.Containers.Common
             Description = "__DESCRIPTION__";
             Value = double.NaN;
             Available = false;
+            RelatedDataPoints = new List<DataPoint>();
         }
 
         public override string ToString()

@@ -25,7 +25,7 @@ namespace ProcessDashboard.src.CommonClasses.Containers
             if (measurements == null)
                 throw new ArgumentNullException(nameof(measurements));
 
-             List<string> dateTime = measurements.Select(m => m.DateTime).ToList();
+            List<string> dateTime = measurements.Select(m => m.DateTime).ToList();
             List<string> values = measurements.Select(v => v.MeasurementValue).ToList();
 
             List<double> resultOffset = new List<double>(dateTime.Count).Select(x => .0).ToList();
@@ -100,34 +100,6 @@ namespace ProcessDashboard.src.CommonClasses.Containers
             X = XResult;
             Y = YResult;
             Count = X.Count;
-        }
-
-        public Point FindPointByX_old(double XValue)
-        {
-            int index = X.IndexOf(XValue);
-            if (index != -1)
-                return new Point { X = X[index], Y = X[index] };
-
-            else
-            {
-                var nearestPoints = X.Select((x, i) => new { Index = i, Distance = Math.Abs(x - XValue) })
-                                  .OrderBy(p => p.Distance)
-                                  .Take(2)
-                                  .OrderBy(p => p.Index)
-                                  .ToArray();
-
-                double x1 = X[nearestPoints[0].Index];
-                double y1 = Y[nearestPoints[0].Index];
-                double x2 = X[nearestPoints[1].Index];
-                double y2 = Y[nearestPoints[1].Index];
-
-                double slope = (y2 - y1) / (x2 - x1);
-                double intercept = y1 - slope * x1;
-
-                double exactValue = slope * XValue + intercept;
-
-                return new Point { X = XValue, Y = exactValue };
-            }
         }
 
         public Point FindPointByX(double XValue)
