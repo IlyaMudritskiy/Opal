@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 
 namespace ProcessDashboard.src.TTL.Containers.Common
@@ -90,12 +91,12 @@ namespace ProcessDashboard.src.TTL.Containers.Common
         /// </summary>
         /// <param name="idx">Index of element in Elements (0-3)</param>
         /// <param name="value">Desired value of type T</param>
-        public void Set(int idx,  T value)
+        public void Set(int idx, T value)
         {
-            if (idx == 0) DS11 = value;
-            if (idx == 1) DS12 = value;
-            if (idx == 2) DS21 = value;
-            if (idx == 3) DS22 = value;
+            if (idx == 0 || idx == 11) DS11 = value;
+            if (idx == 1 || idx == 12) DS12 = value;
+            if (idx == 2 || idx == 21) DS21 = value;
+            if (idx == 3 || idx == 22) DS22 = value;
         }
 
         /// <summary>
@@ -110,6 +111,24 @@ namespace ProcessDashboard.src.TTL.Containers.Common
             if (track == 1 && press == 2) DS12 = value;
             if (track == 2 && press == 1) DS21 = value;
             if (track == 2 && press == 2) DS22 = value;
+        }
+
+        public T Get(int idx)
+        {
+            if (idx == 0 || idx == 11) return DS11;
+            if (idx == 1 || idx == 12) return DS12;
+            if (idx == 2 || idx == 21) return DS21;
+            if (idx == 3 || idx == 22) return DS22;
+            return default;
+        }
+
+        public T Get(int track, int press)
+        {
+            if (track == 1 && press == 1) return DS11;
+            if (track == 1 && press == 2) return DS12;
+            if (track == 2 && press == 1) return DS21;
+            if (track == 2 && press == 2) return DS22;
+            return default;
         }
     }
 }

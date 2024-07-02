@@ -51,16 +51,18 @@ namespace ProcessDashboard.src.TTL.Screen
                 Tabs.TabPages.Add(THD.Tab);
                 Tabs.TabPages.Add(RNB.Tab);
                 Tabs.TabPages.Add(IMP.Tab);
+
+                FR.SubscribeToDSNestToggleButtonClick(FRToggleView);
+                THD.SubscribeToDSNestToggleButtonClick(THDToggleView);
+                RNB.SubscribeToDSNestToggleButtonClick(RNBToggleView);
+                IMP.SubscribeToDSNestToggleButtonClick(IMPToggleView);
             }
 
             panel.SuspendLayout();
             panel.Controls.Add(Tabs);
             panel.ResumeLayout();
 
-            FR.SubscribeToDSNestToggleButtonClick(FRToggleView);
-            THD.SubscribeToDSNestToggleButtonClick(THDToggleView);
-            RNB.SubscribeToDSNestToggleButtonClick(RNBToggleView);
-            IMP.SubscribeToDSNestToggleButtonClick(IMPToggleView);
+            
         }
 
         public void Update(List<JObject> data)

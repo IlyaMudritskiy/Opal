@@ -14,5 +14,10 @@
         {
             return $"{X}{UnitX}, {Y}{UnitY}";
         }
+
+        public bool IsNaN()
+        {
+            return (double.IsNaN(X) || double.IsNaN(Y));
+        }
     }
 }
