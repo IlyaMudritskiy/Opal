@@ -65,6 +65,7 @@
     <Compile Include="src\TTL\Containers\ScreenData\SinglePointMeasurement.cs" />
     <Compile Include="src\TTL\Containers\ScreenData\JSONSinglePoints.cs" />
     <Compile Include="src\TTL\Containers\ScreenData\PlotViewDSContainer.cs" />
+    <Compile Include="src\TTL\Containers\ScreenData\StepStatus.cs" />
     <Compile Include="src\TTL\Processing\ProcessDataProcessor.cs" />
     <Compile Include="src\TTL\UI\EventControllers\DataViewerController.cs" />
     <Compile Include="src\TTL\UI\EventControllers\FileController.cs" />
@@ -114,6 +115,7 @@
     <Compile Include="src\Utils\Colors.cs" />
     <Compile Include="src\Utils\Fonts.cs" />
     <Compile Include="src\TTL\Screen\CommonElements.cs" />
+    <Compile Include="src\Utils\StepNameGetter.cs" />
     <EmbeddedResource Include="src\Forms\DataViewer.resx">
       <DependentUpon>DataViewer.cs</DependentUpon>
     </EmbeddedResource>

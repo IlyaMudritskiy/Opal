@@ -112,6 +112,7 @@
             this.ClientSize = new System.Drawing.Size(1400, 750);
             this.Controls.Add(this.DataViewerPanel);
             this.Controls.Add(this.DataViewerMenuStrip);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "DataViewer";
             this.Text = "DataViewer";
             this.DataViewerMenuStrip.ResumeLayout(false);

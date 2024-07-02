@@ -13,6 +13,7 @@ namespace ProcessDashboard.src.TTL.Containers.ScreenData
         public int TrackNumber { get; set; }
         public int PressNumber { get; set; }
         public string MachineID { get; set; }
+        public string WPC { get; set; }
 
         public TTLProcess Process { get; set; }
         public TTLAcoustic Acoustic { get; set; }
@@ -27,6 +28,7 @@ namespace ProcessDashboard.src.TTL.Containers.ScreenData
             TrackNumber = int.Parse(process.DUT.TrackNumber);
             PressNumber = int.Parse(process.DUT.PressNumber);
             MachineID = process.DUT.MachineID;
+            WPC = process.DUT.WPC;
 
             Process = new TTLProcess(process, color);
 

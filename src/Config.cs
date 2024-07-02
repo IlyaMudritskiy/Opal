@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using Newtonsoft.Json;
 
@@ -17,6 +18,9 @@ namespace ProcessDashboard.Model.AppConfiguration
 
         [JsonProperty(PropertyName = "CrosshairOn")]
         public bool CrosshairOn { get; set; }
+
+        [JsonProperty(PropertyName = "IsASxReports")]
+        public bool IsASxReports { get; set; }
 
         [JsonProperty(PropertyName = "Acoustic")]
         public Acoustic Acoustic { get; set; }
@@ -65,6 +69,7 @@ namespace ProcessDashboard.Model.AppConfiguration
     /// </summary>
     public partial class Config
     {
+        public List<string> ProcessFilePaths { get; set; } = new List<string>();
         private static readonly Lazy<Config> lazy = new Lazy<Config>(() => new Config());
         public static Config Instance => lazy.Value;
 

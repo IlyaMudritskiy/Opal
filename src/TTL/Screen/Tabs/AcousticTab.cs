@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using ProcessDashboard.Model.Data.Acoustic;
-using ProcessDashboard.src.TTL.Containers.Common;
 using ProcessDashboard.src.TTL.Containers.ScreenData;
 using ProcessDashboard.src.TTL.Processing;
 using ProcessDashboard.src.TTL.Screen;
