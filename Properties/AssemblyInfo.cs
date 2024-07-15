@@ -1,35 +1,35 @@
 ﻿using System.Reflection;
 using System.Runtime.InteropServices;
 
-// General Information about an assembly is controlled through the following
-// set of attributes. Change these attribute values to modify the information
-// associated with an assembly.
+/*
+ * Authors:
+ * - Ilya Mudritskiy (ilya.mudritskiy@sonova.com)
+ * - Thomas Lawless (tom.lawless@sonova.com)
+ * 
+ * Developers:
+ * - Ilya Mudritskiy (ilya.mudritskiy@sonova.com)
+ */
+
 [assembly: AssemblyTitle("ProcessDashboard")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Sonova Consumer Hearing Ireland")]
 [assembly: AssemblyProduct("ProcessDashboard")]
-[assembly: AssemblyCopyright("Copyright ©  2024")]
+[assembly: AssemblyCopyright("Copyright © 2024")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
-// Setting ComVisible to false makes the types in this assembly not visible
-// to COM components.  If you need to access a type in this assembly from
-// COM, set the ComVisible attribute to true on that type.
 [assembly: ComVisible(false)]
 
-// The following GUID is for the ID of the typelib if this project is exposed to COM
 [assembly: Guid("e4f680dd-6918-4f78-a2fa-c1fe86206f69")]
 
-// Version information for an assembly consists of the following four values:
-//
-//      Major Version
-//      Minor Version
-//      Build Number
-//      Revision
-//
-// You can specify all the values or you can default the Build and Revision Numbers
-// by using the '*' as shown below:
-// [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.4.4")]
-[assembly: AssemblyFileVersion("1.4.4")]
+/*
+ * Version: major.minor.fix
+ * Each completed task (merged PR in Azure) adds +1 to fix parameter.
+ * When it reaches 10, minor parameter should be increased by 1.
+ * Examples: 1.3.9, 2.0.10, 1.1.1
+ * If any significant changes were presented, minor or major parameters
+ * can be increased independently.
+ */
+[assembly: AssemblyVersion("1.4.7")]
+[assembly: AssemblyFileVersion("1.4.7")]
