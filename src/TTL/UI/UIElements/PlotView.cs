@@ -2,14 +2,11 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Threading.Tasks;
-using ProcessDashboard.src.CommonClasses.Containers;
 using ProcessDashboard.src.TTL.Containers.Common;
 using ProcessDashboard.src.TTL.Screen;
 using ProcessDashboard.src.Utils;
 using ScottPlot;
 using ScottPlot.Plottable;
-using ScottPlot.Statistics;
 
 namespace ProcessDashboard.src.TTL.UI.UIElements
 {
@@ -171,19 +168,43 @@ namespace ProcessDashboard.src.TTL.UI.UIElements
         /// <param name="color">The color in which the data points should be plotted. If not specified, the default color is used.</param>
         /// <param name="markerSize">The size of the markers used to represent the data points. Default is 7.</param>
         /// <returns>A list of MarkerPlot objects representing the added data points.</returns>
+        public List<MarkerPlot> AddGetPoints(List<DataPoint> points, List<Color> colors, bool visibility = true, int markerSize = 7)
+        {
+            if (points == null) return null;
+
+            List<MarkerPlot> result = new List<MarkerPlot>();
+
+            for (int i = 0; i < points.Count; i++)
+            {
+                if (points[i].IsNaN()) 
+                    continue;
+
+                var marker = Control.Plot.AddMarker(points[i].X, points[i].Y, MarkerShape.filledCircle, markerSize, colors[i]);
+                marker.IsVisible = visibility;
+                result.Add(marker);
+            }
+
+            Refresh();
+            Fit();
+            return result;
+        }
+
         public List<MarkerPlot> AddGetPoints(List<DataPoint> points, Color color, bool visibility = true, int markerSize = 7)
         {
-            List<MarkerPlot> result = new List<MarkerPlot>();
             if (points == null) return null;
+
+            List<MarkerPlot> result = new List<MarkerPlot>();
+
             foreach (var point in points)
             {
-                if (!point.IsNaN())
-                {
-                    var marker = Control.Plot.AddMarker(point.X, point.Y, MarkerShape.filledCircle, markerSize, color);
-                    marker.IsVisible = visibility;
-                    result.Add(marker);
-                }
+                if (point.IsNaN())
+                    continue;
+
+                var marker = Control.Plot.AddMarker(point.X, point.Y, MarkerShape.filledCircle, markerSize, color);
+                marker.IsVisible = visibility;
+                result.Add(marker);
             }
+
             Refresh();
             Fit();
             return result;
@@ -191,7 +212,6 @@ namespace ProcessDashboard.src.TTL.UI.UIElements
 
         public void Clear()
         {
-            //Control.Plot.Margins(.2, .2);
             Control.Plot.Clear();
             Control.Refresh();
             Title.Text = "";
@@ -206,13 +226,11 @@ namespace ProcessDashboard.src.TTL.UI.UIElements
 
         public void Fit()
         {
-            //Control.Plot.Margins(.2, .2);
             Control.Plot.AxisAuto();
         }
 
         public void Refresh()
         {
-            //Control.Plot.Margins(.2, .2);
             Control.Refresh();
         }
 

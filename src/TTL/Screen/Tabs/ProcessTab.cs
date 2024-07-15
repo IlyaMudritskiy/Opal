@@ -93,7 +93,6 @@ namespace ProcessDashboard.Model.Screen.Tabs
             FeaturesDistributiuons.DS21 = new PlotView("DS 2-1", Colors.DS21C, padding);
             FeaturesDistributiuons.DS22 = new PlotView("DS 2-2", Colors.DS22C, padding);
 
-            // Basic layout for plot and tables
             TableLayoutPanel tabBase = new TableLayoutPanel()
             {
                 ColumnCount = 1,
@@ -217,19 +216,21 @@ namespace ProcessDashboard.Model.Screen.Tabs
             DataGridView table = FeatureTables.Get(dsIdx).Table;                // DS Table containing mean features
             List<List<Feature>> features = Data.Features.Get(dsIdx);            // All features related to a specific DS
             Feature feature = getSelectedFeature(e, table);                     // Selected mean feature from the table
+            if (feature == null) return;
             List<Feature> list = getCorrespondingFeatures(feature, features);   // List of all features that have the same name
             PlotView distributionPlot = FeaturesDistributiuons.Get(dsIdx);      // Distribution plot related to a specific DS
             bool visibility = Visibility.Get(dsIdx);                            // Visibility of the distribution plot related to a specific DS
             Color color = Colors.GetDSColor(dsIdx);
+            
 
             distributionPlot.Clear();
             distributionPlot.SetText(feature.Name);
 
             plotDistributionHistogram(list, feature, distributionPlot, color);
-            List<List<MarkerPlot>> result = plotDataPoints(list, color, visibility);
+            List<List<MarkerPlot>> dataPointsMarkers = plotDataPoints(list, color, visibility);
             List<Bracket> brackets = plotClusterID(list, visibility);
 
-            MarkerPlots.Set(dsIdx, result);
+            MarkerPlots.Set(dsIdx, dataPointsMarkers);
             Brackets.Set(dsIdx, brackets);
 
             distributionPlot.Refresh();
@@ -303,10 +304,14 @@ namespace ProcessDashboard.Model.Screen.Tabs
         {
             var points = feature.Select(f => f.RelatedDataPoints).ToList();
             List<List<MarkerPlot>> marker = new List<List<MarkerPlot>>();
+            List<Color> colors = new List<Color>();
+
+            foreach (var _ in points[0])
+                colors.Add(Colors.GetRandomColor());
 
             foreach (var pointsList in points)
             {
-                marker.Add(PlotView.AddGetPoints(pointsList, color, visibility));
+                marker.Add(PlotView.AddGetPoints(pointsList, colors, visibility));
             }
 
             return marker;

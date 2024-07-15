@@ -25,13 +25,8 @@ namespace ProcessDashboard.src.TTL.Processing
         {
             if (files == null || files.Count == 0) return null;
 
-            /*
-            if (config.Acoustic.ManualSelection)
-            {
-                List<string> filepaths = CommonFileManager.GetFilesFromDialog();
-                if (filepaths == null || filepaths.Count == 0) return null;
-            }
-            */
+            if (!config.Acoustic.Enabled) return null;
+
             if (config.Acoustic.ManualSelection)
             {
                 if (config.IsASxReports)

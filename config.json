@@ -3,7 +3,7 @@
   "CrosshairOn": false,
   "IsASxReports": true,
   "Acoustic": {
-    "Enabled": true,
+    "Enabled": false,
     "ManualSelection": false
   },
   "EmbossingConstants": {
