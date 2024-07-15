@@ -100,6 +100,19 @@ namespace ProcessDashboard.src.TTL.Processing
                 UnitY = "bar"
             };
 
+            DataPoint t7t = new DataPoint()
+            {
+                Available = unit.JsonPoints.PS01_t7.Available,
+                Name = "t7t",
+                Description = "[T] Temperature value when pressure valve released\n" +
+                              "PS01_t7 from .json file\n" +
+                              "Timestamp, (s; °C)",
+                X = unit.JsonPoints.PS01_t7.Available ? Math.Round(unit.JsonPoints.PS01_t7.DateOffset, round) : 0.0,
+                Y = Math.Round(unit.Temperature.FindPointByX(unit.JsonPoints.PS01_t7.DateOffset).Y, round),
+                UnitX = "s",
+                UnitY = "°C"
+            };
+
             DataPoint t8 = new DataPoint()
             {
                 Available = unit.JsonPoints.PS01_t8.Available,
@@ -152,6 +165,19 @@ namespace ProcessDashboard.src.TTL.Processing
                 UnitY = "bar"
             };
 
+            DataPoint t10t = new DataPoint()
+            {
+                Available = unit.JsonPoints.PS01_t10.Available,
+                Name = "t10t",
+                Description = "[T] Temperature value when measured pressure equals the pre-defined pressure value, P1\n" +
+                              "PS01_t10 from .json file\n" +
+                              "Timestamp, (s; °C)",
+                X = unit.JsonPoints.PS01_t10.Available ? Math.Round(unit.JsonPoints.PS01_t10.DateOffset, round) : 0.0,
+                Y = Math.Round(unit.Temperature.FindPointByX(unit.JsonPoints.PS01_t10.DateOffset).Y, round),
+                UnitX = "s",
+                UnitY = "°C"
+            };
+
             DataPoint Tmax = new DataPoint()
             {
                 Name = "Tmax",
@@ -189,7 +215,7 @@ namespace ProcessDashboard.src.TTL.Processing
             };
 
             // Value data points used to calculate features
-            unit.DataPoints = new List<DataPoint> { t2, t3, t4, t5, t6, t7, t8, t9, t9p, t10, Tmax, P3, P4 };
+            unit.DataPoints = new List<DataPoint> { t2, t3, t4, t5, t6, t7, t7t, t8, t9, t9p, t10, t10t, Tmax, P3, P4 };
 
             #endregion
 
@@ -221,10 +247,10 @@ namespace ProcessDashboard.src.TTL.Processing
                 Available = t7.Available,
                 Name = "tT3",
                 Description = "Time duration between Heater OFF and Pressure intensifier released\n" +
-                              "(P)t7.X - t4.X\n" +
+                              "t7t.X - t4.X\n" +
                               "Duration, (s)",
-                Value = Math.Round(t7.X - t4.X, round),
-                RelatedDataPoints = new List<DataPoint> { t4 }
+                Value = Math.Round(t7t.X - t4.X, round),
+                RelatedDataPoints = new List<DataPoint> { t4, t7t }
             });
 
             unit.TempFeatures.Add(new Feature()
@@ -232,10 +258,10 @@ namespace ProcessDashboard.src.TTL.Processing
                 Available = t7.Available && t8.Available,
                 Name = "tT4",
                 Description = "Time duration (actual) between slider opening and cooling On \n" +
-                              "t8.X - (P)t7.X\n" +
+                              "t8.X - t7t.X\n" +
                               "Duration, (s)",
                 Value = Math.Round(t8.X - t7.X, round),
-                RelatedDataPoints = new List<DataPoint> { t8 }
+                RelatedDataPoints = new List<DataPoint> { t8, t7t }
             });
 
             unit.TempFeatures.Add(new Feature()
@@ -251,11 +277,11 @@ namespace ProcessDashboard.src.TTL.Processing
 
             unit.TempFeatures.Add(new Feature()
             {
-                Available = t9.Available && t10.Available,
+                Available = t9.Available && t10t.Available,
                 Name = "tT6",
-                Description = "(In rework) t10.X - t9.X",
-                Value = Math.Round(t10.X - t9.X, round),
-                RelatedDataPoints = new List<DataPoint> { t9, t10 }
+                Description = "(In rework) t10t.X - t9.X",
+                Value = Math.Round(t10t.X - t9.X, round),
+                RelatedDataPoints = new List<DataPoint> { t9, t10t }
             });
 
             unit.TempFeatures.Add(new Feature()
