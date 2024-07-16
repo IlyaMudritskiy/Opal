@@ -27,16 +27,16 @@ namespace ProcessDashboard.src.TTL.Processing
 
             if (!config.Acoustic.Enabled) return null;
 
-            if (config.Acoustic.ManualSelection)
+            if (config.Acoustic.CustomLocationEnabled)
             {
-                if (config.IsASxReports)
+                if (config.ASxReports)
                     return openFromLocalFiles(files, ASxReportsGet);
                 else
                     return openFromLocalFiles(files, KlippelReportsGet);
             }
             else // Default local network location
             {
-                if (config.IsASxReports)
+                if (config.ASxReports)
                     return openFromShareDrive(files, ASxReportsGet);
                 else
                     return openFromShareDrive(files, KlippelReportsGet);

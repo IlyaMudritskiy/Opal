@@ -127,10 +127,10 @@
       <SubType>Designer</SubType>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="config.json">
+    <None Include="app-config.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="config.json.example" />
+    <None Include="app-config.json-example" />
     <None Include="Configuration\app.json" />
     <None Include="Configuration\config2.json" />
     <None Include="NLog.config">

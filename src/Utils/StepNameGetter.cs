@@ -9,7 +9,7 @@ namespace ProcessDashboard.src.Utils
         {
             Config config = Config.Instance;
 
-            if (config.IsASxReports)
+            if (config.ASxReports)
                 return getNewName(stepName);
             return getOldName(stepName);
         }

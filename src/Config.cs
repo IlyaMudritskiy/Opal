@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using Newtonsoft.Json;
 
 namespace ProcessDashboard.Model.AppConfiguration
@@ -13,55 +14,32 @@ namespace ProcessDashboard.Model.AppConfiguration
     {
         public string ProductID { get; set; }
 
-        [JsonProperty(PropertyName = "DataDriveLetter")]
+        [JsonProperty(PropertyName = "data-drive-letter")]
         public string DataDriveLetter { get; set; }
 
-        [JsonProperty(PropertyName = "CrosshairOn")]
-        public bool CrosshairOn { get; set; }
+        [JsonProperty(PropertyName = "asx-compliant-mode")]
+        public bool ASxReports { get; set; }
 
-        [JsonProperty(PropertyName = "IsASxReports")]
-        public bool IsASxReports { get; set; }
-
-        [JsonProperty(PropertyName = "Acoustic")]
+        [JsonProperty(PropertyName = "acoustic")]
         public Acoustic Acoustic { get; set; }
-
-        [JsonProperty(PropertyName = "EmbossingConstants")]
-        public EmbossingConstants EmbossingConstants { get; set; }
     }
 
     [JsonObject(MemberSerialization.OptIn)]
     public class Acoustic
     {
-        [JsonProperty(PropertyName = "Enabled")]
+        [JsonProperty(PropertyName = "enabled")]
         public bool Enabled { get; set; }
 
-        [JsonProperty(PropertyName = "ManualSelection")]
-        public bool ManualSelection { get; set; }
-    }
+        public bool CustomLocationEnabled
+        {
+            get
+            {
+                return string.IsNullOrEmpty(CustomFilesLocation);
+            }
+        }
 
-    [JsonObject(MemberSerialization.OptIn)]
-    public class EmbossingConstants
-    {
-        [JsonProperty(PropertyName = "TD")]
-        public double TD { get; set; }
-
-        [JsonProperty(PropertyName = "t9const")]
-        public double t9const { get; set; }
-
-        [JsonProperty(PropertyName = "tc")]
-        public double tc { get; set; }
-
-        [JsonProperty(PropertyName = "tHP")]
-        public double tHP { get; set; }
-
-        [JsonProperty(PropertyName = "tsettle")]
-        public double tsettle { get; set; }
-
-        [JsonProperty(PropertyName = "P1")]
-        public double P1 { get; set; }
-
-        [JsonProperty(PropertyName = "RoundTo")]
-        public int RoundTo { get; set; }
+        [JsonProperty(PropertyName = "files-custom-location")]
+        public string CustomFilesLocation { get; set; }
     }
 
     /// <summary>
@@ -75,7 +53,7 @@ namespace ProcessDashboard.Model.AppConfiguration
 
         private static readonly NLog.Logger Log = NLog.LogManager.GetCurrentClassLogger();
 
-        private string path = $"{Directory.GetCurrentDirectory()}\\config.json";
+        private string path = $"{Assembly.GetEntryAssembly().Location}\\app-config.json";
 
         private Config()
         {
@@ -90,7 +68,7 @@ namespace ProcessDashboard.Model.AppConfiguration
             }
             catch (Exception ex)
             {
-                Log.Error($"Failed to save config to {path}, {ex}");
+                Log.Error($"Failed to save config to {path}, exception:\n{ex}");
             }
         }
 
@@ -103,7 +81,7 @@ namespace ProcessDashboard.Model.AppConfiguration
             }
             catch (Exception ex)
             {
-                Log.Error(ex);
+                Log.Error($"Failed to read config at {path}, exception:\n{ex}");
             }
         }
     }
