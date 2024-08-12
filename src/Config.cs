@@ -53,7 +53,7 @@ namespace ProcessDashboard.Model.AppConfiguration
 
         private static readonly NLog.Logger Log = NLog.LogManager.GetCurrentClassLogger();
 
-        private string path = $"{Assembly.GetEntryAssembly().Location}\\app-config.json";
+        private string path = $"{Path.GetDirectoryName(Assembly.GetEntryAssembly().Location)}\\app-config.json";
 
         private Config()
         {

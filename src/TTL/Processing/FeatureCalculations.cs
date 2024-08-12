@@ -17,7 +17,7 @@ namespace ProcessDashboard.src.TTL.Processing
             if (unit == null) return;
             if (lastDataPoints == null) lastDataPoints = new List<DataPoint>();
 
-            int round = config.EmbossingConstants.RoundTo;
+            int round = 3;
             unit.JsonPoints.SetOffset();
 
             #region DataPoints

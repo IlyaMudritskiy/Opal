@@ -13,8 +13,8 @@ namespace ProcessDashboard.src.TTL.UI.EventControllers
         public SettingsController(MainForm mainForm)
         {
             this.mainForm = mainForm;
-            this.mainForm.OnOffAcousticPlotsMenuButton.Checked = config.Acoustic.Enabled;
-            this.mainForm.FileSelectionTypeMenuButton.Checked = config.Acoustic.CustomLocationEnabled;
+            //this.mainForm.OnOffAcousticPlotsMenuButton.Checked = config.Acoustic.Enabled;
+            //this.mainForm.FileSelectionTypeMenuButton.Checked = config.Acoustic.CustomLocationEnabled;
 
             RegisterEvents();
         }
@@ -34,9 +34,9 @@ namespace ProcessDashboard.src.TTL.UI.EventControllers
 
         public void FileSelectionTypeMenuButton_Click(object sender, EventArgs e)
         {
-            config.Acoustic.ManualSelection = !config.Acoustic.CustomLocationEnabled;
-            config.Save();
-            mainForm.FileSelectionTypeMenuButton.Checked = config.Acoustic.CustomLocationEnabled;
+            //config.Acoustic.ManualSelection = !config.Acoustic.CustomLocationEnabled;
+            //config.Save();
+            //mainForm.FileSelectionTypeMenuButton.Checked = config.Acoustic.CustomLocationEnabled;
         }
     }
 }
