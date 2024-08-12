@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using ProcessDashboard.Model.AppConfiguration;
-using ProcessDashboard.src.TTL.Containers.Common;
-using ProcessDashboard.src.TTL.Containers.ScreenData;
-using ProcessDashboard.src.TTL.UI.UIElements;
-using ProcessDashboard.src.Utils;
+using Opal.Model.AppConfiguration;
+using Opal.src.TTL.Containers.Common;
+using Opal.src.TTL.Containers.ScreenData;
+using Opal.src.TTL.UI.UIElements;
+using Opal.src.Utils;
 using ScottPlot;
 using ScottPlot.Plottable;
 
-namespace ProcessDashboard.Model.Screen.Tabs
+namespace Opal.Model.Screen.Tabs
 {
     public class ProcessTab
     {

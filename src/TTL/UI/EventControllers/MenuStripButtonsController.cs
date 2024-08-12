@@ -1,9 +1,9 @@
-﻿using ProcessDashboard.Forms;
-using ProcessDashboard.Model.AppConfiguration;
-using ProcessDashboard.src.TTL.Containers.ScreenData;
+﻿using Opal.Forms;
+using Opal.Model.AppConfiguration;
+using Opal.src.TTL.Containers.ScreenData;
 using System;
 
-namespace ProcessDashboard.src.TTL.UI.EventControllers
+namespace Opal.src.TTL.UI.EventControllers
 {
     public class MenuStripButtonsController
     {

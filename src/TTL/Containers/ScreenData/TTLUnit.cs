@@ -1,9 +1,9 @@
 ﻿using System.Drawing;
-using ProcessDashboard.Model.Data.Acoustic;
-using ProcessDashboard.src.TTL.Containers.FileContent;
-using ProcessDashboard.src.Utils;
+using Opal.Model.Data.Acoustic;
+using Opal.src.TTL.Containers.FileContent;
+using Opal.src.Utils;
 
-namespace ProcessDashboard.src.TTL.Containers.ScreenData
+namespace Opal.src.TTL.Containers.ScreenData
 {
     public class TTLUnit
     {

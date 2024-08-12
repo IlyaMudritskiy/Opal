@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using ProcessDashboard.Model.Data.Acoustic;
-using ProcessDashboard.src.TTL.Containers.ScreenData;
-using ProcessDashboard.src.TTL.Processing;
-using ProcessDashboard.src.TTL.Screen;
-using ProcessDashboard.src.TTL.UI.UIElements;
-using ProcessDashboard.src.Utils;
+using Opal.Model.Data.Acoustic;
+using Opal.src.TTL.Containers.ScreenData;
+using Opal.src.TTL.Processing;
+using Opal.src.TTL.Screen;
+using Opal.src.TTL.UI.UIElements;
+using Opal.src.Utils;
 using ScottPlot.Plottable;
 
-namespace ProcessDashboard.Model.Screen.Tabs
+namespace Opal.Model.Screen.Tabs
 {
     public class AcousticTab
     {

@@ -1,4 +1,4 @@
-﻿namespace ProcessDashboard.src.CommonClasses.Containers
+﻿namespace Opal.src.CommonClasses.Containers
 {
     public class Measurements2DExt : Measurements2D
     {

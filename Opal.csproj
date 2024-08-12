@@ -12,21 +12,6 @@
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
-    <PublishUrl>publish\</PublishUrl>
-    <Install>true</Install>
-    <InstallFrom>Disk</InstallFrom>
-    <UpdateEnabled>false</UpdateEnabled>
-    <UpdateMode>Foreground</UpdateMode>
-    <UpdateInterval>7</UpdateInterval>
-    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
-    <UpdatePeriodically>false</UpdatePeriodically>
-    <UpdateRequired>false</UpdateRequired>
-    <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
-    <UseApplicationTrust>false</UseApplicationTrust>
-    <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -74,6 +59,18 @@
     </Compile>
     <Compile Include="src\Forms\DataViewer.Designer.cs">
       <DependentUpon>DataViewer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="src\Forms\SettingsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="src\Forms\SettingsForm.Designer.cs">
+      <DependentUpon>SettingsForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="src\Forms\UserLoginForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="src\Forms\UserLoginForm.Designer.cs">
+      <DependentUpon>UserLoginForm.cs</DependentUpon>
     </Compile>
     <Compile Include="src\TTL\Containers\Common\DataPointsRow.cs" />
     <Compile Include="src\TTL\Containers\Common\IValueDescription.cs" />
@@ -142,10 +139,16 @@
       <SubType>Designer</SubType>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="app-config.json">
+    <EmbeddedResource Include="src\Forms\SettingsForm.resx">
+      <DependentUpon>SettingsForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="src\Forms\UserLoginForm.resx">
+      <DependentUpon>UserLoginForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="config.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="app-config.json-example" />
+    <None Include="config.json.example" />
     <None Include="Configuration\app.json" />
     <None Include="Configuration\config2.json" />
     <None Include="NLog.config">
@@ -166,10 +169,21 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include=".gitignore" />
+    <Content Include="Assets\ico\menu_other.ico" />
+    <Content Include="Assets\ico\file_green.ico" />
+    <Content Include="Assets\ico\app_icon.ico" />
+    <Content Include="Assets\ico\search.ico" />
+    <Content Include="Assets\ico\settings_blue.ico" />
+    <Content Include="Assets\ico\table_view.ico" />
+    <Content Include="Assets\ico\tools_orange.ico" />
+    <Content Include="Assets\png\menu_other.png" />
+    <Content Include="Assets\png\file_green.png" />
+    <Content Include="Assets\png\tools_orange.png" />
+    <Content Include="Assets\png\search.png" />
+    <Content Include="Assets\png\settings_blue.png" />
+    <Content Include="Assets\png\table_view.png" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Assets\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <PackageReference Include="DotNetZip">
       <Version>1.16.0</Version>
@@ -187,25 +201,10 @@
       <Version>4.1.68</Version>
     </PackageReference>
   </ItemGroup>
-  <ItemGroup>
-    <BootstrapperPackage Include=".NETFramework,Version=v4.7.2">
-      <Visible>False</Visible>
-      <ProductName>Microsoft .NET Framework 4.7.2 %28x86 and x64%29</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
       <UserProperties configuration_4app_1json__JsonSchema="" />
     </VisualStudio>
   </ProjectExtensions>
-  <PropertyGroup>
-    <PostBuildEvent>xcopy /y $(ProjectDir)app-config.json-example  $(ProjectDir)$(OutDir)</PostBuildEvent>
-  </PropertyGroup>
 </Project>

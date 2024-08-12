@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Drawing;
 
-namespace ProcessDashboard.src.Utils
+namespace Opal.src.Utils
 {
     internal static class Colors
     {

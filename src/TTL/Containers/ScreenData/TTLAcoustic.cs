@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using ProcessDashboard.Model.Data.Acoustic;
-using ProcessDashboard.src.CommonClasses.Containers;
-using ProcessDashboard.src.TTL.Misc;
-using ProcessDashboard.src.Utils;
+using Opal.Model.Data.Acoustic;
+using Opal.src.CommonClasses.Containers;
+using Opal.src.TTL.Misc;
+using Opal.src.Utils;
 using ScottPlot.Plottable;
 
-namespace ProcessDashboard.src.TTL.Containers.ScreenData
+namespace Opal.src.TTL.Containers.ScreenData
 {
     public class TTLAcoustic
     {

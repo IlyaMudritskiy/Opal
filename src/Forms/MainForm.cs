@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Windows.Forms;
-using ProcessDashboard.src.App;
-using ProcessDashboard.src.TTL.UI.EventControllers;
+using Opal.src.App;
+using Opal.src.TTL.UI.EventControllers;
 
-namespace ProcessDashboard.Forms
+namespace Opal.Forms
 {
     public partial class MainForm : Form
     {

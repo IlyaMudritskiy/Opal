@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json.Linq;
-using ProcessDashboard.src.CommonClasses.Containers;
-using ProcessDashboard.src.CommonClasses.Processing;
-using ProcessDashboard.src.TTL.Containers.FileContent;
+using Opal.src.CommonClasses.Containers;
+using Opal.src.CommonClasses.Processing;
+using Opal.src.TTL.Containers.FileContent;
 
-namespace ProcessDashboard.src.TTL.Processing
+namespace Opal.src.TTL.Processing
 {
     public static class ProcessDataProcessor
     {

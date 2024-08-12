@@ -10,7 +10,7 @@ using System.Windows.Forms;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace ProcessDashboard.src.CommonClasses.Processing
+namespace Opal.src.CommonClasses.Processing
 {
     public static class CommonFileManager
     {

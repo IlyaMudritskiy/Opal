@@ -2,13 +2,15 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using ProcessDashboard.src.TTL.Containers.Common;
-using ProcessDashboard.src.TTL.Screen;
-using ProcessDashboard.src.Utils;
+using System.Threading.Tasks;
+using Opal.src.CommonClasses.Containers;
+using Opal.src.TTL.Containers.Common;
+using Opal.src.TTL.Screen;
+using Opal.src.Utils;
 using ScottPlot;
 using ScottPlot.Plottable;
 
-namespace ProcessDashboard.src.TTL.UI.UIElements
+namespace Opal.src.TTL.UI.UIElements
 {
     public class PlotView : HeaderView<FormsPlot>
     {

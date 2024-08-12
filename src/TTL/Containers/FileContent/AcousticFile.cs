@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace ProcessDashboard.Model.Data.Acoustic
+namespace Opal.Model.Data.Acoustic
 {
     [JsonObject(MemberSerialization.OptIn)]
     public class AcousticFile

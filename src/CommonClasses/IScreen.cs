@@ -2,7 +2,7 @@
 using System.Windows.Forms;
 using Newtonsoft.Json.Linq;
 
-namespace ProcessDashboard.src.CommonClasses
+namespace Opal.src.CommonClasses
 {
     public interface IScreen
     {

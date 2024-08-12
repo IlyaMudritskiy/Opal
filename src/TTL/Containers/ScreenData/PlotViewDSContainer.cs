@@ -1,9 +1,9 @@
-﻿using ProcessDashboard.src.TTL.Containers.Common;
-using ProcessDashboard.src.TTL.UI.UIElements;
+﻿using Opal.src.TTL.Containers.Common;
+using Opal.src.TTL.UI.UIElements;
 using ScottPlot.Plottable;
 using System.Collections.Generic;
 
-namespace ProcessDashboard.src.TTL.Containers.ScreenData
+namespace Opal.src.TTL.Containers.ScreenData
 {
     public class PlotViewDSContainer : DSContainer<PlotView>
     {

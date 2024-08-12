@@ -6,11 +6,11 @@ using System.IO.Compression;
 using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using ProcessDashboard.Model.AppConfiguration;
-using ProcessDashboard.Model.Data.Acoustic;
-using ProcessDashboard.src.CommonClasses.Processing;
+using Opal.Model.AppConfiguration;
+using Opal.Model.Data.Acoustic;
+using Opal.src.CommonClasses.Processing;
 
-namespace ProcessDashboard.src.TTL.Processing
+namespace Opal.src.TTL.Processing
 {
     public static class AcousticDataProcessor
     {

@@ -1,8 +1,8 @@
 ﻿using System;
-using ProcessDashboard.Forms;
-using ProcessDashboard.Model.AppConfiguration;
+using Opal.Forms;
+using Opal.Model.AppConfiguration;
 
-namespace ProcessDashboard.src.TTL.UI.EventControllers
+namespace Opal.src.TTL.UI.EventControllers
 {
     public class SettingsController
     {

@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ProcessDashboard.Properties {
+namespace Opal.Properties {
     using System;
     
     

@@ -4,12 +4,12 @@ using System.Globalization;
 using System.Threading;
 using System.Windows.Forms;
 using Newtonsoft.Json.Linq;
-using ProcessDashboard.Model.AppConfiguration;
-using ProcessDashboard.src.CommonClasses;
-using ProcessDashboard.src.CommonClasses.Processing;
-using ProcessDashboard.src.TTL.Screen;
+using Opal.Model.AppConfiguration;
+using Opal.src.CommonClasses;
+using Opal.src.CommonClasses.Processing;
+using Opal.src.TTL.Screen;
 
-namespace ProcessDashboard.src.App
+namespace Opal.src.App
 {
     public class App
     {

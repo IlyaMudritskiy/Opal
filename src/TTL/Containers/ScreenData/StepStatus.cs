@@ -1,4 +1,4 @@
-﻿namespace ProcessDashboard.src.TTL.Containers.ScreenData
+﻿namespace Opal.src.TTL.Containers.ScreenData
 {
     public class StepStatus
     {

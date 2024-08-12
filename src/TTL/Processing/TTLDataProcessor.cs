@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
-using ProcessDashboard.Model.AppConfiguration;
-using ProcessDashboard.Model.Data.Acoustic;
-using ProcessDashboard.src.TTL.Containers.FileContent;
-using ProcessDashboard.src.TTL.Containers.ScreenData;
+using Opal.Model.Data.Acoustic;
+using Opal.src.TTL.Containers.FileContent;
+using Opal.src.TTL.Containers.ScreenData;
 
-namespace ProcessDashboard.src.TTL.Processing
+namespace Opal.src.TTL.Processing
 {
     public static class TTLDataProcessor
     {

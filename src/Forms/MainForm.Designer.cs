@@ -1,4 +1,4 @@
-﻿namespace ProcessDashboard.Forms
+﻿namespace Opal.Forms
 {
     partial class MainForm
     {
@@ -75,7 +75,7 @@
             this.PDFReportToolStripMenuItem,
             this.dataAndReportToolStripMenuItem});
             this.FileSaveMenuButton.Name = "FileSaveMenuButton";
-            this.FileSaveMenuButton.Size = new System.Drawing.Size(180, 24);
+            this.FileSaveMenuButton.Size = new System.Drawing.Size(109, 24);
             this.FileSaveMenuButton.Text = "Save";
             // 
             // processedDataToolStripMenuItem
@@ -148,7 +148,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(1600, 900);
             this.Name = "MainForm";
-            this.Text = "Process Dashboard";
+            this.Text = "Opal";
             this.MainMenuStrip.ResumeLayout(false);
             this.MainMenuStrip.PerformLayout();
             this.ResumeLayout(false);

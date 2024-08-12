@@ -4,7 +4,7 @@ using System.IO;
 using System.Reflection;
 using Newtonsoft.Json;
 
-namespace ProcessDashboard.Model.AppConfiguration
+namespace Opal.Model.AppConfiguration
 {
     /// <summary>
     /// Json props of the Config

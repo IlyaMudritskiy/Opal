@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Newtonsoft.Json.Linq;
-using ProcessDashboard.Model.AppConfiguration;
-using ProcessDashboard.Model.Screen.Tabs;
-using ProcessDashboard.src.CommonClasses;
-using ProcessDashboard.src.TTL.Containers.ScreenData;
-using ProcessDashboard.src.TTL.Processing;
+using Opal.Model.AppConfiguration;
+using Opal.Model.Screen.Tabs;
+using Opal.src.CommonClasses;
+using Opal.src.TTL.Containers.ScreenData;
+using Opal.src.TTL.Processing;
 
-namespace ProcessDashboard.src.TTL.Screen
+namespace Opal.src.TTL.Screen
 {
     internal partial class TTLScreen : IScreen
     {

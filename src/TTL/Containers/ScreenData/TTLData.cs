@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using ProcessDashboard.Model.AppConfiguration;
-using ProcessDashboard.src.TTL.Containers.Common;
-using ProcessDashboard.src.TTL.Misc;
+using Opal.Model.AppConfiguration;
+using Opal.src.TTL.Containers.Common;
+using Opal.src.TTL.Misc;
 
-namespace ProcessDashboard.src.TTL.Containers.ScreenData
+namespace Opal.src.TTL.Containers.ScreenData
 {
     public class TTLData
     {

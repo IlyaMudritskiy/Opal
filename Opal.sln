@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34018.315
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProcessDashboard", "ProcessDashboard.csproj", "{E4F680DD-6918-4F78-A2FA-C1FE86206F69}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Opal", "Opal.csproj", "{E4F680DD-6918-4F78-A2FA-C1FE86206F69}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
