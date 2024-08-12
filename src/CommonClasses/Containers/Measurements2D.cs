@@ -23,7 +23,11 @@ namespace ProcessDashboard.src.CommonClasses.Containers
         public Measurements2D(List<Measurement> measurements)
         {
             if (measurements == null)
+            {
+                Log.Error("Null List<Measurement> was passed to Measurements2D ctor.");
                 throw new ArgumentNullException(nameof(measurements));
+            }
+                
 
             List<string> dateTime = measurements.Select(m => m.DateTime).ToList();
             List<string> values = measurements.Select(v => v.MeasurementValue).ToList();
@@ -40,7 +44,7 @@ namespace ProcessDashboard.src.CommonClasses.Containers
                 }
                 catch (Exception ex)
                 {
-                    Log.Error(ex.Message);
+                    Log.Error($"Exception while calculating time offset. Message: {ex.Message}");
                 }
             }
             X = resultOffset;
@@ -94,7 +98,7 @@ namespace ProcessDashboard.src.CommonClasses.Containers
                 }
                 catch (Exception ex)
                 {
-                    Log.Error(ex.Message);
+                    Log.Error($"Exception while calculating time offset. Message: {ex.Message}");
                 }
             }
             X = XResult;

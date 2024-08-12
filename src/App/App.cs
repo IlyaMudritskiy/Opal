@@ -44,8 +44,8 @@ namespace ProcessDashboard.src.App
 
             List<JObject> files = CommonFileManager.ParseJsonFiles(filepaths);
 
-            Log.Trace($"Selected [{filepaths.Count}] files.");
-            Log.Trace($"Opened [{files.Count}] files.");
+            Log.Trace($"Selected [{filepaths.Count}] process files.");
+            Log.Trace($"Opened [{files.Count}] process files.");
 
             string lineCode = CommonFileContentManager.GetLineCode(files);
             string productCode = CommonFileContentManager.GetProductCode(files);

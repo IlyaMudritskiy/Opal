@@ -242,11 +242,8 @@ namespace ProcessDashboard.Model.Screen.Tabs
             if (e.RowIndex < 0 && e.ColumnIndex < 0)
                 return null;
 
-            var data = table.Rows[e.RowIndex].DataBoundItem as Feature;
-            if (data != null)
-            {
+            if (table.Rows[e.RowIndex].DataBoundItem is Feature data)
                 return data;
-            }
 
             return null;
         }
@@ -256,12 +253,9 @@ namespace ProcessDashboard.Model.Screen.Tabs
             List<Feature> result = new List<Feature>();
 
             foreach (var featureList in featureLists)
-            {
                 foreach (var f in featureList)
-                {
-                    if (f.Name == feature.Name) result.Add(f);
-                }
-            }
+                    if (f.Name == feature.Name) 
+                        result.Add(f);
 
             return result;
         }
