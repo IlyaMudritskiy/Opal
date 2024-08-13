@@ -6,12 +6,27 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{E4F680DD-6918-4F78-A2FA-C1FE86206F69}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>ProcessDashboard</RootNamespace>
-    <AssemblyName>ProcessDashboard</AssemblyName>
+    <RootNamespace>Opal</RootNamespace>
+    <AssemblyName>Opal</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -31,6 +46,9 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Assets\ico\app_icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -52,8 +70,23 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="src\CommonClasses\DataProvider\APIDataProvider.cs" />
+    <Compile Include="src\CommonClasses\DataProvider\DataProviderFactory.cs" />
+    <Compile Include="src\CommonClasses\DataProvider\DataProviderType.cs" />
+    <Compile Include="src\CommonClasses\DataProvider\FileDataProvider.cs" />
+    <Compile Include="src\CommonClasses\DataProvider\HubDataProvider.cs" />
+    <Compile Include="src\CommonClasses\DataProvider\IDataProvider.cs" />
     <Compile Include="src\CommonClasses\Processing\CommonFileContentManager.cs" />
     <Compile Include="src\CommonClasses\Processing\CommonFileManager.cs" />
+    <Compile Include="src\CommonClasses\SreenProvider\IScreenCreator.cs" />
+    <Compile Include="src\CommonClasses\SreenProvider\ScreenFactory.cs" />
+    <Compile Include="src\CommonClasses\SreenProvider\TTLScreenCreator.cs" />
+    <Compile Include="src\Forms\APIDataSelectorForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="src\Forms\APIDataSelectorForm.Designer.cs">
+      <DependentUpon>APIDataSelectorForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="src\Forms\DataViewer.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -117,7 +150,7 @@
     <Compile Include="src\TTL\Containers\ScreenData\TTLProcess.cs" />
     <Compile Include="src\TTL\Containers\ScreenData\TTLUnit.cs" />
     <Compile Include="src\TTL\Misc\FailReason.cs" />
-    <Compile Include="src\CommonClasses\IScreen.cs" />
+    <Compile Include="src\CommonClasses\SreenProvider\IScreen.cs" />
     <Compile Include="src\TTL\Screen\Tabs\AcousticTab.cs" />
     <Compile Include="src\TTL\UI\UIElements\HeaderView.cs" />
     <Compile Include="src\TTL\UI\UIElements\PlotView.cs" />
@@ -128,6 +161,9 @@
     <Compile Include="src\Utils\Fonts.cs" />
     <Compile Include="src\TTL\Screen\CommonElements.cs" />
     <Compile Include="src\Utils\StepNameGetter.cs" />
+    <EmbeddedResource Include="src\Forms\APIDataSelectorForm.resx">
+      <DependentUpon>APIDataSelectorForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="src\Forms\DataViewer.resx">
       <DependentUpon>DataViewer.cs</DependentUpon>
     </EmbeddedResource>
@@ -145,12 +181,9 @@
     <EmbeddedResource Include="src\Forms\UserLoginForm.resx">
       <DependentUpon>UserLoginForm.cs</DependentUpon>
     </EmbeddedResource>
-    <None Include="config.json">
+    <None Include="app-config.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="config.json.example" />
-    <None Include="Configuration\app.json" />
-    <None Include="Configuration\config2.json" />
     <None Include="NLog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -183,7 +216,18 @@
     <Content Include="Assets\png\settings_blue.png" />
     <Content Include="Assets\png\table_view.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.7.2">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.7.2 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="DotNetZip">
       <Version>1.16.0</Version>
@@ -202,9 +246,5 @@
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <ProjectExtensions>
-    <VisualStudio>
-      <UserProperties configuration_4app_1json__JsonSchema="" />
-    </VisualStudio>
-  </ProjectExtensions>
+  <ProjectExtensions />
 </Project>

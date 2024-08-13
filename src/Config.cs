@@ -12,13 +12,20 @@ namespace Opal.Model.AppConfiguration
     [JsonObject(MemberSerialization.OptIn)]
     public partial class Config
     {
+        [JsonProperty(PropertyName = "product_id")]
         public string ProductID { get; set; }
 
-        [JsonProperty(PropertyName = "data-drive-letter")]
+        [JsonProperty(PropertyName = "line_id")]
+        public string LineID { get; set; }
+
+        [JsonProperty(PropertyName = "data_drive_letter")]
         public string DataDriveLetter { get; set; }
 
-        [JsonProperty(PropertyName = "asx-compliant-mode")]
+        [JsonProperty(PropertyName = "asx_compliant_mode")]
         public bool ASxReports { get; set; }
+
+        [JsonProperty(PropertyName = "data_provider")]
+        public string DataProvider { get; set; }
 
         [JsonProperty(PropertyName = "acoustic")]
         public Acoustic Acoustic { get; set; }
@@ -38,7 +45,7 @@ namespace Opal.Model.AppConfiguration
             }
         }
 
-        [JsonProperty(PropertyName = "files-custom-location")]
+        [JsonProperty(PropertyName = "files_custom_location")]
         public string CustomFilesLocation { get; set; }
     }
 
