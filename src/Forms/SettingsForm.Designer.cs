@@ -1,4 +1,4 @@
-﻿namespace ProcessDashboard.src.Forms
+﻿namespace Opal.src.Forms
 {
     partial class SettingsForm
     {

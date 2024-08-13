@@ -1,4 +1,4 @@
-﻿using Opal.src.CommonClasses;
+﻿using ProcessDashboard.src.CommonClasses.SreenProvider;
 
 namespace Opal.src.TTL.Screen
 {

@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace ProcessDashboard.src.Forms
+namespace Opal.src.Forms
 {
     public partial class UserLoginForm : Form
     {

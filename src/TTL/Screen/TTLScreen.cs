@@ -5,13 +5,13 @@ using System.Windows.Forms;
 using Newtonsoft.Json.Linq;
 using Opal.Model.AppConfiguration;
 using Opal.Model.Screen.Tabs;
-using Opal.src.CommonClasses;
 using Opal.src.TTL.Containers.ScreenData;
 using Opal.src.TTL.Processing;
+using ProcessDashboard.src.CommonClasses.SreenProvider;
 
 namespace Opal.src.TTL.Screen
 {
-    internal partial class TTLScreen : IScreen
+    public partial class TTLScreen : IScreen
     {
         private static readonly Lazy<TTLScreen> Lazy = new Lazy<TTLScreen>(() => new TTLScreen());
         public static TTLScreen Instance => Lazy.Value;
@@ -30,7 +30,7 @@ namespace Opal.src.TTL.Screen
 
         private TTLData TTLData { get; set; }
 
-        public void Create(ref Panel panel)
+        public void Show(ref Panel panel)
         {
             Tabs = new TabControl() { Dock = DockStyle.Fill };
 
@@ -61,30 +61,24 @@ namespace Opal.src.TTL.Screen
             panel.SuspendLayout();
             panel.Controls.Add(Tabs);
             panel.ResumeLayout();
-
-            
         }
 
         public void Update(List<JObject> data)
         {
+            List<TTLUnit> processedData = new List<TTLUnit>();
+
+            Task.Run(async () =>
+            {
+                processedData = await TTLDataProcessor.LoadFiles(data);
+            }).Wait();
+
+            if (processedData == null) return;
+
             Clear();
-            LoadData(data);
-        }
-
-        public async void LoadData(List<JObject> data)
-        {
-            Clear();
-
-            Task<List<TTLUnit>> processedDataTask = Task.Run(() => TTLDataProcessor.LoadFiles(data));
-
-            await Task.WhenAll(processedDataTask);
-
-            List<TTLUnit> processedData = processedDataTask.Result;
-
-            if (TTLData != null)
-                TTLData = null;
 
             TTLData = TTLData.GetInstance(processedData, true);
+
+            if (TTLData == null) return;
 
             Temperature.AddData(TTLData.Temperature);
             Pressure.AddData(TTLData.Pressure);

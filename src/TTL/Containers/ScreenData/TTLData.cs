@@ -19,7 +19,7 @@ namespace Opal.src.TTL.Containers.ScreenData
         public AcousticData IMP { get; set; }
 
         public List<TTLUnit> Units { get; set; }
-        public PassFailUnits PassFailUnits { get; set; }
+        //public PassFailUnits PassFailUnits { get; set; }
         public List<DataPointsRow<IValueDescription>> DataPoints { get; set; }
         public List<DataPointsRow<IValueDescription>> TempFeatures { get; set; }
         public List<DataPointsRow<IValueDescription>> PressFeatures { get; set; }
@@ -31,7 +31,7 @@ namespace Opal.src.TTL.Containers.ScreenData
         private TTLData(List<TTLUnit> units)
         {
             Units = units;
-            PassFailUnits = new PassFailUnits(units);
+            //PassFailUnits = new PassFailUnits(units);
             Temperature = new ProcessData(units, ProcessStep.Temperature);
             Pressure = new ProcessData(units, ProcessStep.HighPressure);
             DataPoints = new List<DataPointsRow<IValueDescription>>();
@@ -127,6 +127,8 @@ namespace Opal.src.TTL.Containers.ScreenData
 
         private void PackDataPointsRows()
         {
+            if (Units == null || Units.Count == 0) return;
+
             foreach (var unit in Units)
             {
                 DataPoints.Add(GetDataPointObj(unit));

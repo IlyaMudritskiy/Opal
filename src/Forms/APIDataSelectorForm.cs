@@ -10,9 +10,9 @@ using System.Windows.Forms;
 
 namespace Opal.src.Forms
 {
-    public partial class SettingsForm : Form
+    public partial class APIDataSelectorForm : Form
     {
-        public SettingsForm()
+        public APIDataSelectorForm()
         {
             InitializeComponent();
         }

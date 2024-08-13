@@ -12,7 +12,6 @@ namespace Opal.src.TTL.Processing
     public static class TTLDataProcessor
     {
         private static readonly NLog.Logger Log = NLog.LogManager.GetCurrentClassLogger();
-        private static Config config = Config.Instance;
 
         public async static Task<List<TTLUnit>> LoadFiles(List<JObject> files)
         {
@@ -26,10 +25,10 @@ namespace Opal.src.TTL.Processing
             List<ProcessFile> processFiles = processFilesTask.Result;
             List<AcousticFile> acousticFiles = acousticFilesTask.Result;
 
-            return JoinFiles(processFiles, acousticFiles);
+            return await JoinFiles(processFiles, acousticFiles);
         }
 
-        private static List<TTLUnit> JoinFiles(IEnumerable<ProcessFile> processFiles, IEnumerable<AcousticFile> acousticFiles)
+        private async static Task<List<TTLUnit>> JoinFiles(IEnumerable<ProcessFile> processFiles, IEnumerable<AcousticFile> acousticFiles)
         {
             ConcurrentBag<TTLUnit> result = new ConcurrentBag<TTLUnit>();
             //ConcurrentBag<ProcessFile> pf = new ConcurrentBag<ProcessFile>(processFiles);

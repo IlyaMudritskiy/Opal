@@ -5,9 +5,11 @@ using System.Threading;
 using System.Windows.Forms;
 using Newtonsoft.Json.Linq;
 using Opal.Model.AppConfiguration;
-using Opal.src.CommonClasses;
+using Opal.src.CommonClasses.DataProvider;
 using Opal.src.CommonClasses.Processing;
+using Opal.src.CommonClasses.SreenProvider;
 using Opal.src.TTL.Screen;
+using ProcessDashboard.src.CommonClasses.SreenProvider;
 
 namespace Opal.src.App
 {
@@ -19,13 +21,17 @@ namespace Opal.src.App
 
         private static readonly NLog.Logger Log = NLog.LogManager.GetCurrentClassLogger();
 
-        private IScreen screen;
+        private IDataProvider _dataProvider;
 
-        private Config config = Config.Instance;
+        private IScreen _screen;
+
+        private Config _config = Config.Instance;
 
         public App()
         {
             AppSettings();
+            _screen = ScreenFactory.Create(_config.LineID);
+            _dataProvider = DataProviderFactory.Get(_config.DataProvider);
         }
 
         /// <summary>
@@ -33,38 +39,10 @@ namespace Opal.src.App
         /// </summary>
         /// <param name="dialog">File dialog that will open files.</param>
         /// <param name="panel">Container in MainForm that holds the TabControl with all tabs related to the line.</param>
-        public void Run(ref OpenFileDialog dialog, ref Panel panel)
+        public void Run(ref Panel panel)
         {
-            // Get paths of selected files
-            List<string> filepaths = CommonFileManager.GetFilesFromDialog();
-            // Read selected files into JObject (JObject is not tied to a specific screen)
-            if (filepaths == null || filepaths.Count == 0) return;
-
-            config.ProcessFilePaths = filepaths;
-
-            List<JObject> files = CommonFileManager.ParseJsonFiles(filepaths);
-
-            Log.Trace($"Selected [{filepaths.Count}] process files.");
-            Log.Trace($"Opened [{files.Count}] process files.");
-
-            string lineCode = CommonFileContentManager.GetLineCode(files);
-            string productCode = CommonFileContentManager.GetProductCode(files);
-            config.ProductID = productCode;
-
-            Log.Trace($"Line code [{lineCode}].");
-            Log.Trace($"Product code [{productCode}].");
-
-            files = CommonFileContentManager.FilterByLine(files, lineCode);
-            files = CommonFileContentManager.FilterByProduct(files, productCode);
-
-            Log.Trace($"After filtering: Left [{files.Count}], Dropped [{filepaths.Count - files.Count}].");
-
-            if (screen == null)
-            {
-                screen = ScreenCreator.GetIScreen(lineCode);
-                screen.Create(ref panel);
-            }
-            screen.LoadData(files);
+            _screen.Show(ref panel);
+            _dataProvider.ProvideData(_screen);
         }
 
         private void AppSettings()

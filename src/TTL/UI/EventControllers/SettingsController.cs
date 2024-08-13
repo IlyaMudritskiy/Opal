@@ -21,15 +21,12 @@ namespace Opal.src.TTL.UI.EventControllers
 
         private void RegisterEvents()
         {
-            mainForm.FileSelectionTypeMenuButton.Click += new EventHandler(FileSelectionTypeMenuButton_Click);
-            mainForm.OnOffAcousticPlotsMenuButton.Click += new EventHandler(OnOffAcousticPlotsMenuButton_Click);
         }
 
         public void OnOffAcousticPlotsMenuButton_Click(object sender, EventArgs e)
         {
             config.Acoustic.Enabled = !config.Acoustic.Enabled;
             config.Save();
-            mainForm.OnOffAcousticPlotsMenuButton.Checked = config.Acoustic.Enabled;
         }
 
         public void FileSelectionTypeMenuButton_Click(object sender, EventArgs e)

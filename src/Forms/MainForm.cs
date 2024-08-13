@@ -19,7 +19,7 @@ namespace Opal.Forms
 
         public void SelectFilesMenuButton_Click(object sender, EventArgs e)
         {
-            App.Run(ref JsonFileDialog, ref MainFormPanel);
+            App.Run(ref MainFormPanel);
         }
     }
 }
