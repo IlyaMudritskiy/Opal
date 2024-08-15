@@ -24,11 +24,31 @@ namespace Opal.Model.AppConfiguration
         [JsonProperty(PropertyName = "asx_compliant_mode")]
         public bool ASxReports { get; set; }
 
-        [JsonProperty(PropertyName = "data_provider")]
-        public string DataProvider { get; set; }
-
         [JsonProperty(PropertyName = "acoustic")]
         public Acoustic Acoustic { get; set; }
+
+        [JsonProperty(PropertyName = "data_provider")]
+        public DataProviderInfo DataProvider { get; set; }
+
+        [JsonProperty(PropertyName = "auth")]
+        public Auth Auth { get; set; }
+
+        [JsonProperty(PropertyName = "enabled")]
+        public bool SettingsEnabled { get; set; }
+
+        [JsonProperty(PropertyName = "line_product_map")]
+        public Dictionary<string, List<string>> LineProductMap { get; set; }
+    }
+
+    [JsonObject(MemberSerialization.OptIn)]
+    public class Auth
+    {
+        [JsonProperty(PropertyName = "token")]
+        public string Token { get; set; }
+
+        public bool ApiReachable { get; set; } = false;
+
+        public bool UserAuthenticated { get; set; } = false;
     }
 
     [JsonObject(MemberSerialization.OptIn)]
@@ -47,6 +67,24 @@ namespace Opal.Model.AppConfiguration
 
         [JsonProperty(PropertyName = "files_custom_location")]
         public string CustomFilesLocation { get; set; }
+    }
+
+    [JsonObject(MemberSerialization.OptIn)]
+    public class DataProviderInfo
+    {
+        private string _type;
+
+        [JsonProperty(PropertyName = "type")]
+        public string Type { 
+            get => _type.ToLower(); 
+            set => _type = value.ToLower(); 
+        }
+
+        [JsonProperty(PropertyName = "api_url")]
+        public string ApiUrl { get; set; }
+
+        [JsonProperty(PropertyName = "hub_url")]
+        public string HubUrl { get; set; }
     }
 
     /// <summary>
