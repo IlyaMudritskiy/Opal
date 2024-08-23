@@ -35,11 +35,12 @@
             this.processedDataToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.PDFReportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dataAndReportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.SelectFilesMenuButton = new System.Windows.Forms.ToolStripMenuItem();
+            this.StartButton = new System.Windows.Forms.ToolStripMenuItem();
             this.SettingsMenuButton = new System.Windows.Forms.ToolStripMenuItem();
             this.DataViewer_MenuStripBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.MainFormPanel = new System.Windows.Forms.Panel();
             this.JsonFileDialog = new System.Windows.Forms.OpenFileDialog();
+            this.Status_tstxb = new System.Windows.Forms.ToolStripTextBox();
             this.MainMenuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -48,9 +49,10 @@
             this.MainMenuStrip.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.MainMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.FileMenuButton,
-            this.SelectFilesMenuButton,
+            this.StartButton,
             this.SettingsMenuButton,
-            this.DataViewer_MenuStripBtn});
+            this.DataViewer_MenuStripBtn,
+            this.Status_tstxb});
             this.MainMenuStrip.Location = new System.Drawing.Point(0, 0);
             this.MainMenuStrip.Name = "MainMenuStrip";
             this.MainMenuStrip.ShowItemToolTips = true;
@@ -96,22 +98,22 @@
             this.dataAndReportToolStripMenuItem.Size = new System.Drawing.Size(188, 24);
             this.dataAndReportToolStripMenuItem.Text = "Data and Report";
             // 
-            // SelectFilesMenuButton
+            // StartButton
             // 
-            this.SelectFilesMenuButton.Image = ((System.Drawing.Image)(resources.GetObject("SelectFilesMenuButton.Image")));
-            this.SelectFilesMenuButton.Name = "SelectFilesMenuButton";
-            this.SelectFilesMenuButton.Size = new System.Drawing.Size(120, 24);
-            this.SelectFilesMenuButton.Text = "Select File(s)";
-            this.SelectFilesMenuButton.Click += new System.EventHandler(this.SelectFilesMenuButton_Click);
+            this.StartButton.Image = global::Opal.Properties.Resources.start_green;
+            this.StartButton.Name = "StartButton";
+            this.StartButton.Size = new System.Drawing.Size(68, 24);
+            this.StartButton.Text = "Start";
+            this.StartButton.Click += new System.EventHandler(this.SelectFilesMenuButton_Click);
             // 
             // SettingsMenuButton
             // 
-            this.SettingsMenuButton.Image = ((System.Drawing.Image)(resources.GetObject("SettingsMenuButton.Image")));
+            this.SettingsMenuButton.Image = global::Opal.Properties.Resources.settings_blue;
             this.SettingsMenuButton.Margin = new System.Windows.Forms.Padding(0, 0, 20, 0);
             this.SettingsMenuButton.Name = "SettingsMenuButton";
             this.SettingsMenuButton.Size = new System.Drawing.Size(90, 24);
             this.SettingsMenuButton.Text = "Settings";
-            this.SettingsMenuButton.Click += new System.EventHandler(this.SelectFilesMenuButton_Click);
+            this.SettingsMenuButton.Click += new System.EventHandler(this.SettingsMenuButton_Click);
             // 
             // DataViewer_MenuStripBtn
             // 
@@ -138,6 +140,14 @@
             this.JsonFileDialog.FileName = "JsonFileDialog";
             this.JsonFileDialog.Multiselect = true;
             // 
+            // Status_tstxb
+            // 
+            this.Status_tstxb.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.Status_tstxb.Name = "Status_tstxb";
+            this.Status_tstxb.ReadOnly = true;
+            this.Status_tstxb.Size = new System.Drawing.Size(100, 24);
+            this.Status_tstxb.TextBoxTextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -161,7 +171,7 @@
         internal new System.Windows.Forms.MenuStrip MainMenuStrip;
         internal System.Windows.Forms.Panel MainFormPanel;
         internal System.Windows.Forms.OpenFileDialog JsonFileDialog;
-        internal System.Windows.Forms.ToolStripMenuItem SelectFilesMenuButton;
+        internal System.Windows.Forms.ToolStripMenuItem StartButton;
         internal System.Windows.Forms.ToolStripMenuItem DataViewer_MenuStripBtn;
         internal System.Windows.Forms.ToolStripMenuItem FileMenuButton;
         internal System.Windows.Forms.ToolStripMenuItem FileSaveMenuButton;
@@ -169,6 +179,7 @@
         internal System.Windows.Forms.ToolStripMenuItem PDFReportToolStripMenuItem;
         internal System.Windows.Forms.ToolStripMenuItem dataAndReportToolStripMenuItem;
         internal System.Windows.Forms.ToolStripMenuItem SettingsMenuButton;
+        internal System.Windows.Forms.ToolStripTextBox Status_tstxb;
     }
 }
 
