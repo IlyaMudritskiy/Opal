@@ -1,11 +1,12 @@
 ﻿using Newtonsoft.Json.Linq;
+using Opal.Forms;
 using Opal.Model.AppConfiguration;
 using Opal.src.CommonClasses.Processing;
+using Opal.src.CommonClasses.SreenProvider;
 using ProcessDashboard.src.CommonClasses.SreenProvider;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Opal.src.CommonClasses.DataProvider
@@ -14,30 +15,29 @@ namespace Opal.src.CommonClasses.DataProvider
     {
         private static readonly NLog.Logger Log = NLog.LogManager.GetCurrentClassLogger();
         private Config _config = Config.Instance;
-        private List<JObject> _files = new List<JObject>();
+        private static MainForm _form;
+        private IScreen _screen;
 
-        public string GetLineCode()
+        public FileDataProvider(MainForm form)
         {
-            return CommonFileContentManager.GetLineCode(_files);
+            _form = form;
         }
 
-        public string GetProductCode()
+        public void Start()
         {
-            return CommonFileContentManager.GetProductCode(_files);
-        }
+            var files = ReadJsonFiles();
+            _config.LineID = CommonFileContentManager.GetLineCode(files);
+            _config.ProductID = CommonFileContentManager.GetProductCode(files);
 
-        public async void ProvideData(IScreen screen)
-        {
-            _files = await ReadJsonFilesAsync();
-            string lineCode = GetLineCode();
-            string productCode = GetProductCode();
+            files = CommonFileContentManager.FilterByLine(files, _config.LineID);
+            files = CommonFileContentManager.FilterByProduct(files, _config.ProductID);
 
-            _config.ProductID = productCode;
+            if (_screen == null) {
+                _screen = ScreenFactory.Create(_config.LineID);
+                _screen.Show(_form.MainFormPanel);
+            }
 
-            _files = CommonFileContentManager.FilterByLine(_files, lineCode);
-            _files = CommonFileContentManager.FilterByProduct(_files, productCode);
-
-            screen.Update(_files);
+            _screen.Update(files, _form);
         }
 
 
@@ -65,10 +65,10 @@ namespace Opal.src.CommonClasses.DataProvider
             return result;
         }
 
-        private async Task<List<JObject>> ReadJsonFilesAsync()
+        private List<JObject> ReadJsonFiles()
         {
             var paths = GetFilepathsFromDialog();
-            return await CommonFileManager.ParseJsonFilesAsync(paths);
+            return CommonFileManager.ParseJsonFiles(paths);
         }
     }
 }

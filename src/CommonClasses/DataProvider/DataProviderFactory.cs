@@ -1,16 +1,17 @@
-﻿using Opal.Model.AppConfiguration;
+﻿using Opal.Forms;
+using Opal.Model.AppConfiguration;
 
 namespace Opal.src.CommonClasses.DataProvider
 {
     public static class DataProviderFactory
     {
-        public static IDataProvider Get(string dataProvider)
+        public static IDataProvider Get(string dataProvider, MainForm form)
         {
             if (dataProvider.ToLower() == DataProviderType.File)
-                return new FileDataProvider();
+                return new FileDataProvider(form);
 
             if (dataProvider.ToLower() == DataProviderType.API)
-                return null;
+                return new APIDataProvider(form);
 
             if (dataProvider.ToLower() == DataProviderType.Hub)
                 return null;
