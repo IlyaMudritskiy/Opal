@@ -17,22 +17,20 @@ namespace Opal.src.TTL.Processing
         {
             if (files == null || files.Count == 0) return null;
 
-            Task<List<ProcessFile>> processFilesTask = Task.Run(() => ProcessDataProcessor.GetProcessFiles(ref files));
-            Task<List<AcousticFile>> acousticFilesTask = Task.Run(() => AcousticDataProcessor.GetAcousticFiles(ref files));
+            List<ProcessFile> processFilesTask = Task.Run(() => ProcessDataProcessor.GetProcessFiles(ref files)).Result;
+            List<AcousticFile> acousticFilesTask = Task.Run(() => AcousticDataProcessor.GetAcousticFiles(ref files)).Result;
 
-            await Task.WhenAll(processFilesTask, acousticFilesTask);
+            //await Task.WhenAll(processFilesTask, acousticFilesTask);
 
-            List<ProcessFile> processFiles = processFilesTask.Result;
-            List<AcousticFile> acousticFiles = acousticFilesTask.Result;
+            //List<ProcessFile> processFiles = processFilesTask;
+            //List<AcousticFile> acousticFiles = acousticFilesTask;
 
-            return await JoinFiles(processFiles, acousticFiles);
+            return JoinFiles(processFilesTask, acousticFilesTask);
         }
 
-        private async static Task<List<TTLUnit>> JoinFiles(IEnumerable<ProcessFile> processFiles, IEnumerable<AcousticFile> acousticFiles)
+        private static List<TTLUnit> JoinFiles(IEnumerable<ProcessFile> processFiles, IEnumerable<AcousticFile> acousticFiles)
         {
             ConcurrentBag<TTLUnit> result = new ConcurrentBag<TTLUnit>();
-            //ConcurrentBag<ProcessFile> pf = new ConcurrentBag<ProcessFile>(processFiles);
-            //ConcurrentBag<AcousticFile> af = new ConcurrentBag<AcousticFile>(acousticFiles);
 
             Parallel.ForEach(processFiles, file =>
             {

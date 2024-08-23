@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Newtonsoft.Json.Linq;
+using Opal.Forms;
 using Opal.Model.AppConfiguration;
 using Opal.Model.Screen.Tabs;
 using Opal.src.TTL.Containers.ScreenData;
@@ -30,7 +31,7 @@ namespace Opal.src.TTL.Screen
 
         private TTLData TTLData { get; set; }
 
-        public void Show(ref Panel panel)
+        public void Show(Panel panel)
         {
             Tabs = new TabControl() { Dock = DockStyle.Fill };
 
@@ -63,33 +64,30 @@ namespace Opal.src.TTL.Screen
             panel.ResumeLayout();
         }
 
-        public void Update(List<JObject> data)
+        public void Update(List<JObject> data, MainForm form)
         {
-            List<TTLUnit> processedData = new List<TTLUnit>();
+            var processedData = Task.Run(() => TTLDataProcessor.LoadFiles(data)).GetAwaiter().GetResult();
 
-            Task.Run(async () =>
-            {
-                processedData = await TTLDataProcessor.LoadFiles(data);
-            }).Wait();
+            //form.Invoke((Action)(() => {
+                Clear();
 
-            if (processedData == null) return;
+                if (processedData == null) return;
 
-            Clear();
+                TTLData = TTLData.GetInstance(processedData, true);
 
-            TTLData = TTLData.GetInstance(processedData, true);
+                if (TTLData == null) return;
 
-            if (TTLData == null) return;
+                Temperature.AddData(TTLData.Temperature);
+                Pressure.AddData(TTLData.Pressure);
 
-            Temperature.AddData(TTLData.Temperature);
-            Pressure.AddData(TTLData.Pressure);
-
-            if (Config.Acoustic.Enabled)
-            {
-                FR.AddData(TTLData.FR);
-                THD.AddData(TTLData.THD);
-                RNB.AddData(TTLData.RNB);
-                IMP.AddData(TTLData.IMP);
-            }
+                if (Config.Acoustic.Enabled)
+                {
+                    FR.AddData(TTLData.FR);
+                    THD.AddData(TTLData.THD);
+                    RNB.AddData(TTLData.RNB);
+                    IMP.AddData(TTLData.IMP);
+                }
+            //}));
         }
 
         public void Clear()
@@ -105,7 +103,7 @@ namespace Opal.src.TTL.Screen
                 IMP.Clear();
             }
 
-            TTLData = null;
+            //TTLData = null;
         }
 
         private void FRToggleView(object sender, EventArgs e)
