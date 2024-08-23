@@ -70,6 +70,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="src\CommonClasses\Containers\SearchFilter.cs" />
     <Compile Include="src\CommonClasses\DataProvider\APIDataProvider.cs" />
     <Compile Include="src\CommonClasses\DataProvider\DataProviderFactory.cs" />
     <Compile Include="src\CommonClasses\DataProvider\DataProviderType.cs" />
@@ -112,6 +113,7 @@
     <Compile Include="src\TTL\Containers\ScreenData\PlotViewDSContainer.cs" />
     <Compile Include="src\TTL\Containers\ScreenData\StepStatus.cs" />
     <Compile Include="src\TTL\Processing\ProcessDataProcessor.cs" />
+    <Compile Include="src\TTL\UI\EventControllers\ApiDataSelectController.cs" />
     <Compile Include="src\TTL\UI\EventControllers\DataViewerController.cs" />
     <Compile Include="src\TTL\UI\EventControllers\FileController.cs" />
     <Compile Include="src\Forms\MainForm.cs">
@@ -128,7 +130,7 @@
     <Compile Include="src\TTL\Processing\FeatureCalculations.cs" />
     <Compile Include="src\TTL\UI\EventControllers\MenuStripButtonsController.cs" />
     <Compile Include="src\TTL\UI\EventControllers\SettingsController.cs" />
-    <Compile Include="src\TTL\UI\EventControllers\UIController.cs" />
+    <Compile Include="src\TTL\UI\EventControllers\MainFormController.cs" />
     <Compile Include="src\Config.cs" />
     <Compile Include="src\CommonClasses\Containers\Measurements2D.cs" />
     <Compile Include="src\CommonClasses\Containers\Measurements2DExt.cs" />
@@ -196,24 +198,33 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <None Include="Queries\query.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include=".gitignore" />
+    <Content Include="Assets\ico\filter_purple.ico" />
+    <Content Include="Assets\ico\login_blue.ico" />
     <Content Include="Assets\ico\menu_other.ico" />
     <Content Include="Assets\ico\file_green.ico" />
     <Content Include="Assets\ico\app_icon.ico" />
     <Content Include="Assets\ico\search.ico" />
     <Content Include="Assets\ico\settings_blue.ico" />
+    <Content Include="Assets\ico\start_green.ico" />
     <Content Include="Assets\ico\table_view.ico" />
     <Content Include="Assets\ico\tools_orange.ico" />
+    <Content Include="Assets\png\filter_purple.png" />
+    <Content Include="Assets\png\login_blue.png" />
     <Content Include="Assets\png\menu_other.png" />
     <Content Include="Assets\png\file_green.png" />
+    <Content Include="Assets\png\settings_blue.png" />
+    <Content Include="Assets\png\start_green.png" />
     <Content Include="Assets\png\tools_orange.png" />
     <Content Include="Assets\png\search.png" />
-    <Content Include="Assets\png\settings_blue.png" />
     <Content Include="Assets\png\table_view.png" />
   </ItemGroup>
   <ItemGroup>
