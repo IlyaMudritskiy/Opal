@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using System.Security.Policy;
 using Newtonsoft.Json;
+using Opal.src.CommonClasses.Containers;
 
 namespace Opal.Model.AppConfiguration
 {
@@ -12,6 +14,9 @@ namespace Opal.Model.AppConfiguration
     [JsonObject(MemberSerialization.OptIn)]
     public partial class Config
     {
+        [JsonIgnore]
+        public SearchFilter Filter { get; set; }
+
         [JsonProperty(PropertyName = "product_id")]
         public string ProductID { get; set; }
 
@@ -75,9 +80,10 @@ namespace Opal.Model.AppConfiguration
         private string _type;
 
         [JsonProperty(PropertyName = "type")]
-        public string Type { 
-            get => _type.ToLower(); 
-            set => _type = value.ToLower(); 
+        public string Type
+        {
+            get => _type.ToLower();
+            set => _type = value.ToLower();
         }
 
         [JsonProperty(PropertyName = "api_url")]
@@ -128,6 +134,8 @@ namespace Opal.Model.AppConfiguration
             {
                 Log.Error($"Failed to read config at {path}, exception:\n{ex}");
             }
+
+            Filter = new SearchFilter();
         }
     }
 }
