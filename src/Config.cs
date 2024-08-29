@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using System.Security.Policy;
 using Newtonsoft.Json;
 using Opal.src.CommonClasses.Containers;
 
@@ -51,9 +50,14 @@ namespace Opal.Model.AppConfiguration
         [JsonProperty(PropertyName = "token")]
         public string Token { get; set; }
 
+        [JsonIgnore]
         public bool ApiReachable { get; set; } = false;
 
+        [JsonIgnore]
         public bool UserAuthenticated { get; set; } = false;
+
+        [JsonIgnore]
+        public bool HubAvailable { get; set; } = false;
     }
 
     [JsonObject(MemberSerialization.OptIn)]
