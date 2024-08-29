@@ -18,7 +18,7 @@ namespace Opal.src.TTL.UI.EventControllers
 
         private TTLData TTLData { get; set; }
 
-        public DataViewerController(MainForm mainForm)
+        public DataViewerController()
         {
             //this.mainForm = mainForm;
             DV = new DataViewer();
@@ -29,7 +29,7 @@ namespace Opal.src.TTL.UI.EventControllers
 
         public void Show()
         {
-            DV.Show();
+            DV.ShowDialog();
         }
 
         public void AddData(TTLData data)

@@ -20,7 +20,11 @@ namespace Opal.src.TTL.UI.EventControllers
 
         private void RegisterEvents()
         {
-            _dsf.Confirm_btn.Click += (sender, e) => _dsf.SaveState();
+            _dsf.Confirm_btn.Click += (sender, e) =>
+            {
+                _dsf.SaveState();
+                _dsf.Close();
+            };
         }
 
         public void OpenApiDataFilters()

@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Threading.Tasks;
-using Opal.src.CommonClasses.Containers;
 using Opal.src.TTL.Containers.Common;
 using Opal.src.TTL.Screen;
 using Opal.src.Utils;
@@ -28,10 +26,17 @@ namespace Opal.src.TTL.UI.UIElements
         {
             if (data == null || data.Length == 0) return;
 
-                foreach (var plotSet in data)
-                    foreach (var plot in plotSet)
-                        if (plot != null)
-                            Control.Plot.Add(plot);
+            foreach (var plotSet in data)
+            {
+                if (plotSet == null) continue;
+                foreach (var plot in plotSet)
+                {
+                    if (plot != null)
+                    {
+                        Control.Plot.Add(plot);
+                    }
+                }
+            }
 
             Refresh();
             Fit();
@@ -41,7 +46,7 @@ namespace Opal.src.TTL.UI.UIElements
         {
             if (data == null || data.Length == 0) return;
 
-                foreach (var plot in data)
+            foreach (var plot in data)
                 if (plot != null)
                     Control.Plot.Add(plot);
 
@@ -80,7 +85,17 @@ namespace Opal.src.TTL.UI.UIElements
 
             if (start.IsNaN() || end.IsNaN()) return null;
 
-            var bracket = Control.Plot.AddBracket(start.X, start.Y, end.X, end.Y, start.Name);
+            Bracket bracket;
+
+            if (start.Equals(end))
+            {
+                bracket = Control.Plot.AddBracket(start.X - 0.01, start.Y, end.X + 0.01, end.Y, start.Name);
+            }
+            else
+            {
+                bracket = Control.Plot.AddBracket(start.X, start.Y, end.X, end.Y, start.Name);
+            }
+            
             bracket.IsVisible = visibility;
 
             Refresh();
@@ -178,7 +193,7 @@ namespace Opal.src.TTL.UI.UIElements
 
             for (int i = 0; i < points.Count; i++)
             {
-                if (points[i].IsNaN()) 
+                if (points[i].IsNaN())
                     continue;
 
                 var marker = Control.Plot.AddMarker(points[i].X, points[i].Y, MarkerShape.filledCircle, markerSize, colors[i]);
@@ -233,7 +248,8 @@ namespace Opal.src.TTL.UI.UIElements
 
         public void Refresh()
         {
-            Control.Refresh();
+            if (Control is FormsPlot)
+                Control.Refresh();
         }
 
         private void createLayout(string title, Color color, string unitx = "", string unity = "", bool log = false)

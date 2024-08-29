@@ -9,6 +9,9 @@ using System.Net;
 using System;
 using System.Drawing;
 using Opal.src.Utils;
+using Microsoft.AspNetCore.SignalR.Client;
+using System.Threading.Tasks;
+using System.Threading;
 
 namespace Opal.src.TTL.UI.EventControllers
 {
@@ -50,7 +53,10 @@ namespace Opal.src.TTL.UI.EventControllers
             // General
             SaveConfig();
             ShowStatus("Configuration saved!", Colors.Green);
-            CheckAvailability();
+            if (_sf.ApiProvider_rbn.Checked)
+                CheckAvailability();
+            if (_sf.HubProvider_rbn.Checked)
+                CheckHub();
         }
 
         private void SaveConfig()
@@ -252,6 +258,75 @@ namespace Opal.src.TTL.UI.EventControllers
                 color = Colors.Red;
             }
             return (status, color);
+        }
+
+        private void CheckHub()
+        {
+            var (message, color, available) = Task.Run(() => GetHubStatus()).GetAwaiter().GetResult();
+            ShowStatus(message, color);
+            _config.Auth.HubAvailable = available;
+        }
+
+        private async Task<(string Message, Color Color, bool Available)> GetHubStatus()
+        {
+            var machineName = Environment.MachineName;
+            var connection = new HubConnectionBuilder()
+                .WithUrl($"{_config.DataProvider.HubUrl}?clientId={machineName}&lineId={_config.LineID}&typeId={_config.ProductID}")
+                .WithAutomaticReconnect()
+                .Build();
+
+            string message = "";
+            Color color = Colors.Black;
+            bool available = false;
+
+            var cts = new CancellationTokenSource();
+            cts.CancelAfter(TimeSpan.FromSeconds(10));
+
+            var closedTcs = new TaskCompletionSource<object>();
+
+            connection.Closed += async (error) =>
+            {
+                closedTcs.TrySetResult(null);
+                await connection.StartAsync();
+            };
+
+            connection.On<string>("ReceiveMessage", async m =>
+            {
+                message = m;
+                color = Colors.Green;
+                available = true;
+                //await CleanupHubConnection(connection, cts);
+            });
+
+            connection.On<string>("CloseConnection", async m =>
+            {
+                message = m;
+                color = Colors.Red;
+                available = false;
+                await connection.StopAsync();
+                await CleanupHubConnection(connection, cts);
+            });
+
+            connection.On<string>("AddedToGroup", async m =>
+            {
+                message = m;
+                color = Colors.Green;
+                available = true;
+                await connection.StopAsync();
+                await CleanupHubConnection(connection, cts);
+            });
+
+            await connection.StartAsync();
+
+            await Task.WhenAny(Task.Delay(-1, cts.Token), closedTcs.Task);
+
+            return (message, color, available);
+        }
+
+        private async Task CleanupHubConnection(HubConnection connection, CancellationTokenSource cts)
+        {
+            cts.Cancel();
+            await connection.DisposeAsync();
         }
     }
 }
