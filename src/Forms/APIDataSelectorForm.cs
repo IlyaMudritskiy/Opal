@@ -18,7 +18,7 @@ namespace Opal.src.Forms
             InitializeComponent();
             RefreshQueries_btn.Click += (sender, e) => RefreshQueriesList();
             Clear_btn.Click += (sender, e) => ClearQueriesList();
-            Serial_txb.TextChanged += (sender, e) => _config.Filter.Serial = Serial_txb.Text;
+            Serial_txb.TextChanged += (sender, e) => SerialTextChanged();
 
             RestoreState();
         }
@@ -71,6 +71,19 @@ namespace Opal.src.Forms
                 DateTo_dtp.Value = _config.Filter.End;
                 TimeTo_dtp.Value = _config.Filter.End;
             }
+        }
+
+        private void SerialTextChanged()
+        {
+            if (string.IsNullOrEmpty(Serial_txb.Text))
+            {
+                DateTimeRange_grp.Enabled = true;
+                _config.Filter.Serial = "";
+                return;
+            }
+
+            DateTimeRange_grp.Enabled = false;
+            _config.Filter.Serial = Serial_txb.Text;
         }
 
         private string GetSelectedRbn()

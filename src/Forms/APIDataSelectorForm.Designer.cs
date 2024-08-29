@@ -99,10 +99,10 @@
             this.ThisHour_rbn.Checked = true;
             this.ThisHour_rbn.Location = new System.Drawing.Point(6, 19);
             this.ThisHour_rbn.Name = "ThisHour_rbn";
-            this.ThisHour_rbn.Size = new System.Drawing.Size(69, 17);
+            this.ThisHour_rbn.Size = new System.Drawing.Size(222, 17);
             this.ThisHour_rbn.TabIndex = 10;
             this.ThisHour_rbn.TabStop = true;
-            this.ThisHour_rbn.Text = "This hour";
+            this.ThisHour_rbn.Text = "This hour (start of the hour to current time)";
             this.ThisHour_rbn.UseVisualStyleBackColor = true;
             // 
             // Range_rbn
@@ -119,9 +119,9 @@
             this.LastHour_rbn.AutoSize = true;
             this.LastHour_rbn.Location = new System.Drawing.Point(6, 42);
             this.LastHour_rbn.Name = "LastHour_rbn";
-            this.LastHour_rbn.Size = new System.Drawing.Size(69, 17);
+            this.LastHour_rbn.Size = new System.Drawing.Size(90, 17);
             this.LastHour_rbn.TabIndex = 12;
-            this.LastHour_rbn.Text = "Last hour";
+            this.LastHour_rbn.Text = "Previous hour";
             this.LastHour_rbn.UseVisualStyleBackColor = true;
             // 
             // DateTimeRange_grp

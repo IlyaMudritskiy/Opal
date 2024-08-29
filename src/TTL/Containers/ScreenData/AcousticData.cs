@@ -129,7 +129,7 @@ namespace Opal.src.TTL.Containers.ScreenData
 
             Step = step;
 
-            MachineID = units[0].MachineID;
+            MachineID = units[0].LineID;
             ProductID = units[0].ProductID;
 
             SeparateAcousticMeasurementsByDS(DSDataPass, PassUnits);

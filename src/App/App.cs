@@ -37,13 +37,8 @@ namespace Opal.src.App
         /// <param name="panel">Container in MainForm that holds the TabControl with all tabs related to the line.</param>
         public void Run(Panel panel, MainForm mainForm)
         {
+            mainForm.ClearMessage();
             SetDataprovider(mainForm);
-            /*
-             * Remove the screen from panel and create new DataProvider
-             * and leave old DataProvider for GC mercy
-            mainForm.ClearScreen();
-            _dataProvider = DataProviderFactory.Get(_config.DataProvider.Type, mainForm);
-            */
 
             _dataProvider.Start();
         }
@@ -63,7 +58,7 @@ namespace Opal.src.App
 
             if (_dataProvider != null && !string.IsNullOrEmpty(_providerInfo))
             {
-                if (_providerInfo == _config.DataProvider.Type)
+                if (_providerInfo != _config.DataProvider.Type)
                 {
                     mainForm.ClearScreen();
                     _dataProvider = DataProviderFactory.Get(_config.DataProvider.Type, mainForm);

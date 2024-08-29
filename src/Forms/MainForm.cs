@@ -29,6 +29,11 @@ namespace Opal.Forms
             UIController.Settings.OpenSettings();
         }
 
+        private void DataViewer_MenuStripBtn_Click(object sender, EventArgs e)
+        {
+            UIController.DataViewer.Show();
+        }
+
         public void SettingsEnabled(bool enabled)
         {
             SettingsMenuButton.Enabled = enabled;

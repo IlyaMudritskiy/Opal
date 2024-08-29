@@ -19,5 +19,12 @@
         {
             return (double.IsNaN(X) || double.IsNaN(Y));
         }
+
+        public bool Equals(DataPoint other)
+        {
+            if (other == null) return false;
+            if (other.Name == this.Name && other.X == this.X && other.Y == this.Y) return true;
+            return false;
+        }
     }
 }

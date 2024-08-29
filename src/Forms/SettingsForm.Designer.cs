@@ -302,7 +302,7 @@
             // 
             // Save_btn
             // 
-            this.Save_btn.Location = new System.Drawing.Point(366, 392);
+            this.Save_btn.Location = new System.Drawing.Point(366, 415);
             this.Save_btn.Name = "Save_btn";
             this.Save_btn.Size = new System.Drawing.Size(75, 23);
             this.Save_btn.TabIndex = 2;
@@ -311,7 +311,7 @@
             // 
             // Close_btn
             // 
-            this.Close_btn.Location = new System.Drawing.Point(285, 392);
+            this.Close_btn.Location = new System.Drawing.Point(285, 415);
             this.Close_btn.Name = "Close_btn";
             this.Close_btn.Size = new System.Drawing.Size(75, 23);
             this.Close_btn.TabIndex = 3;
@@ -412,7 +412,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
-            this.ClientSize = new System.Drawing.Size(452, 424);
+            this.ClientSize = new System.Drawing.Size(452, 450);
             this.Controls.Add(this.OtherSettings_grp);
             this.Controls.Add(this.StatusText_lbl);
             this.Controls.Add(this.Status_lbl);
