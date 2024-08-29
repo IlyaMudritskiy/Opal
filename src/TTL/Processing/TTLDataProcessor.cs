@@ -3,38 +3,51 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
-using ProcessDashboard.Model.AppConfiguration;
-using ProcessDashboard.Model.Data.Acoustic;
-using ProcessDashboard.src.TTL.Containers.FileContent;
-using ProcessDashboard.src.TTL.Containers.ScreenData;
+using Opal.Model.Data.Acoustic;
+using Opal.src.TTL.Containers.FileContent;
+using Opal.src.TTL.Containers.ScreenData;
 
-namespace ProcessDashboard.src.TTL.Processing
+namespace Opal.src.TTL.Processing
 {
     public static class TTLDataProcessor
     {
         private static readonly NLog.Logger Log = NLog.LogManager.GetCurrentClassLogger();
-        private static Config config = Config.Instance;
 
         public async static Task<List<TTLUnit>> LoadFiles(List<JObject> files)
         {
-            if (files == null || files.Count == 0) return null;
+            if (files == null || !files.Any())
+            {
+                return new List<TTLUnit>();
+            }
 
-            Task<List<ProcessFile>> processFilesTask = Task.Run(() => ProcessDataProcessor.GetProcessFiles(ref files));
-            Task<List<AcousticFile>> acousticFilesTask = Task.Run(() => AcousticDataProcessor.GetAcousticFiles(ref files));
+            var processFilesTask = ProcessDataProcessor.GetProcessFiles(files);
+            var acousticFilesTask = AcousticDataProcessor.GetAcousticFiles(files);
 
             await Task.WhenAll(processFilesTask, acousticFilesTask);
 
-            List<ProcessFile> processFiles = processFilesTask.Result;
-            List<AcousticFile> acousticFiles = acousticFilesTask.Result;
+            var processFiles = processFilesTask.Result;
+            var acousticFiles = acousticFilesTask.Result;
 
             return JoinFiles(processFiles, acousticFiles);
+        }
+
+        public async static Task<TTLUnit> LoadFile(JObject file)
+        {
+            if (file == null)
+            {
+                return null;
+            }
+
+            var processFile = await ProcessDataProcessor.GetProcessFile(file);
+
+            if (processFile == null) { return null; }
+
+            return new TTLUnit(processFile);
         }
 
         private static List<TTLUnit> JoinFiles(IEnumerable<ProcessFile> processFiles, IEnumerable<AcousticFile> acousticFiles)
         {
             ConcurrentBag<TTLUnit> result = new ConcurrentBag<TTLUnit>();
-            //ConcurrentBag<ProcessFile> pf = new ConcurrentBag<ProcessFile>(processFiles);
-            //ConcurrentBag<AcousticFile> af = new ConcurrentBag<AcousticFile>(acousticFiles);
 
             Parallel.ForEach(processFiles, file =>
             {

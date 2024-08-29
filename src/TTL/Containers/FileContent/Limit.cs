@@ -1,4 +1,4 @@
-﻿using ProcessDashboard.src.Utils;
+﻿using Opal.src.Utils;
 using ScottPlot.Plottable;
 using System;
 using System.Collections.Generic;
@@ -7,7 +7,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 
-namespace ProcessDashboard.Model.Data.Acoustic
+namespace Opal.Model.Data.Acoustic
 {
     public class Limit
     {

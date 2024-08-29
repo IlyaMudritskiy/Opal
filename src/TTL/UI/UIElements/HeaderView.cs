@@ -1,8 +1,8 @@
-﻿using ProcessDashboard.src.Utils;
+﻿using Opal.src.Utils;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace ProcessDashboard.src.TTL.UI.UIElements
+namespace Opal.src.TTL.UI.UIElements
 {
     public abstract class HeaderView<T> where T : Control
     {

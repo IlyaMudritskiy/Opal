@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace ProcessDashboard.src.TTL.Containers.Common
+namespace Opal.src.TTL.Containers.Common
 {
     public class DSContainer<T>
     {

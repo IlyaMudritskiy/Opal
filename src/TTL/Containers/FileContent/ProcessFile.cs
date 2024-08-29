@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace ProcessDashboard.src.TTL.Containers.FileContent
+namespace Opal.src.TTL.Containers.FileContent
 {
     [JsonObject(MemberSerialization.OptIn)]
     public class ProcessFile

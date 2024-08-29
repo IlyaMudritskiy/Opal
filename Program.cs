@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Windows.Forms;
-using ProcessDashboard.Forms;
+using Opal.Forms;
 
-namespace ProcessDashboard
+namespace Opal
 {
     internal static class Program
     {

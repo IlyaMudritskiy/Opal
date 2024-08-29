@@ -10,7 +10,7 @@ using System.Windows.Forms;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace ProcessDashboard.src.CommonClasses.Processing
+namespace Opal.src.CommonClasses.Processing
 {
     public static class CommonFileManager
     {
@@ -103,6 +103,27 @@ namespace ProcessDashboard.src.CommonClasses.Processing
             return default;
         }
 
+        public static async Task<T> OpenToAsync<T>(string filePath)
+        {
+            if (!File.Exists(filePath))
+            {
+                Log.Error($"The file '{filePath}' does not exist");
+                return default;
+            }
+
+            try
+            {
+                string json = File.ReadAllText(filePath);
+                T result = JsonConvert.DeserializeObject<T>(json, JsonSettings);
+                return result;
+            }
+            catch (JsonSerializationException ex)
+            {
+                Log.Error($"Error deserializing JSON: {ex.Message}");
+            }
+            return default;
+        }
+
         /// <summary>
         /// Opens and deserializes a collection of JSON files at the specified file paths into a list of objects of type <typeparamref name="T"/>.
         /// </summary>
@@ -119,6 +140,19 @@ namespace ProcessDashboard.src.CommonClasses.Processing
             {
                 result.Add(OpenTo<T>(f));
             });
+
+            return result.ToList();
+        }
+
+        public async static Task<List<T>> OpenToAsync<T>(IEnumerable<string> filePaths)
+        {
+            ConcurrentBag<T> result = new ConcurrentBag<T>();
+
+            foreach (var f in  filePaths)
+            {
+                var cont = await OpenToAsync<T>(f);
+                result.Add(cont);
+            }
 
             return result.ToList();
         }
@@ -209,6 +243,23 @@ namespace ProcessDashboard.src.CommonClasses.Processing
             return res;
         }
 
+        public async static Task<JObject> ParseJsonFileAsync(string filepath)
+        {
+            if (!File.Exists(filepath))
+            {
+                Log.Info($"File [{filepath}] does not exist.");
+                return null;
+            }
+
+            string content;
+            using (StreamReader r = new StreamReader(filepath))
+            {
+                content = r.ReadToEnd();
+            }
+            var res = JObject.Parse(content);
+            return res;
+        }
+
         /// <summary>
         /// Checks for existance and reads all files in filepaths to list of generic JOobject objects.
         /// </summary>
@@ -224,41 +275,24 @@ namespace ProcessDashboard.src.CommonClasses.Processing
             return result;
         }
 
+        /// <summary>
+        /// Checks for existance and asynchronosly reads all files in filepaths to list of generic JOobject objects.
+        /// </summary>
+        /// <param name="filepaths">List of full paths to files.</param>
+        /// <returns>List of Json Objects of selected files.</returns>
+        public async static Task<List<JObject>> ParseJsonFilesAsync(List<string> filepaths)
+        {
+            List<JObject> result = new List<JObject>();
+
+            foreach (var file in filepaths)
+                result.Add(await ParseJsonFileAsync(file));
+
+            return result;
+        }
+
         #endregion
 
         #region File Dialog and Write
-
-        /// <summary>
-        /// Gets the list of selected files using OpenFileDialog.
-        /// </summary>
-        /// <param name="dialog">Dialog in WinForms to select files.</param>
-        /// <returns>List of full paths to selected files.</returns>
-        public static List<string> GetFilesFromDialog2(ref OpenFileDialog dialog)
-        {
-            if (dialog.ShowDialog() == DialogResult.OK)
-                return dialog.FileNames.ToList();
-            else
-            {
-                Log.Info("No files were selected in OpenFileDialog");
-                return null;
-            }
-        }
-
-        /// <summary>
-        /// Gets the list of selected files using OpenFileDialog.
-        /// </summary>
-        /// <returns>List of full paths to selected files.</returns>
-        public static List<string> GetFilesFromDialog2()
-        {
-            OpenFileDialog dialog = new OpenFileDialog() { Multiselect = true };
-            if (dialog.ShowDialog() == DialogResult.OK)
-                return dialog.FileNames.ToList();
-            else
-            {
-                Log.Info("No files were selected in OpenFileDialog");
-                return null;
-            }
-        }
 
         public static List<string> GetFilesFromDialog()
         {

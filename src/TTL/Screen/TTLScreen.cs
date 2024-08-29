@@ -3,15 +3,16 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Newtonsoft.Json.Linq;
-using ProcessDashboard.Model.AppConfiguration;
-using ProcessDashboard.Model.Screen.Tabs;
-using ProcessDashboard.src.CommonClasses;
-using ProcessDashboard.src.TTL.Containers.ScreenData;
-using ProcessDashboard.src.TTL.Processing;
+using Opal.Forms;
+using Opal.Model.AppConfiguration;
+using Opal.Model.Screen.Tabs;
+using Opal.src.TTL.Containers.ScreenData;
+using Opal.src.TTL.Processing;
+using ProcessDashboard.src.CommonClasses.SreenProvider;
 
-namespace ProcessDashboard.src.TTL.Screen
+namespace Opal.src.TTL.Screen
 {
-    internal partial class TTLScreen : IScreen
+    public partial class TTLScreen : IScreen
     {
         private static readonly Lazy<TTLScreen> Lazy = new Lazy<TTLScreen>(() => new TTLScreen());
         public static TTLScreen Instance => Lazy.Value;
@@ -30,7 +31,7 @@ namespace ProcessDashboard.src.TTL.Screen
 
         private TTLData TTLData { get; set; }
 
-        public void Create(ref Panel panel)
+        public void Show(Panel panel)
         {
             Tabs = new TabControl() { Dock = DockStyle.Fill };
 
@@ -61,30 +62,16 @@ namespace ProcessDashboard.src.TTL.Screen
             panel.SuspendLayout();
             panel.Controls.Add(Tabs);
             panel.ResumeLayout();
-
-            
         }
 
-        public void Update(List<JObject> data)
+        public void Update(List<JObject> data, MainForm form)
         {
-            Clear();
-            LoadData(data);
-        }
+            var processedData = Task.Run(() => TTLDataProcessor.LoadFiles(data)).GetAwaiter().GetResult();
 
-        public async void LoadData(List<JObject> data)
-        {
-            Clear();
+            if (processedData == null) return;
 
-            Task<List<TTLUnit>> processedDataTask = Task.Run(() => TTLDataProcessor.LoadFiles(data));
-
-            await Task.WhenAll(processedDataTask);
-
-            List<TTLUnit> processedData = processedDataTask.Result;
-
-            if (TTLData != null)
-                TTLData = null;
-
-            TTLData = TTLData.GetInstance(processedData, true);
+            TTLData = TTLData.Instance;
+            TTLData.AddData(processedData);
 
             Temperature.AddData(TTLData.Temperature);
             Pressure.AddData(TTLData.Pressure);
@@ -96,6 +83,19 @@ namespace ProcessDashboard.src.TTL.Screen
                 RNB.AddData(TTLData.RNB);
                 IMP.AddData(TTLData.IMP);
             }
+        }
+
+        public void Update(JObject data, MainForm form)
+        {
+            var processedData = Task.Run(() => TTLDataProcessor.LoadFile(data)).GetAwaiter().GetResult();
+
+            if (processedData == null) return;
+
+            TTLData = TTLData.Instance;
+            TTLData.UpdateUnit(processedData);
+
+            Temperature.AddData(TTLData.Temperature);
+            Pressure.AddData(TTLData.Pressure);
         }
 
         public void Clear()
@@ -111,7 +111,7 @@ namespace ProcessDashboard.src.TTL.Screen
                 IMP.Clear();
             }
 
-            TTLData = null;
+            //TTLData = null;
         }
 
         private void FRToggleView(object sender, EventArgs e)

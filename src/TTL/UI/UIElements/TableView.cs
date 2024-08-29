@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
-using ProcessDashboard.src.TTL.Containers.Common;
-using ProcessDashboard.src.TTL.Screen;
-using ProcessDashboard.src.Utils;
+using Opal.src.TTL.Containers.Common;
+using Opal.src.TTL.Screen;
+using Opal.src.Utils;
 
-namespace ProcessDashboard.src.TTL.UI.UIElements
+namespace Opal.src.TTL.UI.UIElements
 {
     public class TableView
     {

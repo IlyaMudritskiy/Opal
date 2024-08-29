@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using Newtonsoft.Json.Linq;
 
-namespace ProcessDashboard.src.CommonClasses.Processing
+namespace Opal.src.CommonClasses.Processing
 {
     public static class CommonFileContentManager
     {

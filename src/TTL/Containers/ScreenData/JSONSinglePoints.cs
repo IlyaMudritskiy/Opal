@@ -1,7 +1,7 @@
-﻿using ProcessDashboard.src.TTL.Containers.FileContent;
+﻿using Opal.src.TTL.Containers.FileContent;
 using System.Linq;
 
-namespace ProcessDashboard.src.TTL.Containers.ScreenData
+namespace Opal.src.TTL.Containers.ScreenData
 {
     public class JSONSinglePoints
     {

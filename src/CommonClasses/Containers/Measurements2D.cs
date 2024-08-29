@@ -1,9 +1,9 @@
-﻿using ProcessDashboard.src.TTL.Containers.FileContent;
+﻿using Opal.src.TTL.Containers.FileContent;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ProcessDashboard.src.CommonClasses.Containers
+namespace Opal.src.CommonClasses.Containers
 {
     public class Measurements2D
     {

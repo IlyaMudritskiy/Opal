@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using Newtonsoft.Json;
+using Opal.src.CommonClasses.Containers;
 
-namespace ProcessDashboard.Model.AppConfiguration
+namespace Opal.Model.AppConfiguration
 {
     /// <summary>
     /// Json props of the Config
@@ -12,16 +13,51 @@ namespace ProcessDashboard.Model.AppConfiguration
     [JsonObject(MemberSerialization.OptIn)]
     public partial class Config
     {
+        [JsonIgnore]
+        public SearchFilter Filter { get; set; }
+
+        [JsonProperty(PropertyName = "product_id")]
         public string ProductID { get; set; }
 
-        [JsonProperty(PropertyName = "data-drive-letter")]
+        [JsonProperty(PropertyName = "line_id")]
+        public string LineID { get; set; }
+
+        [JsonProperty(PropertyName = "data_drive_letter")]
         public string DataDriveLetter { get; set; }
 
-        [JsonProperty(PropertyName = "asx-compliant-mode")]
+        [JsonProperty(PropertyName = "asx_compliant_mode")]
         public bool ASxReports { get; set; }
 
         [JsonProperty(PropertyName = "acoustic")]
         public Acoustic Acoustic { get; set; }
+
+        [JsonProperty(PropertyName = "data_provider")]
+        public DataProviderInfo DataProvider { get; set; }
+
+        [JsonProperty(PropertyName = "auth")]
+        public Auth Auth { get; set; }
+
+        [JsonProperty(PropertyName = "enabled")]
+        public bool SettingsEnabled { get; set; }
+
+        [JsonProperty(PropertyName = "line_product_map")]
+        public Dictionary<string, List<string>> LineProductMap { get; set; }
+    }
+
+    [JsonObject(MemberSerialization.OptIn)]
+    public class Auth
+    {
+        [JsonProperty(PropertyName = "token")]
+        public string Token { get; set; }
+
+        [JsonIgnore]
+        public bool ApiReachable { get; set; } = false;
+
+        [JsonIgnore]
+        public bool UserAuthenticated { get; set; } = false;
+
+        [JsonIgnore]
+        public bool HubAvailable { get; set; } = false;
     }
 
     [JsonObject(MemberSerialization.OptIn)]
@@ -38,8 +74,27 @@ namespace ProcessDashboard.Model.AppConfiguration
             }
         }
 
-        [JsonProperty(PropertyName = "files-custom-location")]
+        [JsonProperty(PropertyName = "files_custom_location")]
         public string CustomFilesLocation { get; set; }
+    }
+
+    [JsonObject(MemberSerialization.OptIn)]
+    public class DataProviderInfo
+    {
+        private string _type;
+
+        [JsonProperty(PropertyName = "type")]
+        public string Type
+        {
+            get => _type.ToLower();
+            set => _type = value.ToLower();
+        }
+
+        [JsonProperty(PropertyName = "api_url")]
+        public string ApiUrl { get; set; }
+
+        [JsonProperty(PropertyName = "hub_url")]
+        public string HubUrl { get; set; }
     }
 
     /// <summary>
@@ -83,6 +138,8 @@ namespace ProcessDashboard.Model.AppConfiguration
             {
                 Log.Error($"Failed to read config at {path}, exception:\n{ex}");
             }
+
+            Filter = new SearchFilter();
         }
     }
 }

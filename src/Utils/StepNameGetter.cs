@@ -1,6 +1,6 @@
-﻿using ProcessDashboard.Model.AppConfiguration;
+﻿using Opal.Model.AppConfiguration;
 
-namespace ProcessDashboard.src.Utils
+namespace Opal.src.Utils
 {
     public static class StepNameGetter
     {

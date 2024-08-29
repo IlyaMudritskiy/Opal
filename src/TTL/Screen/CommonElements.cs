@@ -1,9 +1,9 @@
 ﻿using System.Drawing;
 using System.Windows.Forms;
-using ProcessDashboard.src.Utils;
+using Opal.src.Utils;
 using ScottPlot;
 
-namespace ProcessDashboard.src.TTL.Screen
+namespace Opal.src.TTL.Screen
 {
     public static class CommonElements
     {

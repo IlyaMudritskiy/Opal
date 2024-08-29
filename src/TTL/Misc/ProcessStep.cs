@@ -1,4 +1,4 @@
-﻿namespace ProcessDashboard.src.TTL.Misc
+﻿namespace Opal.src.TTL.Misc
 {
     public enum ProcessStep
     {

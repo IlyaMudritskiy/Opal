@@ -3,15 +3,16 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using ProcessDashboard.Model.AppConfiguration;
-using ProcessDashboard.src.TTL.Containers.Common;
-using ProcessDashboard.src.TTL.Containers.ScreenData;
-using ProcessDashboard.src.TTL.UI.UIElements;
-using ProcessDashboard.src.Utils;
+using Opal.Model.AppConfiguration;
+using Opal.src.CommonClasses.DataProvider;
+using Opal.src.TTL.Containers.Common;
+using Opal.src.TTL.Containers.ScreenData;
+using Opal.src.TTL.UI.UIElements;
+using Opal.src.Utils;
 using ScottPlot;
 using ScottPlot.Plottable;
 
-namespace ProcessDashboard.Model.Screen.Tabs
+namespace Opal.Model.Screen.Tabs
 {
     public class ProcessTab
     {
@@ -23,10 +24,13 @@ namespace ProcessDashboard.Model.Screen.Tabs
         private DSContainer<bool> Visibility { get; set; }
         private DSContainer<List<Bracket>> Brackets { get; set; }
 
-        private Config Config = Config.Instance;
+        private Config _config = Config.Instance;
         private string Title = string.Empty;
 
         private ProcessData Data { get; set; }
+
+        private Dictionary<TableView, int?> _selectedFeatureIndices;
+        private Dictionary<TableView, bool> _checkboxStates;
 
         public ProcessTab(string title)
         {
@@ -40,13 +44,37 @@ namespace ProcessDashboard.Model.Screen.Tabs
             registerEvents();
             Title = title;
             SetVisibility();
+
+            _selectedFeatureIndices = new Dictionary<TableView, int?>
+            {
+                { FeatureTables.DS11, null },
+                { FeatureTables.DS12, null },
+                { FeatureTables.DS21, null },
+                { FeatureTables.DS22, null }
+            };
+
+            _checkboxStates = new Dictionary<TableView, bool>
+            {
+                { FeatureTables.DS11, false },
+                { FeatureTables.DS12, false },
+                { FeatureTables.DS21, false },
+                { FeatureTables.DS22, false }
+            };
+
+            FeatureTables.Apply(table =>
+            {
+                _checkboxStates[table] = table.CheckBox.Checked;
+            });
         }
 
         public void AddData(ProcessData data)
         {
+            SaveCheckboxStates();
             Clear();
             Data = data;
             FillScreen();
+            RestoreCheckboxStates();
+            RestoreFeaturesState();
         }
 
         public void Clear()
@@ -57,7 +85,6 @@ namespace ProcessDashboard.Model.Screen.Tabs
             FeatureTables.DS21.Clear();
             FeatureTables.DS22.Clear();
             Data = null;
-            ResetCheckBoxes();
         }
 
         private void FillScreen()
@@ -69,12 +96,19 @@ namespace ProcessDashboard.Model.Screen.Tabs
                Data.Curves.DS22
             );
 
-            PlotView.Title.Text = $"{Title} | {Data.MachineID} - {Data.ProductID}";
+            PlotView.Title.Text = $"{Title} | {Data.LineID} - {Data.ProductID}";
 
-            FeatureTables.DS11.AddData(Data.MeanFeatures.DS11, Colors.DS11C, Data.Features.DS11.Count);
-            FeatureTables.DS12.AddData(Data.MeanFeatures.DS12, Colors.DS12C, Data.Features.DS12.Count);
-            FeatureTables.DS21.AddData(Data.MeanFeatures.DS21, Colors.DS21C, Data.Features.DS21.Count);
-            FeatureTables.DS22.AddData(Data.MeanFeatures.DS22, Colors.DS22C, Data.Features.DS22.Count);
+            if (Data.MeanFeatures.DS11 != null)
+                FeatureTables.DS11.AddData(Data.MeanFeatures.DS11, Colors.DS11C, Data.Features.DS11.Count);
+
+            if (Data.MeanFeatures.DS12 != null)
+                FeatureTables.DS12.AddData(Data.MeanFeatures.DS12, Colors.DS12C, Data.Features.DS12.Count);
+
+            if (Data.MeanFeatures.DS21 != null)
+                FeatureTables.DS21.AddData(Data.MeanFeatures.DS21, Colors.DS21C, Data.Features.DS21.Count);
+
+            if (Data.MeanFeatures.DS22 != null)
+                FeatureTables.DS22.AddData(Data.MeanFeatures.DS22, Colors.DS22C, Data.Features.DS22.Count);
         }
 
         private void CreateLayout(string title)
@@ -217,24 +251,26 @@ namespace ProcessDashboard.Model.Screen.Tabs
             List<List<Feature>> features = Data.Features.Get(dsIdx);            // All features related to a specific DS
             Feature feature = getSelectedFeature(e, table);                     // Selected mean feature from the table
             if (feature == null) return;
-            List<Feature> list = getCorrespondingFeatures(feature, features);   // List of all features that have the same name
+            List<Feature> selectedFeature = getCorrespondingFeatures(feature, features);   // List of all features that have the same name
             PlotView distributionPlot = FeaturesDistributiuons.Get(dsIdx);      // Distribution plot related to a specific DS
             bool visibility = Visibility.Get(dsIdx);                            // Visibility of the distribution plot related to a specific DS
             Color color = Colors.GetDSColor(dsIdx);
-            
+
 
             distributionPlot.Clear();
             distributionPlot.SetText(feature.Name);
 
-            plotDistributionHistogram(list, feature, distributionPlot, color);
-            List<List<MarkerPlot>> dataPointsMarkers = plotDataPoints(list, color, visibility);
-            List<Bracket> brackets = plotClusterID(list, visibility);
+            plotDistributionHistogram(selectedFeature, feature, distributionPlot, color);
+            List<List<MarkerPlot>> dataPointsMarkers = plotDataPoints(selectedFeature, color, visibility);
+            List<Bracket> brackets = plotClusterID(selectedFeature, visibility);
 
             MarkerPlots.Set(dsIdx, dataPointsMarkers);
             Brackets.Set(dsIdx, brackets);
 
             distributionPlot.Refresh();
             distributionPlot.Fit();
+
+            SaveSelectedFeature(FeatureTables.Get(dsIdx), e.RowIndex);
         }
 
         private Feature getSelectedFeature(DataGridViewCellEventArgs e, DataGridView table)
@@ -254,7 +290,7 @@ namespace ProcessDashboard.Model.Screen.Tabs
 
             foreach (var featureList in featureLists)
                 foreach (var f in featureList)
-                    if (f.Name == feature.Name) 
+                    if (f.Name == feature.Name)
                         result.Add(f);
 
             return result;
@@ -270,20 +306,25 @@ namespace ProcessDashboard.Model.Screen.Tabs
             List<double> positions = new List<double>();
             values.Sort();
 
+            // Calculate the range of features
             var min = values.Min();
             var max = values.Max();
             var range = max - min;
 
+            // Number of bins (bars) and their width
             var binCount = (int)Math.Ceiling(Math.Sqrt(features.Count));
-            var binWidth = range/binCount;
+            var binWidth = range / binCount;
 
+            // count the amount of values that got into certain bin
             double[] binSizes = new double[binCount];
 
             for (int i = 0; i <= binCount; i++)
                 edges.Add(min + i * binWidth);
 
-            for (int i = 0; i < binCount; i++)
-                for (int j = 0; j < values.Count; j++)
+            edges[edges.Count - 1] = max;
+
+            for (int i = 0; i < binCount; i++) // For each bin (bar)
+                for (int j = 0; j < values.Count; j++) // for each value in list of values for specific feature
                     if (values[j] >= edges[i] && values[j] < edges[i + 1])
                         binSizes[i]++;
 
@@ -331,7 +372,7 @@ namespace ProcessDashboard.Model.Screen.Tabs
 
                 for (int j = 0; j < points.Count; j++)
                 {
-                    if (points[j][i].IsNaN()) 
+                    if (points[j][i].IsNaN())
                         continue;
 
                     if (points[j][i].Name != "t2" && points[j][i].X == 0)
@@ -341,10 +382,10 @@ namespace ProcessDashboard.Model.Screen.Tabs
                         if (points[j][i].Y < min.Y)
                             min = points[j][i];
 
-                    if (points[j][i].X < min.X) 
+                    if (points[j][i].X < min.X)
                         min = points[j][i];
 
-                    if (points[j][i].X > max.X) 
+                    if (points[j][i].X > max.X)
                         max = points[j][i];
                 }
                 var bracket = PlotView.AddGetBracket(min, max, visibility);
@@ -375,6 +416,55 @@ namespace ProcessDashboard.Model.Screen.Tabs
             foreach (var bracket in brackets)
             {
                 bracket.IsVisible = false;
+            }
+        }
+
+        #endregion
+
+        #region Save and Restore selected features
+
+        private void SaveSelectedFeature(TableView tableView, int rowIndex)
+        {
+            _selectedFeatureIndices[tableView] = rowIndex;
+        }
+
+        private void RestoreFeaturesState()
+        {
+            if (_config.DataProvider.Type != DataProviderType.Hub)
+                return;
+
+            for (int i = 0; i < _selectedFeatureIndices.Count; i++)
+            {
+                var kvp = _selectedFeatureIndices.ElementAt(i);
+
+                if (kvp.Value.HasValue && kvp.Value >= 0)
+                {
+                    RestoreFeature(kvp.Key, kvp.Value.Value);
+                }
+            }
+        }
+
+        private void RestoreFeature(TableView tableView, int rowIndex)
+        {
+            if (rowIndex < tableView.Table.Rows.Count)
+            {
+                // Select the feature in the table
+                tableView.Table.CurrentCell = tableView.Table.Rows[rowIndex].Cells[0];
+
+                // Plot the feature on the main plot
+                cellDoubleClickHandler(new DataGridViewCellEventArgs(0, rowIndex), GetDSIndex(tableView));
+            }
+        }
+
+        private int GetDSIndex(TableView tableView)
+        {
+            switch (tableView)
+            {
+                case TableView DS11 when ReferenceEquals(DS11, FeatureTables.DS11): return 11;
+                case TableView DS12 when ReferenceEquals(DS12, FeatureTables.DS12): return 12;
+                case TableView DS21 when ReferenceEquals(DS21, FeatureTables.DS21): return 21;
+                case TableView DS22 when ReferenceEquals(DS22, FeatureTables.DS22): return 22;
+                default: throw new ArgumentException("Invalid TableView");
             }
         }
 
@@ -429,20 +519,63 @@ namespace ProcessDashboard.Model.Screen.Tabs
             return false;
         }
 
-        private void ResetCheckBoxes()
-        {
-            FeatureTables.DS11.CheckBox.Checked = true;
-            FeatureTables.DS12.CheckBox.Checked = true;
-            FeatureTables.DS21.CheckBox.Checked = true;
-            FeatureTables.DS22.CheckBox.Checked = true;
-        }
-
         private void SetVisibility()
         {
             Visibility.DS11 = FeatureTables.DS11.CheckBox.Checked;
             Visibility.DS12 = FeatureTables.DS12.CheckBox.Checked;
             Visibility.DS21 = FeatureTables.DS21.CheckBox.Checked;
             Visibility.DS22 = FeatureTables.DS22.CheckBox.Checked;
+        }
+
+        private void SaveCheckboxStates()
+        {
+            FeatureTables.Apply(table =>
+            {
+                _checkboxStates[table] = table.CheckBox.Checked;
+            });
+        }
+
+        private void RestoreCheckboxStates()
+        {
+            FeatureTables.Apply(table =>
+            {
+                table.CheckBox.Checked = _checkboxStates[table];
+                UpdatePlotVisibility(table);
+            });
+        }
+
+        private void UpdatePlotVisibility(TableView tableView)
+        {
+            int dsIndex = GetDSIndex(tableView);
+            List<ScatterPlot> curves = Data.Curves.Get(dsIndex);
+            List<List<MarkerPlot>> markers = MarkerPlots.Get(dsIndex);
+            List<Bracket> brackets = Brackets.Get(dsIndex);
+
+            bool isVisible = tableView.CheckBox.Checked;
+
+            if (curves != null)
+            {
+                foreach (var curve in curves)
+                    curve.IsVisible = isVisible;
+            }
+
+            if (markers != null)
+            {
+                foreach (var markerList in markers)
+                {
+                    foreach (var marker in markerList)
+                        marker.IsVisible = isVisible;
+                }
+            }
+
+            if (brackets != null)
+            {
+                foreach (var bracket in brackets)
+                    bracket.IsVisible = isVisible;
+            }
+
+            PlotView.Fit();
+            PlotView.Refresh();
         }
 
         #endregion

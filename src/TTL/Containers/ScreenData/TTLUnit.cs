@@ -1,9 +1,8 @@
 ﻿using System.Drawing;
-using ProcessDashboard.Model.Data.Acoustic;
-using ProcessDashboard.src.TTL.Containers.FileContent;
-using ProcessDashboard.src.Utils;
+using Opal.Model.Data.Acoustic;
+using Opal.src.TTL.Containers.FileContent;
 
-namespace ProcessDashboard.src.TTL.Containers.ScreenData
+namespace Opal.src.TTL.Containers.ScreenData
 {
     public class TTLUnit
     {
@@ -12,7 +11,7 @@ namespace ProcessDashboard.src.TTL.Containers.ScreenData
         public string SerialNumber { get; set; }
         public int TrackNumber { get; set; }
         public int PressNumber { get; set; }
-        public string MachineID { get; set; }
+        public string LineID { get; set; }
         public string WPC { get; set; }
 
         public TTLProcess Process { get; set; }
@@ -27,7 +26,7 @@ namespace ProcessDashboard.src.TTL.Containers.ScreenData
             SerialNumber = process.DUT.SerialNumber;
             TrackNumber = int.Parse(process.DUT.TrackNumber);
             PressNumber = int.Parse(process.DUT.PressNumber);
-            MachineID = process.DUT.MachineID;
+            LineID = process.DUT.MachineID;
             WPC = process.DUT.WPC;
 
             Process = new TTLProcess(process, color);

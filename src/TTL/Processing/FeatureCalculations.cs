@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using ProcessDashboard.Model.AppConfiguration;
-using ProcessDashboard.src.TTL.Containers.Common;
-using ProcessDashboard.src.TTL.Containers.ScreenData;
+using Opal.Model.AppConfiguration;
+using Opal.src.TTL.Containers.Common;
+using Opal.src.TTL.Containers.ScreenData;
 
-namespace ProcessDashboard.src.TTL.Processing
+namespace Opal.src.TTL.Processing
 {
     public static class FeatureCalculations
     {
