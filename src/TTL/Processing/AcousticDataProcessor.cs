@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Opal.Model.AppConfiguration;
@@ -21,7 +22,7 @@ namespace Opal.src.TTL.Processing
 
         private delegate List<AcousticFile> FileOpener(List<JObject> files, string path);
 
-        public static List<AcousticFile> GetAcousticFiles(ref List<JObject> files)
+        public static async Task<List<AcousticFile>> GetAcousticFiles(List<JObject> files)
         {
             if (files == null || files.Count == 0) return null;
 

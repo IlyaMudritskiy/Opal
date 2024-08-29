@@ -1,5 +1,4 @@
 ﻿using Opal.Forms;
-using Opal.Model.AppConfiguration;
 
 namespace Opal.src.CommonClasses.DataProvider
 {
@@ -14,7 +13,7 @@ namespace Opal.src.CommonClasses.DataProvider
                 return new APIDataProvider(form);
 
             if (dataProvider.ToLower() == DataProviderType.Hub)
-                return null;
+                return new HubDataProvider(form);
 
             return null;
         }

@@ -9,6 +9,7 @@ namespace ProcessDashboard.src.CommonClasses.SreenProvider
     {
         void Show(Panel panel);
         void Update(List<JObject> data, MainForm form);
+        void Update(JObject data, MainForm form);
         void Clear();
     }
 }

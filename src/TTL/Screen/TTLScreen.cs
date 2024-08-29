@@ -68,26 +68,34 @@ namespace Opal.src.TTL.Screen
         {
             var processedData = Task.Run(() => TTLDataProcessor.LoadFiles(data)).GetAwaiter().GetResult();
 
-            //form.Invoke((Action)(() => {
-                Clear();
+            if (processedData == null) return;
 
-                if (processedData == null) return;
+            TTLData = TTLData.Instance;
+            TTLData.AddData(processedData);
 
-                TTLData = TTLData.GetInstance(processedData, true);
+            Temperature.AddData(TTLData.Temperature);
+            Pressure.AddData(TTLData.Pressure);
 
-                if (TTLData == null) return;
+            if (Config.Acoustic.Enabled)
+            {
+                FR.AddData(TTLData.FR);
+                THD.AddData(TTLData.THD);
+                RNB.AddData(TTLData.RNB);
+                IMP.AddData(TTLData.IMP);
+            }
+        }
 
-                Temperature.AddData(TTLData.Temperature);
-                Pressure.AddData(TTLData.Pressure);
+        public void Update(JObject data, MainForm form)
+        {
+            var processedData = Task.Run(() => TTLDataProcessor.LoadFile(data)).GetAwaiter().GetResult();
 
-                if (Config.Acoustic.Enabled)
-                {
-                    FR.AddData(TTLData.FR);
-                    THD.AddData(TTLData.THD);
-                    RNB.AddData(TTLData.RNB);
-                    IMP.AddData(TTLData.IMP);
-                }
-            //}));
+            if (processedData == null) return;
+
+            TTLData = TTLData.Instance;
+            TTLData.UpdateUnit(processedData);
+
+            Temperature.AddData(TTLData.Temperature);
+            Pressure.AddData(TTLData.Pressure);
         }
 
         public void Clear()

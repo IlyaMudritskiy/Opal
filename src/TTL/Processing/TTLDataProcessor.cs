@@ -15,17 +15,34 @@ namespace Opal.src.TTL.Processing
 
         public async static Task<List<TTLUnit>> LoadFiles(List<JObject> files)
         {
-            if (files == null || files.Count == 0) return null;
+            if (files == null || !files.Any())
+            {
+                return new List<TTLUnit>();
+            }
 
-            List<ProcessFile> processFilesTask = Task.Run(() => ProcessDataProcessor.GetProcessFiles(ref files)).Result;
-            List<AcousticFile> acousticFilesTask = Task.Run(() => AcousticDataProcessor.GetAcousticFiles(ref files)).Result;
+            var processFilesTask = ProcessDataProcessor.GetProcessFiles(files);
+            var acousticFilesTask = AcousticDataProcessor.GetAcousticFiles(files);
 
-            //await Task.WhenAll(processFilesTask, acousticFilesTask);
+            await Task.WhenAll(processFilesTask, acousticFilesTask);
 
-            //List<ProcessFile> processFiles = processFilesTask;
-            //List<AcousticFile> acousticFiles = acousticFilesTask;
+            var processFiles = processFilesTask.Result;
+            var acousticFiles = acousticFilesTask.Result;
 
-            return JoinFiles(processFilesTask, acousticFilesTask);
+            return JoinFiles(processFiles, acousticFiles);
+        }
+
+        public async static Task<TTLUnit> LoadFile(JObject file)
+        {
+            if (file == null)
+            {
+                return null;
+            }
+
+            var processFile = await ProcessDataProcessor.GetProcessFile(file);
+
+            if (processFile == null) { return null; }
+
+            return new TTLUnit(processFile);
         }
 
         private static List<TTLUnit> JoinFiles(IEnumerable<ProcessFile> processFiles, IEnumerable<AcousticFile> acousticFiles)
