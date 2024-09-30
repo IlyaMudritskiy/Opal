@@ -70,6 +70,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="src\CommonClasses\Containers\FixedSizeBuffer.cs" />
     <Compile Include="src\CommonClasses\Containers\SearchFilter.cs" />
     <Compile Include="src\CommonClasses\DataProvider\APIDataProvider.cs" />
     <Compile Include="src\CommonClasses\DataProvider\DataProviderFactory.cs" />

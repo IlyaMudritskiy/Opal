@@ -1,0 +1,31 @@
+﻿{
+  "product_id": "999999",
+  "line_id": "TTL_M",
+  "data_drive_letter": "Z",
+  "asx_compliant_mode": true,
+  "enabled": true,
+
+  "acoustic": {
+    "enabled": false,
+    "files_custom_location": "C:\\Code\\Azure\\ProcessDashboard\\bin\\Release\\Acoustic"
+  },
+  "auth": {
+    "token": ""
+  },
+  "data_provider": {
+    "type": "hub",
+    "api_url": "https://localhost:7244/api",
+    "hub_url": "https://localhost:7244/newdata-hub"
+  },
+
+  "line_product_map": {
+    "TTL_M": [
+      "588408",
+      "521836",
+      "576661"
+    ],
+    "MDA": [
+      "999999"
+    ]
+  }
+}

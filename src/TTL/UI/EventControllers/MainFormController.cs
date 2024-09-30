@@ -27,7 +27,7 @@ namespace Opal.src.TTL.UI.EventControllers
         {
             File = new FileController(_mainForm);
             Settings = new SettingsController();
-            //Menu = new MenuStripButtonsController(_mainForm);
+            Menu = new MenuStripButtonsController(_mainForm);
             DataViewer = new DataViewerController();
         }
     }

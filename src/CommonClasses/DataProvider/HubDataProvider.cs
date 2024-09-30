@@ -6,7 +6,6 @@ using Opal.src.CommonClasses.SreenProvider;
 using Opal.src.Utils;
 using ProcessDashboard.src.CommonClasses.SreenProvider;
 using System;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace Opal.src.CommonClasses.DataProvider
@@ -55,12 +54,11 @@ namespace Opal.src.CommonClasses.DataProvider
 
             connection.On<string>("NewDataAvailable", message =>
             {
-                
-                InvokeOnUiThread(() => _form.SetMessage("New Data received", Colors.Green));
                 try
                 {
                     var parsedMessage = JObject.Parse(message);
                     Log.Info($"[PARSED] On NewDataAvailable: {parsedMessage["DUT"]["serial_nr"]}");
+                    InvokeOnUiThread(() => _form.SetMessage($"{parsedMessage["DUT"]["serial_nr"]}", Colors.Green));
                     InvokeOnUiThread(() => _screen.Update(parsedMessage, _form));
                 }
                 catch (Exception ex)
@@ -76,6 +74,7 @@ namespace Opal.src.CommonClasses.DataProvider
                 {
                     Log.Info($"[OK] Connection Closed: {message}");
                     connection.StopAsync().Wait();
+                    InvokeOnUiThread(() => _form.SetMessage($"Connection closed", Colors.Green));
                 }
                 catch (Exception ex)
                 {
@@ -86,6 +85,7 @@ namespace Opal.src.CommonClasses.DataProvider
             connection.On<string>("AddedToGroup", message =>
             {
                 Log.Info($"[OK] {message}");
+                InvokeOnUiThread(() => _form.SetMessage(message, Colors.Green));
             });
 
             try

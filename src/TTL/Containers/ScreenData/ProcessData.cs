@@ -136,7 +136,7 @@ namespace Opal.src.TTL.Containers.ScreenData
         {
             if (!CheckUnit(unit)) return;
             Step = step;
-
+            
             LineID = _config.LineID;
             ProductID = _config.ProductID;
 
