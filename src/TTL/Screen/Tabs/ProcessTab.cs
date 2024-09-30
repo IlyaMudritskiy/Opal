@@ -19,7 +19,7 @@ namespace Opal.Model.Screen.Tabs
         public TabPage Tab { get; set; }
         public PlotView PlotView { get; set; }
         public DSContainer<TableView> FeatureTables { get; set; }
-        public DSContainer<PlotView> FeaturesDistributiuons { get; set; }
+        public DSContainer<PlotView> FeaturesDistributions { get; set; }
         public DSContainer<List<List<MarkerPlot>>> MarkerPlots { get; set; }
         private DSContainer<bool> Visibility { get; set; }
         private DSContainer<List<Bracket>> Brackets { get; set; }
@@ -31,11 +31,12 @@ namespace Opal.Model.Screen.Tabs
 
         private Dictionary<TableView, int?> _selectedFeatureIndices;
         private Dictionary<TableView, bool> _checkboxStates;
+        private DSContainer<FixedSizeBuffer<List<Feature>>> _accumulatedFeatures;
 
         public ProcessTab(string title)
         {
             FeatureTables = new DSContainer<TableView>();
-            FeaturesDistributiuons = new DSContainer<PlotView>();
+            FeaturesDistributions = new DSContainer<PlotView>();
             MarkerPlots = new DSContainer<List<List<MarkerPlot>>>();
             Visibility = new DSContainer<bool>();
             Brackets = new DSContainer<List<Bracket>>();
@@ -65,6 +66,13 @@ namespace Opal.Model.Screen.Tabs
             {
                 _checkboxStates[table] = table.CheckBox.Checked;
             });
+
+            _accumulatedFeatures = new DSContainer<FixedSizeBuffer<List<Feature>>>(
+                new FixedSizeBuffer<List<Feature>>(_config.HubBufferSize),
+                new FixedSizeBuffer<List<Feature>>(_config.HubBufferSize),
+                new FixedSizeBuffer<List<Feature>>(_config.HubBufferSize),
+                new FixedSizeBuffer<List<Feature>>(_config.HubBufferSize)
+                );
         }
 
         public void AddData(ProcessData data)
@@ -89,6 +97,11 @@ namespace Opal.Model.Screen.Tabs
 
         private void FillScreen()
         {
+            PreFillCurvesVisibility();
+            //RestoreCheckboxStates();
+            //RestoreFeaturesState();
+            //AccumulateFeatures();
+
             PlotView.AddScatter(
                Data.Curves.DS11,
                Data.Curves.DS12,
@@ -122,10 +135,10 @@ namespace Opal.Model.Screen.Tabs
             FeatureTables.DS21 = new TableView("DS 2-1");
             FeatureTables.DS22 = new TableView("DS 2-2");
 
-            FeaturesDistributiuons.DS11 = new PlotView("DS 1-1", Colors.DS11C, padding);
-            FeaturesDistributiuons.DS12 = new PlotView("DS 1-2", Colors.DS12C, padding);
-            FeaturesDistributiuons.DS21 = new PlotView("DS 2-1", Colors.DS21C, padding);
-            FeaturesDistributiuons.DS22 = new PlotView("DS 2-2", Colors.DS22C, padding);
+            FeaturesDistributions.DS11 = new PlotView("DS 1-1", Colors.DS11C, padding);
+            FeaturesDistributions.DS12 = new PlotView("DS 1-2", Colors.DS12C, padding);
+            FeaturesDistributions.DS21 = new PlotView("DS 2-1", Colors.DS21C, padding);
+            FeaturesDistributions.DS22 = new PlotView("DS 2-2", Colors.DS22C, padding);
 
             TableLayoutPanel tabBase = new TableLayoutPanel()
             {
@@ -182,10 +195,10 @@ namespace Opal.Model.Screen.Tabs
             };
 
             distributionArea.SuspendLayout();
-            distributionArea.Controls.Add(FeaturesDistributiuons.DS11.Layout, 0, 0);
-            distributionArea.Controls.Add(FeaturesDistributiuons.DS12.Layout, 1, 0);
-            distributionArea.Controls.Add(FeaturesDistributiuons.DS21.Layout, 2, 0);
-            distributionArea.Controls.Add(FeaturesDistributiuons.DS22.Layout, 3, 0);
+            distributionArea.Controls.Add(FeaturesDistributions.DS11.Layout, 0, 0);
+            distributionArea.Controls.Add(FeaturesDistributions.DS12.Layout, 1, 0);
+            distributionArea.Controls.Add(FeaturesDistributions.DS21.Layout, 2, 0);
+            distributionArea.Controls.Add(FeaturesDistributions.DS22.Layout, 3, 0);
             distributionArea.ResumeLayout();
 
             tableArea.SuspendLayout();
@@ -248,19 +261,46 @@ namespace Opal.Model.Screen.Tabs
 
             // Get DS data for further use
             DataGridView table = FeatureTables.Get(dsIdx).Table;                // DS Table containing mean features
-            List<List<Feature>> features = Data.Features.Get(dsIdx);            // All features related to a specific DS
-            Feature feature = getSelectedFeature(e, table);                     // Selected mean feature from the table
+
+            List<List<Feature>> accumulatedFeatures = new List<List<Feature>>();
+            List<Feature> selectedAccumFeature = new List<Feature>();
+
+            if (_config.DataProvider.Type == DataProviderType.Hub)
+            {
+                accumulatedFeatures = _accumulatedFeatures.Get(dsIdx).Buffer;
+            }
+
+            List<List<Feature>> features = Data.Features.Get(dsIdx);
+            //AccumulateFeature(dsIdx, features);
+
+
+            Feature feature = getSelectedFeature(e, table); 
+            // Selected mean feature from the table
+
             if (feature == null) return;
+            if (accumulatedFeatures != null)
+            {
+                selectedAccumFeature = getCorrespondingFeatures(feature, accumulatedFeatures);
+            }
+
             List<Feature> selectedFeature = getCorrespondingFeatures(feature, features);   // List of all features that have the same name
-            PlotView distributionPlot = FeaturesDistributiuons.Get(dsIdx);      // Distribution plot related to a specific DS
+            
+            PlotView distributionPlot = FeaturesDistributions.Get(dsIdx);      // Distribution plot related to a specific DS
             bool visibility = Visibility.Get(dsIdx);                            // Visibility of the distribution plot related to a specific DS
             Color color = Colors.GetDSColor(dsIdx);
-
 
             distributionPlot.Clear();
             distributionPlot.SetText(feature.Name);
 
-            plotDistributionHistogram(selectedFeature, feature, distributionPlot, color);
+            if (_config.DataProvider.Type == DataProviderType.Hub)
+            {
+                plotDistributionHistogram(selectedAccumFeature, feature, distributionPlot, color);
+            }
+            else
+            {
+                plotDistributionHistogram(selectedFeature, feature, distributionPlot, color);
+            }
+
             List<List<MarkerPlot>> dataPointsMarkers = plotDataPoints(selectedFeature, color, visibility);
             List<Bracket> brackets = plotClusterID(selectedFeature, visibility);
 
@@ -309,7 +349,8 @@ namespace Opal.Model.Screen.Tabs
             // Calculate the range of features
             var min = values.Min();
             var max = values.Max();
-            var range = max - min;
+            var diff = min - max;
+            var range = diff == 0 ? 1 : diff;
 
             // Number of bins (bars) and their width
             var binCount = (int)Math.Ceiling(Math.Sqrt(features.Count));
@@ -321,12 +362,23 @@ namespace Opal.Model.Screen.Tabs
             for (int i = 0; i <= binCount; i++)
                 edges.Add(min + i * binWidth);
 
-            edges[edges.Count - 1] = max;
+            var maxEdge = edges[edges.Count - 1];
 
-            for (int i = 0; i < binCount; i++) // For each bin (bar)
-                for (int j = 0; j < values.Count; j++) // for each value in list of values for specific feature
+            if (maxEdge <= max)
+                edges[edges.Count - 1] = maxEdge * 1.01;
+
+            // For each bin (bar)
+            for (int i = 0; i < binCount; i++)
+            {
+                // for each value in list of values for specific feature
+                for (int j = 0; j < values.Count; j++)
+                {
                     if (values[j] >= edges[i] && values[j] < edges[i + 1])
+                    {
                         binSizes[i]++;
+                    }
+                }
+            }
 
             for (int i = 0; i < binCount; i++)
                 positions.Add(edges[i] + binWidth / 2);
@@ -417,6 +469,38 @@ namespace Opal.Model.Screen.Tabs
             {
                 bracket.IsVisible = false;
             }
+        }
+
+        private void AccumulateFeatures()
+        {
+            if (_config.DataProvider.Type != DataProviderType.Hub) return;
+
+            if (Data.Features.DS11 != null)
+            {
+                _accumulatedFeatures.DS11.Add(Data.Features.DS11);
+            }
+
+            if (Data.Features.DS12 != null)
+            {
+                _accumulatedFeatures.DS12.Add(Data.Features.DS12);
+            }
+
+            if (Data.Features.DS21 != null)
+            {
+                _accumulatedFeatures.DS21.Add(Data.Features.DS21);
+            }
+
+            if (Data.Features.DS22 != null)
+            {
+                _accumulatedFeatures.DS22.Add(Data.Features.DS22);
+            }
+        }
+
+        private void AccumulateFeature(int dsIdx, List<List<Feature>> features)
+        {
+            if (_config.DataProvider.Type != DataProviderType.Hub) return;
+
+            _accumulatedFeatures.Apply(dsIdx, x => x.Add(features));
         }
 
         #endregion
@@ -576,6 +660,23 @@ namespace Opal.Model.Screen.Tabs
 
             PlotView.Fit();
             PlotView.Refresh();
+        }
+
+        private void PreFillCurvesVisibility()
+        {
+            var visibility = _checkboxStates.Values.ToList();
+
+            for (int i = 0; i < visibility.Count; i++)
+            {
+                var curves = Data.Curves.Elements[i];
+
+                if (curves == null) return;
+
+                foreach (var curve in curves)
+                {
+                    curve.IsVisible = visibility[i];
+                }
+            }
         }
 
         #endregion

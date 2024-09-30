@@ -16,6 +16,9 @@ namespace Opal.Model.AppConfiguration
         [JsonIgnore]
         public SearchFilter Filter { get; set; }
 
+        [JsonProperty(PropertyName = "hub_distribution_buffer")]
+        public int HubBufferSize { get; set; }
+
         [JsonProperty(PropertyName = "product_id")]
         public string ProductID { get; set; }
 

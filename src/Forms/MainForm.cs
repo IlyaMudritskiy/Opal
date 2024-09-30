@@ -46,14 +46,14 @@ namespace Opal.Forms
 
         public void SetMessage(string message, Color color)
         {
-            Status_tstxb.Text = message;
-            Status_tstxb.ForeColor = color;
+            Status_lbl.Text = message;
+            Status_lbl.ForeColor = color;
         }
 
         public void ClearMessage()
         {
-            Status_tstxb.Text = "";
-            Status_tstxb.ForeColor = Colors.Black;
+            Status_lbl.Text = "";
+            Status_lbl.ForeColor = Colors.Black;
         }
 
         public void ClearScreen()
