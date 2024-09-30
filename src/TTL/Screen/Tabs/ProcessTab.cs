@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using Microsoft.AspNetCore.SignalR;
 using Opal.Model.AppConfiguration;
 using Opal.src.CommonClasses.DataProvider;
 using Opal.src.TTL.Containers.Common;
@@ -98,9 +99,6 @@ namespace Opal.Model.Screen.Tabs
         private void FillScreen()
         {
             PreFillCurvesVisibility();
-            //RestoreCheckboxStates();
-            //RestoreFeaturesState();
-            //AccumulateFeatures();
 
             PlotView.AddScatter(
                Data.Curves.DS11,
@@ -109,7 +107,12 @@ namespace Opal.Model.Screen.Tabs
                Data.Curves.DS22
             );
 
-            PlotView.Title.Text = $"{Title} | {Data.LineID} - {Data.ProductID}";
+            string title = $"{Title} | {Data.LineID} - {Data.ProductID}";
+
+            if (_config.DataProvider.Type == DataProviderType.Hub)
+                title += $" (last DUTs: {_config.HubBufferSize})";
+
+            PlotView.Title.Text = title;
 
             if (Data.MeanFeatures.DS11 != null)
                 FeatureTables.DS11.AddData(Data.MeanFeatures.DS11, Colors.DS11C, Data.Features.DS11.Count);
@@ -152,8 +155,8 @@ namespace Opal.Model.Screen.Tabs
                 RowStyles =
                 {
                     new RowStyle(SizeType.Percent, 35),
-                    new RowStyle(SizeType.Absolute, 318),
-                    new RowStyle(SizeType.Percent, 29.7f)
+                    new RowStyle(SizeType.Absolute, 340),
+                    new RowStyle(SizeType.Percent, 25)
                 }
             };
 
