@@ -81,6 +81,7 @@ namespace Opal.Model.Screen.Tabs
             Clear();
             Data = data;
             FillScreen();
+            AccumulateFeatures();
             RestoreCheckboxStates();
             RestoreFeaturesState();
         }
@@ -109,7 +110,7 @@ namespace Opal.Model.Screen.Tabs
             string title = $"{Title} | {Data.LineID} - {Data.ProductID}";
 
             if (_config.DataProvider.Type == DataProviderType.Hub)
-                title += $" (last DUTs: {_config.HubBufferSize})";
+                title += $" ({_config.HubBufferSize} last DUTs)";
 
             PlotView.Title.Text = title;
 
@@ -351,7 +352,7 @@ namespace Opal.Model.Screen.Tabs
             // Calculate the range of features
             var min = values.Min();
             var max = values.Max();
-            var diff = min - max;
+            var diff = max - min;
             var range = diff == 0 ? 1 : diff;
 
             // Number of bins (bars) and their width
@@ -375,7 +376,16 @@ namespace Opal.Model.Screen.Tabs
                 // for each value in list of values for specific feature
                 for (int j = 0; j < values.Count; j++)
                 {
-                    if (values[j] >= edges[i] && values[j] < edges[i + 1])
+                    /*
+                     * 1. Check if value is greater than the lower edge of the bin
+                     * 2. If it is the last bin: i == binCount - 1
+                     *  1. Check the value with the edge including the edge: values[j] <= edges[i + 1]
+                     *  2. If not last bin, check the value excluding the edge: values[j] < edges[i + 1]
+                     */
+                    bool isInBin = (values[j] >= edges[i]) 
+                        && (i == binCount - 1 ? values[j] <= edges[i + 1] : values[j] < edges[i + 1]);
+                    
+                    if (isInBin)
                     {
                         binSizes[i]++;
                     }
@@ -476,33 +486,20 @@ namespace Opal.Model.Screen.Tabs
         private void AccumulateFeatures()
         {
             if (_config.DataProvider.Type != DataProviderType.Hub) return;
-
-            if (Data.Features.DS11 != null)
-            {
-                _accumulatedFeatures.DS11.Add(Data.Features.DS11);
-            }
-
-            if (Data.Features.DS12 != null)
-            {
-                _accumulatedFeatures.DS12.Add(Data.Features.DS12);
-            }
-
-            if (Data.Features.DS21 != null)
-            {
-                _accumulatedFeatures.DS21.Add(Data.Features.DS21);
-            }
-
-            if (Data.Features.DS22 != null)
-            {
-                _accumulatedFeatures.DS22.Add(Data.Features.DS22);
-            }
+            AccumulateFeature(11);
+            AccumulateFeature(12);
+            AccumulateFeature(21);
+            AccumulateFeature(22);
         }
 
-        private void AccumulateFeature(int dsIdx, List<List<Feature>> features)
+        private void AccumulateFeature(int dsIdx)
         {
-            if (_config.DataProvider.Type != DataProviderType.Hub) return;
+            if (Data.MeanFeatures.Get(dsIdx) == null) return;
 
-            _accumulatedFeatures.Apply(dsIdx, x => x.Add(features));
+            if (!_accumulatedFeatures.Get(dsIdx).Contains(Data.MeanFeatures.Get(dsIdx)))
+            {
+                _accumulatedFeatures.Get(dsIdx).Add(Data.MeanFeatures.Get(dsIdx));
+            }
         }
 
         #endregion
