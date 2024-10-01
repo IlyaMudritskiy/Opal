@@ -72,6 +72,7 @@ namespace Opal.src.TTL.UI.EventControllers
             _config.DataProvider.Type = dataProvider;
             _config.DataProvider.ApiUrl = _sf.ApiUrl_txb.Text;
             _config.DataProvider.HubUrl = _sf.HubUrl_txb.Text;
+            _config.HubBufferSize = int.Parse(_sf.BufferSize_txb.Text); // TextChanged checks input against regex
 
             // Other
             _config.DataDriveLetter = _sf.DataDriveLetter_cmb.Text;
@@ -98,6 +99,8 @@ namespace Opal.src.TTL.UI.EventControllers
 
             _sf.DataDriveLetter_cmb.Text = _config.DataDriveLetter;
             _sf.ASxCompliant_chk.Checked = _config.ASxReports;
+
+            _sf.BufferSize_txb.Text = _config.HubBufferSize.ToString();
         }
 
         private void EnableAcousticCustomPath(CheckBox sender)

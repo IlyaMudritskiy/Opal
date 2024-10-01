@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using Microsoft.AspNetCore.SignalR;
 using Opal.Model.AppConfiguration;
 using Opal.src.CommonClasses.DataProvider;
 using Opal.src.TTL.Containers.Common;
