@@ -34,6 +34,8 @@
             this.ApiProvider_rbn = new System.Windows.Forms.RadioButton();
             this.FilesProvider_rbn = new System.Windows.Forms.RadioButton();
             this.HubProvider_grp = new System.Windows.Forms.GroupBox();
+            this.BufferSize_txb = new System.Windows.Forms.TextBox();
+            this.Buffer_lbl = new System.Windows.Forms.Label();
             this.HubProviderDescription_lbl = new System.Windows.Forms.Label();
             this.HubUrl_lbl = new System.Windows.Forms.Label();
             this.HubUrl_txb = new System.Windows.Forms.TextBox();
@@ -78,7 +80,7 @@
             this.DataProvider_grp.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.DataProvider_grp.Location = new System.Drawing.Point(12, 12);
             this.DataProvider_grp.Name = "DataProvider_grp";
-            this.DataProvider_grp.Size = new System.Drawing.Size(429, 286);
+            this.DataProvider_grp.Size = new System.Drawing.Size(429, 317);
             this.DataProvider_grp.TabIndex = 0;
             this.DataProvider_grp.TabStop = false;
             this.DataProvider_grp.Text = "Data Provider";
@@ -115,16 +117,37 @@
             // 
             // HubProvider_grp
             // 
+            this.HubProvider_grp.Controls.Add(this.BufferSize_txb);
+            this.HubProvider_grp.Controls.Add(this.Buffer_lbl);
             this.HubProvider_grp.Controls.Add(this.HubProviderDescription_lbl);
             this.HubProvider_grp.Controls.Add(this.HubUrl_lbl);
             this.HubProvider_grp.Controls.Add(this.HubUrl_txb);
             this.HubProvider_grp.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.HubProvider_grp.Location = new System.Drawing.Point(26, 209);
             this.HubProvider_grp.Name = "HubProvider_grp";
-            this.HubProvider_grp.Size = new System.Drawing.Size(392, 65);
+            this.HubProvider_grp.Size = new System.Drawing.Size(392, 95);
             this.HubProvider_grp.TabIndex = 2;
             this.HubProvider_grp.TabStop = false;
             this.HubProvider_grp.Text = "Onyx Notifications Hub";
+            // 
+            // BufferSize_txb
+            // 
+            this.BufferSize_txb.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BufferSize_txb.Location = new System.Drawing.Point(77, 63);
+            this.BufferSize_txb.Name = "BufferSize_txb";
+            this.BufferSize_txb.Size = new System.Drawing.Size(68, 21);
+            this.BufferSize_txb.TabIndex = 8;
+            this.BufferSize_txb.TextChanged += new System.EventHandler(this.BufferSize_txb_TextChanged);
+            // 
+            // Buffer_lbl
+            // 
+            this.Buffer_lbl.AutoSize = true;
+            this.Buffer_lbl.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Buffer_lbl.Location = new System.Drawing.Point(7, 66);
+            this.Buffer_lbl.Name = "Buffer_lbl";
+            this.Buffer_lbl.Size = new System.Drawing.Size(64, 15);
+            this.Buffer_lbl.TabIndex = 7;
+            this.Buffer_lbl.Text = "Buffer size";
             // 
             // HubProviderDescription_lbl
             // 
@@ -255,7 +278,7 @@
             this.LineProduct_grp.Controls.Add(this.ProductId_lbl);
             this.LineProduct_grp.Controls.Add(this.LineName_lbl);
             this.LineProduct_grp.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LineProduct_grp.Location = new System.Drawing.Point(12, 304);
+            this.LineProduct_grp.Location = new System.Drawing.Point(12, 334);
             this.LineProduct_grp.Name = "LineProduct_grp";
             this.LineProduct_grp.Size = new System.Drawing.Size(216, 82);
             this.LineProduct_grp.TabIndex = 1;
@@ -302,7 +325,7 @@
             // 
             // Save_btn
             // 
-            this.Save_btn.Location = new System.Drawing.Point(366, 415);
+            this.Save_btn.Location = new System.Drawing.Point(366, 445);
             this.Save_btn.Name = "Save_btn";
             this.Save_btn.Size = new System.Drawing.Size(75, 23);
             this.Save_btn.TabIndex = 2;
@@ -311,7 +334,7 @@
             // 
             // Close_btn
             // 
-            this.Close_btn.Location = new System.Drawing.Point(285, 415);
+            this.Close_btn.Location = new System.Drawing.Point(285, 445);
             this.Close_btn.Name = "Close_btn";
             this.Close_btn.Size = new System.Drawing.Size(75, 23);
             this.Close_btn.TabIndex = 3;
@@ -322,7 +345,7 @@
             // 
             this.Status_lbl.AutoSize = true;
             this.Status_lbl.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Status_lbl.Location = new System.Drawing.Point(9, 397);
+            this.Status_lbl.Location = new System.Drawing.Point(9, 427);
             this.Status_lbl.Name = "Status_lbl";
             this.Status_lbl.Size = new System.Drawing.Size(51, 15);
             this.Status_lbl.TabIndex = 4;
@@ -331,7 +354,7 @@
             // StatusText_lbl
             // 
             this.StatusText_lbl.AutoSize = true;
-            this.StatusText_lbl.Location = new System.Drawing.Point(66, 399);
+            this.StatusText_lbl.Location = new System.Drawing.Point(66, 429);
             this.StatusText_lbl.Name = "StatusText_lbl";
             this.StatusText_lbl.Size = new System.Drawing.Size(52, 13);
             this.StatusText_lbl.TabIndex = 5;
@@ -343,7 +366,7 @@
             this.OtherSettings_grp.Controls.Add(this.ASxCompliant_chk);
             this.OtherSettings_grp.Controls.Add(this.DriveLetter_lbl);
             this.OtherSettings_grp.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.OtherSettings_grp.Location = new System.Drawing.Point(235, 305);
+            this.OtherSettings_grp.Location = new System.Drawing.Point(235, 335);
             this.OtherSettings_grp.Name = "OtherSettings_grp";
             this.OtherSettings_grp.Size = new System.Drawing.Size(206, 81);
             this.OtherSettings_grp.TabIndex = 6;
@@ -412,7 +435,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
-            this.ClientSize = new System.Drawing.Size(452, 450);
+            this.ClientSize = new System.Drawing.Size(452, 478);
             this.Controls.Add(this.OtherSettings_grp);
             this.Controls.Add(this.StatusText_lbl);
             this.Controls.Add(this.Status_lbl);
@@ -472,5 +495,7 @@
         private System.Windows.Forms.Label DriveLetter_lbl;
         internal System.Windows.Forms.GroupBox OtherSettings_grp;
         internal System.Windows.Forms.Label Status_lbl;
+        internal System.Windows.Forms.TextBox BufferSize_txb;
+        private System.Windows.Forms.Label Buffer_lbl;
     }
 }
