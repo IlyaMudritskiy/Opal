@@ -23,6 +23,7 @@ namespace Opal.Model.Screen.Tabs
         public DSContainer<List<List<MarkerPlot>>> MarkerPlots { get; set; }
         private DSContainer<bool> Visibility { get; set; }
         private DSContainer<List<Bracket>> Brackets { get; set; }
+        private DSContainer<bool> IsFeatureSelected { get; set; }
 
         private Config _config = Config.Instance;
         private string Title = string.Empty;
@@ -40,6 +41,7 @@ namespace Opal.Model.Screen.Tabs
             MarkerPlots = new DSContainer<List<List<MarkerPlot>>>();
             Visibility = new DSContainer<bool>();
             Brackets = new DSContainer<List<Bracket>>();
+            IsFeatureSelected = new DSContainer<bool>(false);
 
             CreateLayout(title);
             registerEvents();
@@ -256,11 +258,38 @@ namespace Opal.Model.Screen.Tabs
 
         private void cellDoubleClickHandler(DataGridViewCellEventArgs e, int dsIdx)
         {
+            var table = FeatureTables.Get(dsIdx).Table;
+            var rowCells = table.Rows[e.RowIndex].Cells;
+
+            if (!IsFeatureSelected.Get(dsIdx))
+            {
+                PlotFeaturesProperties(e, dsIdx);
+                IsFeatureSelected.Set(dsIdx, true);
+                return;
+            }
+
+            foreach (DataGridViewCell cell in rowCells)
+            {
+                if (cell.Selected)
+                {
+                    IsFeatureSelected.Set(dsIdx, true);
+                    break;
+                }
+            }
+
+            if (IsFeatureSelected.Get(dsIdx))
+            {
+                UnplotPoints(dsIdx);
+                DeselectFeature(e, dsIdx);
+                IsFeatureSelected.Set(dsIdx, false);
+                return;
+            }
+        }
+
+        private void PlotFeaturesProperties(DataGridViewCellEventArgs e, int dsIdx)
+        {
             // Clear the corresponding plot
-            unplotDataPoints(MarkerPlots.Get(dsIdx));
-            unplotBrackets(Brackets.Get(dsIdx));
-            MarkerPlots.Set(dsIdx, null);
-            Brackets.Set(dsIdx, null);
+            UnplotPoints(dsIdx);
 
             // Get DS data for further use
             DataGridView table = FeatureTables.Get(dsIdx).Table;                // DS Table containing mean features
@@ -274,8 +303,6 @@ namespace Opal.Model.Screen.Tabs
             }
 
             List<List<Feature>> features = Data.Features.Get(dsIdx);
-            //AccumulateFeature(dsIdx, features);
-
 
             Feature feature = getSelectedFeature(e, table); 
             // Selected mean feature from the table
@@ -325,6 +352,26 @@ namespace Opal.Model.Screen.Tabs
                 return data;
 
             return null;
+        }
+
+        private void DeselectFeature(DataGridViewCellEventArgs e, int dsIdx)
+        {
+            var table = FeatureTables.Get(dsIdx).Table;
+            table.Rows[e.RowIndex].Selected = false;
+        }
+
+        private void UnplotPoints(int dsIdx)
+        {
+            unplotDataPoints(MarkerPlots.Get(dsIdx));
+            unplotBrackets(Brackets.Get(dsIdx));
+            MarkerPlots.Set(dsIdx, null);
+            Brackets.Set(dsIdx, null);
+
+            var distributionPlot = FeaturesDistributions.Get(dsIdx);
+            distributionPlot.Clear();
+            distributionPlot.Refresh();
+            distributionPlot.Fit();
+            PlotView.Refresh();
         }
 
         private List<Feature> getCorrespondingFeatures(Feature feature, List<List<Feature>> featureLists)

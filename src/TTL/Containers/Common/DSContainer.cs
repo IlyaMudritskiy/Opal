@@ -67,6 +67,15 @@ namespace Opal.src.TTL.Containers.Common
             UpdateElementsList();
         }
 
+        public DSContainer(T value)
+        {
+            _ds11 = value;
+            _ds12 = value;
+            _ds21 = value;
+            _ds22 = value;
+            UpdateElementsList();
+        }
+
         internal protected void UpdateElementsList()
         {
             Elements = new List<T> { DS11, DS12, DS21, DS22 };
