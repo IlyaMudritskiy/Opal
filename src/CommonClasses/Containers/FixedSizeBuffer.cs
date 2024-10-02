@@ -40,6 +40,11 @@ public sealed class FixedSizeBuffer<T>
         }
     }
 
+    public bool Contains(T element)
+    {
+        return Buffer.Contains(element);
+    }
+
     public T this[int index]
     {
         get
