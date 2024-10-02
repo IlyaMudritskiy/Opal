@@ -567,22 +567,23 @@ namespace Opal.Model.Screen.Tabs
             {
                 var kvp = _selectedFeatureIndices.ElementAt(i);
 
-                if (kvp.Value.HasValue && kvp.Value >= 0)
+                if (kvp.Value.HasValue && kvp.Value >= 0 && IsFeatureSelected.Elements[i])
                 {
-                    RestoreFeature(kvp.Key, kvp.Value.Value);
+                    RestoreFeature(kvp.Key, kvp.Value.Value, i);
                 }
             }
         }
 
-        private void RestoreFeature(TableView tableView, int rowIndex)
+        private void RestoreFeature(TableView tableView, int rowIndex, int tableIndex)
         {
-            if (rowIndex < tableView.Table.Rows.Count)
+            if (rowIndex < tableView.Table.Rows.Count && IsFeatureSelected.Get(tableIndex))
             {
                 // Select the feature in the table
                 tableView.Table.CurrentCell = tableView.Table.Rows[rowIndex].Cells[0];
 
                 // Plot the feature on the main plot
-                cellDoubleClickHandler(new DataGridViewCellEventArgs(0, rowIndex), GetDSIndex(tableView));
+                //cellDoubleClickHandler(new DataGridViewCellEventArgs(0, rowIndex), GetDSIndex(tableView));
+                PlotFeaturesProperties(new DataGridViewCellEventArgs(0, rowIndex), GetDSIndex(tableView));
             }
         }
 
