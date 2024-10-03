@@ -258,9 +258,13 @@ namespace Opal.Model.Screen.Tabs
 
         private void cellDoubleClickHandler(DataGridViewCellEventArgs e, int dsIdx)
         {
-            var table = FeatureTables.Get(dsIdx).Table;
+            var tableView = FeatureTables.Get(dsIdx);
+            var table = tableView.Table;
             var rowCells = table.Rows[e.RowIndex].Cells;
 
+            var savedFeatureIndex = GetSavedFeatureIndex(tableView);
+
+            // If no feature was selected before, plot Feature properties
             if (!IsFeatureSelected.Get(dsIdx))
             {
                 PlotFeaturesProperties(e, dsIdx);
@@ -268,6 +272,7 @@ namespace Opal.Model.Screen.Tabs
                 return;
             }
 
+            // If any of the features was selected in table, save the state
             foreach (DataGridViewCell cell in rowCells)
             {
                 if (cell.Selected)
@@ -277,13 +282,27 @@ namespace Opal.Model.Screen.Tabs
                 }
             }
 
-            if (IsFeatureSelected.Get(dsIdx))
+            // If feature was selected, and double click happened, deselect it and unplot properties
+            if (savedFeatureIndex != null && savedFeatureIndex == e.RowIndex)
             {
-                UnplotPoints(dsIdx);
-                DeselectFeature(e, dsIdx);
-                IsFeatureSelected.Set(dsIdx, false);
-                return;
+                if (IsFeatureSelected.Get(dsIdx))
+                {
+                    UnplotPoints(dsIdx);
+                    DeselectFeature(e, dsIdx);
+                    IsFeatureSelected.Set(dsIdx, false);
+                    return;
+                }
             }
+            if (savedFeatureIndex != null && savedFeatureIndex != e.RowIndex)
+            {
+                if (IsFeatureSelected.Get(dsIdx))
+                {
+                    PlotFeaturesProperties(e, dsIdx);
+                    IsFeatureSelected.Set(dsIdx, true);
+                    return;
+                }
+            }
+
         }
 
         private void PlotFeaturesProperties(DataGridViewCellEventArgs e, int dsIdx)
@@ -372,6 +391,19 @@ namespace Opal.Model.Screen.Tabs
             distributionPlot.Refresh();
             distributionPlot.Fit();
             PlotView.Refresh();
+        }
+
+        private int? GetSavedFeatureIndex(TableView tableView)
+        {
+            var dsIdx = GetDSIndex(tableView);
+            var index = (dsIdx / 10 - 1) * 2 + (dsIdx % 10) - 1;
+            var kvp = _selectedFeatureIndices.ElementAt(index);
+
+            if (kvp.Value.HasValue && kvp.Value >= 0)
+            {
+                return kvp.Value;
+            }
+            return null;
         }
 
         private List<Feature> getCorrespondingFeatures(Feature feature, List<List<Feature>> featureLists)
