@@ -15,6 +15,9 @@ namespace Opal.src.CommonClasses.DataProvider
             if (dataProvider.ToLower() == DataProviderType.Hub)
                 return new HubDataProvider(form);
 
+            if (dataProvider.ToLower() == DataProviderType.Acoustic)
+                return new AcousticDataProvider(form);
+
             return null;
         }
     }
