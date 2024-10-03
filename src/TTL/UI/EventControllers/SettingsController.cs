@@ -35,6 +35,7 @@ namespace Opal.src.TTL.UI.EventControllers
             _sf.FilesProvider_rbn.CheckedChanged += (sender, e) => EnableGroup((RadioButton)sender);
             _sf.ApiProvider_rbn.CheckedChanged += (sender, e) => EnableGroup((RadioButton)sender);
             _sf.HubProvider_rbn.CheckedChanged += (sender, e) => EnableGroup((RadioButton)sender);
+            _sf.AcousticProvider_rbn.CheckedChanged += (sender, e) => EnableGroup((RadioButton)sender);
             _sf.FilesProviderAvoustic_chb.CheckedChanged += (sender, e) => EnableAcousticCustomPath((CheckBox)sender);
             _sf.LineName_cmb.TextChanged += (sender, e) => SetProductIdFromLine((ComboBox)sender);
             _sf.Save_btn.Click += (sender, e) => SaveButtonClick();
@@ -117,9 +118,13 @@ namespace Opal.src.TTL.UI.EventControllers
 
         private void EnableGroup(RadioButton sender)
         {
+            // Data providers GroupBoxes
             SetEnabledGroup(_sf.FilesProvider_grp, false);
             SetEnabledGroup(_sf.ApiProvider_grp, false);
             SetEnabledGroup(_sf.HubProvider_grp, false);
+            SetEnabledGroup(_sf.AcousticProvider_grp, false);
+
+            // Further settings GroupBoxes
             SetEnabledGroup(_sf.LineProduct_grp, false);
             SetEnabledGroup(_sf.OtherSettings_grp, false);
 
@@ -140,6 +145,10 @@ namespace Opal.src.TTL.UI.EventControllers
                     SetEnabledGroup(_sf.HubProvider_grp, true);
                     SetEnabledGroup(_sf.LineProduct_grp, true);
                     dataProvider = "hub";
+                    break;
+                case "AcousticProvider_rbn":
+                    SetEnabledGroup(_sf.AcousticProvider_grp, true);
+                    dataProvider = "acoustic";
                     break;
             }
         }
