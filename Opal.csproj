@@ -72,6 +72,7 @@
     </Compile>
     <Compile Include="src\CommonClasses\Containers\FixedSizeBuffer.cs" />
     <Compile Include="src\CommonClasses\Containers\SearchFilter.cs" />
+    <Compile Include="src\CommonClasses\DataProvider\AcousticDataProvider.cs" />
     <Compile Include="src\CommonClasses\DataProvider\APIDataProvider.cs" />
     <Compile Include="src\CommonClasses\DataProvider\DataProviderFactory.cs" />
     <Compile Include="src\CommonClasses\DataProvider\DataProviderType.cs" />
@@ -80,6 +81,7 @@
     <Compile Include="src\CommonClasses\DataProvider\IDataProvider.cs" />
     <Compile Include="src\CommonClasses\Processing\CommonFileContentManager.cs" />
     <Compile Include="src\CommonClasses\Processing\CommonFileManager.cs" />
+    <Compile Include="src\CommonClasses\SreenProvider\AcousticOpenerScreenCreator.cs" />
     <Compile Include="src\CommonClasses\SreenProvider\IScreenCreator.cs" />
     <Compile Include="src\CommonClasses\SreenProvider\ScreenFactory.cs" />
     <Compile Include="src\CommonClasses\SreenProvider\TTLScreenCreator.cs" />
@@ -109,11 +111,13 @@
     </Compile>
     <Compile Include="src\TTL\Containers\Common\DataPointsRow.cs" />
     <Compile Include="src\TTL\Containers\Common\IValueDescription.cs" />
+    <Compile Include="src\TTL\Containers\FileContent\AcousticStepStatistics.cs" />
     <Compile Include="src\TTL\Containers\ScreenData\SinglePointMeasurement.cs" />
     <Compile Include="src\TTL\Containers\ScreenData\JSONSinglePoints.cs" />
     <Compile Include="src\TTL\Containers\ScreenData\PlotViewDSContainer.cs" />
     <Compile Include="src\TTL\Containers\ScreenData\StepStatus.cs" />
     <Compile Include="src\TTL\Processing\ProcessDataProcessor.cs" />
+    <Compile Include="src\TTL\Screen\AcousticOpenerScreen.cs" />
     <Compile Include="src\TTL\UI\EventControllers\ApiDataSelectController.cs" />
     <Compile Include="src\TTL\UI\EventControllers\DataViewerController.cs" />
     <Compile Include="src\TTL\UI\EventControllers\FileController.cs" />
@@ -155,8 +159,12 @@
     <Compile Include="src\TTL\Misc\FailReason.cs" />
     <Compile Include="src\CommonClasses\SreenProvider\IScreen.cs" />
     <Compile Include="src\TTL\Screen\Tabs\AcousticTab.cs" />
-    <Compile Include="src\TTL\UI\UIElements\HeaderView.cs" />
-    <Compile Include="src\TTL\UI\UIElements\PlotView.cs" />
+    <Compile Include="src\TTL\UI\UIElements\HeaderView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="src\TTL\UI\UIElements\PlotView.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="src\TTL\UI\UIElements\TableView.cs" />
     <Compile Include="src\TTL\Screen\Tabs\ProcessTab.cs" />
     <Compile Include="src\TTL\Screen\TTLScreen.cs" />
