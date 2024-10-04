@@ -31,6 +31,16 @@ namespace Opal.src.TTL.Processing
             return JoinFiles(processFiles, acousticFiles);
         }
 
+        public async static Task<List<AcousticFile>> LoadAcousticFiles(List<JObject> files)
+        {
+            if (files == null || !files.Any())
+            {
+                return new List<AcousticFile>();
+            }
+
+            return await AcousticDataProcessor.GetAcousticFiles(files);
+        }
+
         public async static Task<TTLUnit> LoadFile(JObject file)
         {
             if (file == null)
