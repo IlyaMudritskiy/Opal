@@ -35,6 +35,7 @@ namespace Opal.src.TTL.UI.EventControllers
             _sf.FilesProvider_rbn.CheckedChanged += (sender, e) => EnableGroup((RadioButton)sender);
             _sf.ApiProvider_rbn.CheckedChanged += (sender, e) => EnableGroup((RadioButton)sender);
             _sf.HubProvider_rbn.CheckedChanged += (sender, e) => EnableGroup((RadioButton)sender);
+            _sf.AcousticProvider_rbn.CheckedChanged += (sender, e) => EnableGroup((RadioButton)sender);
             _sf.FilesProviderAvoustic_chb.CheckedChanged += (sender, e) => EnableAcousticCustomPath((CheckBox)sender);
             _sf.LineName_cmb.TextChanged += (sender, e) => SetProductIdFromLine((ComboBox)sender);
             _sf.Save_btn.Click += (sender, e) => SaveButtonClick();
@@ -93,6 +94,8 @@ namespace Opal.src.TTL.UI.EventControllers
             _sf.HubProvider_rbn.Checked = _config.DataProvider.Type == DataProviderType.Hub;
             _sf.HubUrl_txb.Text = _config.DataProvider.HubUrl;
 
+            _sf.AcousticProvider_rbn.Checked = _config.DataProvider.Type == DataProviderType.Acoustic;
+
             SetComboboxItems(_sf.LineName_cmb, _config.LineProductMap.Keys.ToList());
             _sf.LineName_cmb.Text = _config.LineID;
             _sf.ProductId_cmb.Text = _config.ProductID;
@@ -117,11 +120,10 @@ namespace Opal.src.TTL.UI.EventControllers
 
         private void EnableGroup(RadioButton sender)
         {
-            SetEnabledGroup(_sf.FilesProvider_grp, false);
-            SetEnabledGroup(_sf.ApiProvider_grp, false);
-            SetEnabledGroup(_sf.HubProvider_grp, false);
-            SetEnabledGroup(_sf.LineProduct_grp, false);
-            SetEnabledGroup(_sf.OtherSettings_grp, false);
+            // Disable all groupboxes
+            foreach (var control in _sf.DataProvider_grp.Controls)
+                if (control is GroupBox grp)
+                    SetEnabledGroup(grp, false);
 
             switch (sender.Name)
             {
@@ -140,6 +142,10 @@ namespace Opal.src.TTL.UI.EventControllers
                     SetEnabledGroup(_sf.HubProvider_grp, true);
                     SetEnabledGroup(_sf.LineProduct_grp, true);
                     dataProvider = "hub";
+                    break;
+                case "AcousticProvider_rbn":
+                    SetEnabledGroup(_sf.AcousticProvider_grp, true);
+                    dataProvider = "acoustic";
                     break;
             }
         }
@@ -171,16 +177,16 @@ namespace Opal.src.TTL.UI.EventControllers
 
         private void SetSettingsControlsEnabled()
         {
-            SetEnabledGroup(_sf.FilesProvider_grp, _config.SettingsEnabled);
-            SetEnabledGroup(_sf.ApiProvider_grp, _config.SettingsEnabled);
-            SetEnabledGroup(_sf.HubProvider_grp, _config.SettingsEnabled);
-            SetEnabledGroup(_sf.LineProduct_grp, _config.SettingsEnabled);
-            SetEnabledGroup(_sf.OtherSettings_grp, _config.SettingsEnabled);
+            foreach (var control in _sf.Controls)
+                if (control is GroupBox grp)
+                    SetEnabledGroup(grp, _config.SettingsEnabled);
+
+            foreach (var control in _sf.Controls)
+                if (control is RadioButton radioButton)
+                    radioButton.Enabled = _config.SettingsEnabled;
+
             _sf.Close_btn.Enabled = _config.SettingsEnabled;
             _sf.Save_btn.Enabled = _config.SettingsEnabled;
-            _sf.FilesProvider_rbn.Enabled = _config.SettingsEnabled;
-            _sf.ApiProvider_rbn.Enabled= _config.SettingsEnabled;
-            _sf.HubProvider_rbn.Enabled=_config.SettingsEnabled;
         }
 
         private void ToggleSettingsControlsEnabled()
