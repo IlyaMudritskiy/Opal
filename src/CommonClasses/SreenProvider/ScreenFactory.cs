@@ -1,5 +1,4 @@
-﻿using Opal.Model.AppConfiguration;
-using ProcessDashboard.src.CommonClasses.SreenProvider;
+﻿using ProcessDashboard.src.CommonClasses.SreenProvider;
 using System;
 using System.Collections.Generic;
 
@@ -12,6 +11,7 @@ namespace Opal.src.CommonClasses.SreenProvider
         static ScreenFactory()
         {
             _creators.Add(new TTLScreenCreator().Name, new TTLScreenCreator());
+            _creators.Add(new AcousticOpenerScreenCreator().Name, new AcousticOpenerScreenCreator());
         }
 
         public static IScreen Create(string lineId)
