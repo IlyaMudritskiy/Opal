@@ -4,7 +4,7 @@ using System.Windows.Forms;
 
 namespace Opal.src.TTL.UI.UIElements
 {
-    public abstract class HeaderView<T> where T : Control
+    public class HeaderView<T> : Control where T : Control
     {
         public Label Title { get; private set; }
         public TableLayoutPanel Layout { get; private set; }

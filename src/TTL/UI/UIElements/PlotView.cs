@@ -264,7 +264,7 @@ namespace Opal.src.TTL.UI.UIElements
             Control.Plot.YLabel(unity);
 
             if (log)
-                toLog(Control);
+                ToLog(Control);
 
             Control.Refresh();
         }
@@ -279,7 +279,7 @@ namespace Opal.src.TTL.UI.UIElements
             Control.Refresh();
         }
 
-        private void toLog(FormsPlot plot)
+        private void ToLog(FormsPlot plot)
         {
             if (plot == null) return;
             double[] positions = { 20, 30, 70, 200, 300, 500, 700, 2000, 3000, 4000, 5000, 7000, 20000 };
@@ -294,6 +294,18 @@ namespace Opal.src.TTL.UI.UIElements
             plot.Plot.YAxis.MajorGrid(true, Color.FromArgb(20, Color.Black));
             plot.Plot.XAxis.Ticks(major: true, minor: true);
             plot.Plot.XAxis.AutomaticTickPositions(positions, labels);
+        }
+
+        public void ToLog()
+        {
+            if (Control != null)
+                ToLog(Control);
+        }
+
+        public void ToNormal()
+        {
+            if (Control != null)
+                Control.Plot.Clear();
         }
 
         private static string logTickLabels(double y)
