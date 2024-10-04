@@ -17,6 +17,7 @@ namespace Opal.src.Utils
         public static Color Purple { get; } = Color.FromArgb(144, 58, 173);
         public static Color Cyan { get; } = Color.FromArgb(42, 161, 152);
         public static Color Grey { get; } = Color.FromArgb(151, 151, 151);
+        public static Color HOTPINK { get; } = Color.FromArgb(255, 105, 180);
 
         // Die-side colors
         public static Color DS11C { get; } = Orange;
