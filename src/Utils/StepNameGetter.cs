@@ -1,6 +1,6 @@
-﻿using ProcessDashboard.Model.AppConfiguration;
+﻿using Opal.Model.AppConfiguration;
 
-namespace ProcessDashboard.src.Utils
+namespace Opal.src.Utils
 {
     public static class StepNameGetter
     {
@@ -9,7 +9,7 @@ namespace ProcessDashboard.src.Utils
         {
             Config config = Config.Instance;
 
-            if (config.IsASxReports)
+            if (config.ASxReports)
                 return getNewName(stepName);
             return getOldName(stepName);
         }

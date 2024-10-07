@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using Newtonsoft.Json.Linq;
 
-namespace ProcessDashboard.src.CommonClasses.Processing
+namespace Opal.src.CommonClasses.Processing
 {
     public static class CommonFileContentManager
     {
@@ -104,6 +104,13 @@ namespace ProcessDashboard.src.CommonClasses.Processing
             return getFieldValue(files.First(), "machine_id");
         }
 
+        public static string GetTypeName(List<JObject> files)
+        {
+            if (files == null || files.Count() == 0) return null;
+
+            return getFieldValue(files.First(), "typename");
+        }
+
         /// <summary>
         /// Retrieves the line code from the first JSON file in a list of file paths by extracting the value of the "machine_id" field.
         /// </summary>
@@ -151,6 +158,13 @@ namespace ProcessDashboard.src.CommonClasses.Processing
             if (files == null || files.Count() == 0) return null;
 
             return getFieldValue(files.First(), "type_id");
+        }
+
+        public static string GetAcousticProductCode(List<JObject> files)
+        {
+            if (files == null || files.Count() == 0) return null;
+
+            return getFieldValue(files.First(), "typeid");
         }
 
         /// <summary>

@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace ProcessDashboard.src.TTL.Containers.Common
+namespace Opal.src.TTL.Containers.Common
 {
     public class DSContainer<T>
     {
@@ -67,9 +67,27 @@ namespace ProcessDashboard.src.TTL.Containers.Common
             UpdateElementsList();
         }
 
+        public DSContainer(T value)
+        {
+            _ds11 = value;
+            _ds12 = value;
+            _ds21 = value;
+            _ds22 = value;
+            UpdateElementsList();
+        }
+
         internal protected void UpdateElementsList()
         {
             Elements = new List<T> { DS11, DS12, DS21, DS22 };
+        }
+
+        public void Clear()
+        {
+            _ds11 = default;
+            _ds12 = default;
+            _ds21 = default;
+            _ds22 = default;
+            UpdateElementsList();
         }
 
         /// <summary>
@@ -84,6 +102,24 @@ namespace ProcessDashboard.src.TTL.Containers.Common
             action(DS12);
             action(DS21);
             action(DS22);
+        }
+
+        public void Apply(int idx, Action<T> action)
+        {
+            if (action == null) return;
+            if (idx == 0 || idx == 11) action(DS11);
+            if (idx == 1 || idx == 12) action(DS12);
+            if (idx == 2 || idx == 21) action(DS21);
+            if (idx == 3 || idx == 22) action(DS22);
+        }
+
+        public DSContainer(T ds11, T ds12, T ds21, T ds22)
+        {
+            _ds11 = ds11;
+            _ds12 = ds12;
+            _ds21 = ds21;
+            _ds22 = ds22;
+            UpdateElementsList();
         }
 
         /// <summary>

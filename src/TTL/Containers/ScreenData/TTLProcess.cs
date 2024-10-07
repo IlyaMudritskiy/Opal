@@ -1,14 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using ProcessDashboard.src.CommonClasses.Containers;
-using ProcessDashboard.src.TTL.Containers.Common;
-using ProcessDashboard.src.TTL.Containers.FileContent;
-using ProcessDashboard.src.TTL.Processing;
-using ProcessDashboard.src.Utils;
+using Opal.src.CommonClasses.Containers;
+using Opal.src.TTL.Containers.Common;
+using Opal.src.TTL.Containers.FileContent;
+using Opal.src.TTL.Processing;
+using Opal.src.Utils;
 using ScottPlot.Plottable;
 
-namespace ProcessDashboard.src.TTL.Containers.ScreenData
+namespace Opal.src.TTL.Containers.ScreenData
 {
     public class TTLProcess
     {

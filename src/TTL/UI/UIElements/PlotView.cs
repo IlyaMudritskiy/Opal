@@ -2,16 +2,13 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Threading.Tasks;
-using ProcessDashboard.src.CommonClasses.Containers;
-using ProcessDashboard.src.TTL.Containers.Common;
-using ProcessDashboard.src.TTL.Screen;
-using ProcessDashboard.src.Utils;
+using Opal.src.TTL.Containers.Common;
+using Opal.src.TTL.Screen;
+using Opal.src.Utils;
 using ScottPlot;
 using ScottPlot.Plottable;
-using ScottPlot.Statistics;
 
-namespace ProcessDashboard.src.TTL.UI.UIElements
+namespace Opal.src.TTL.UI.UIElements
 {
     public class PlotView : HeaderView<FormsPlot>
     {
@@ -29,10 +26,17 @@ namespace ProcessDashboard.src.TTL.UI.UIElements
         {
             if (data == null || data.Length == 0) return;
 
-                foreach (var plotSet in data)
-                    foreach (var plot in plotSet)
-                        if (plot != null)
-                            Control.Plot.Add(plot);
+            foreach (var plotSet in data)
+            {
+                if (plotSet == null) continue;
+                foreach (var plot in plotSet)
+                {
+                    if (plot != null)
+                    {
+                        Control.Plot.Add(plot);
+                    }
+                }
+            }
 
             Refresh();
             Fit();
@@ -42,7 +46,7 @@ namespace ProcessDashboard.src.TTL.UI.UIElements
         {
             if (data == null || data.Length == 0) return;
 
-                foreach (var plot in data)
+            foreach (var plot in data)
                 if (plot != null)
                     Control.Plot.Add(plot);
 
@@ -81,7 +85,17 @@ namespace ProcessDashboard.src.TTL.UI.UIElements
 
             if (start.IsNaN() || end.IsNaN()) return null;
 
-            var bracket = Control.Plot.AddBracket(start.X, start.Y, end.X, end.Y, start.Name);
+            Bracket bracket;
+
+            if (start.Equals(end))
+            {
+                bracket = Control.Plot.AddBracket(start.X - 0.01, start.Y, end.X + 0.01, end.Y, start.Name);
+            }
+            else
+            {
+                bracket = Control.Plot.AddBracket(start.X, start.Y, end.X, end.Y, start.Name);
+            }
+            
             bracket.IsVisible = visibility;
 
             Refresh();
@@ -171,19 +185,43 @@ namespace ProcessDashboard.src.TTL.UI.UIElements
         /// <param name="color">The color in which the data points should be plotted. If not specified, the default color is used.</param>
         /// <param name="markerSize">The size of the markers used to represent the data points. Default is 7.</param>
         /// <returns>A list of MarkerPlot objects representing the added data points.</returns>
+        public List<MarkerPlot> AddGetPoints(List<DataPoint> points, List<Color> colors, bool visibility = true, int markerSize = 7)
+        {
+            if (points == null) return null;
+
+            List<MarkerPlot> result = new List<MarkerPlot>();
+
+            for (int i = 0; i < points.Count; i++)
+            {
+                if (points[i].IsNaN())
+                    continue;
+
+                var marker = Control.Plot.AddMarker(points[i].X, points[i].Y, MarkerShape.filledCircle, markerSize, colors[i]);
+                marker.IsVisible = visibility;
+                result.Add(marker);
+            }
+
+            Refresh();
+            Fit();
+            return result;
+        }
+
         public List<MarkerPlot> AddGetPoints(List<DataPoint> points, Color color, bool visibility = true, int markerSize = 7)
         {
-            List<MarkerPlot> result = new List<MarkerPlot>();
             if (points == null) return null;
+
+            List<MarkerPlot> result = new List<MarkerPlot>();
+
             foreach (var point in points)
             {
-                if (!point.IsNaN())
-                {
-                    var marker = Control.Plot.AddMarker(point.X, point.Y, MarkerShape.filledCircle, markerSize, color);
-                    marker.IsVisible = visibility;
-                    result.Add(marker);
-                }
+                if (point.IsNaN())
+                    continue;
+
+                var marker = Control.Plot.AddMarker(point.X, point.Y, MarkerShape.filledCircle, markerSize, color);
+                marker.IsVisible = visibility;
+                result.Add(marker);
             }
+
             Refresh();
             Fit();
             return result;
@@ -191,7 +229,6 @@ namespace ProcessDashboard.src.TTL.UI.UIElements
 
         public void Clear()
         {
-            //Control.Plot.Margins(.2, .2);
             Control.Plot.Clear();
             Control.Refresh();
             Title.Text = "";
@@ -206,14 +243,13 @@ namespace ProcessDashboard.src.TTL.UI.UIElements
 
         public void Fit()
         {
-            //Control.Plot.Margins(.2, .2);
             Control.Plot.AxisAuto();
         }
 
         public void Refresh()
         {
-            //Control.Plot.Margins(.2, .2);
-            Control.Refresh();
+            if (Control is FormsPlot)
+                Control.Refresh();
         }
 
         private void createLayout(string title, Color color, string unitx = "", string unity = "", bool log = false)
@@ -228,7 +264,7 @@ namespace ProcessDashboard.src.TTL.UI.UIElements
             Control.Plot.YLabel(unity);
 
             if (log)
-                toLog(Control);
+                ToLog(Control);
 
             Control.Refresh();
         }
@@ -243,7 +279,7 @@ namespace ProcessDashboard.src.TTL.UI.UIElements
             Control.Refresh();
         }
 
-        private void toLog(FormsPlot plot)
+        private void ToLog(FormsPlot plot)
         {
             if (plot == null) return;
             double[] positions = { 20, 30, 70, 200, 300, 500, 700, 2000, 3000, 4000, 5000, 7000, 20000 };
@@ -258,6 +294,18 @@ namespace ProcessDashboard.src.TTL.UI.UIElements
             plot.Plot.YAxis.MajorGrid(true, Color.FromArgb(20, Color.Black));
             plot.Plot.XAxis.Ticks(major: true, minor: true);
             plot.Plot.XAxis.AutomaticTickPositions(positions, labels);
+        }
+
+        public void ToLog()
+        {
+            if (Control != null)
+                ToLog(Control);
+        }
+
+        public void ToNormal()
+        {
+            if (Control != null)
+                Control.Plot.Clear();
         }
 
         private static string logTickLabels(double y)

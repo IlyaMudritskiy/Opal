@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using ProcessDashboard.Model.AppConfiguration;
-using ProcessDashboard.src.TTL.Containers.Common;
-using ProcessDashboard.src.TTL.Containers.ScreenData;
+using Opal.Model.AppConfiguration;
+using Opal.src.TTL.Containers.Common;
+using Opal.src.TTL.Containers.ScreenData;
 
-namespace ProcessDashboard.src.TTL.Processing
+namespace Opal.src.TTL.Processing
 {
     public static class FeatureCalculations
     {
@@ -17,7 +17,7 @@ namespace ProcessDashboard.src.TTL.Processing
             if (unit == null) return;
             if (lastDataPoints == null) lastDataPoints = new List<DataPoint>();
 
-            int round = config.EmbossingConstants.RoundTo;
+            int round = 3;
             unit.JsonPoints.SetOffset();
 
             #region DataPoints
@@ -25,7 +25,9 @@ namespace ProcessDashboard.src.TTL.Processing
             DataPoint t2 = new DataPoint()
             {
                 Name = "t2",
-                Description = "Heater turning ON\nTimestamp, (s)",
+                Description = "[T] Heater turning ON\n" +
+                              "Heater ON = true from .json\n" +
+                              "Timestamp, (s; °C)",
                 X = Math.Round(unit.Heater.On, round),
                 Y = Math.Round(unit.Temperature.FindPointByX(unit.Heater.On).Y, round),
                 UnitX = "s",
@@ -36,7 +38,9 @@ namespace ProcessDashboard.src.TTL.Processing
             {
                 Available = unit.JsonPoints.PS01_t3.Available,
                 Name = "t3",
-                Description = "Temperature setpoint reached\nTimestamp, (s)",
+                Description = "[T] Temperature setpoint reached\n" +
+                              "PS01_t3 from .json file\n" +
+                              "Timestamp, (s; °C)",
                 X = unit.JsonPoints.PS01_t3.Available ? Math.Round(unit.JsonPoints.PS01_t3.DateOffset, round) : 0.0,
                 Y = Math.Round(unit.Temperature.FindPointByX(unit.JsonPoints.PS01_t3.DateOffset).Y, round),
                 UnitX = "s",
@@ -46,7 +50,9 @@ namespace ProcessDashboard.src.TTL.Processing
             DataPoint t4 = new DataPoint()
             {
                 Name = "t4",
-                Description = "Heater turning OFF\nTimestamp, (s)",
+                Description = "[T] Heater turning OFF\n" +
+                              "Heater ON = false from .json\n" +
+                              "Timestamp, (s; °C)",
                 X = Math.Round(unit.Heater.Off, round),
                 Y = Math.Round(unit.Temperature.FindPointByX(unit.Heater.Off).Y, round),
                 UnitX = "s",
@@ -57,7 +63,9 @@ namespace ProcessDashboard.src.TTL.Processing
             {
                 Available = unit.JsonPoints.PS01_t5.Available,
                 Name = "t5",
-                Description = "Pressure intensifier ON\nTimestamp, (s)",
+                Description = "[P] Pressure intensifier ON\n" +
+                              "PS01_t5 from .json file\n" +
+                              "Timestamp, (s; bar)",
                 X = unit.JsonPoints.PS01_t5.Available ? Math.Round(unit.JsonPoints.PS01_t5.DateOffset, round) : 0.0,
                 Y = Math.Round(unit.HighPressure.FindPointByX(unit.JsonPoints.PS01_t5.DateOffset).Y, round),
                 UnitX = "s",
@@ -68,9 +76,9 @@ namespace ProcessDashboard.src.TTL.Processing
             {
                 Available = unit.JsonPoints.PS01_t6.Available,
                 Name = "t6",
-                Description = "Maximum Pressure\n"
-                            + "Pressure intensifier fully loaded, before pressure valve is released\n"
-                            + "Timestamp, (s)",
+                Description = "[P] Maximum Pressure, pressure intensifier fully loaded, before pressure valve is released\n"
+                            + "Max point from HighPressure\n"
+                            + "Timestamp, (s; bar)",
                 //X = unit.JsonPoints.PS01_t6.Available ? Math.Round(unit.JsonPoints.PS01_t6.DateOffset, round) : 0.0,
                 X = Math.Round(unit.HighPressure.MaxPointX(), round),
                 //Y = Math.Round(unit.HighPressure.FindPointByX(unit.JsonPoints.PS01_t6.DateOffset).Y, round),
@@ -83,18 +91,35 @@ namespace ProcessDashboard.src.TTL.Processing
             {
                 Available = unit.JsonPoints.PS01_t7.Available,
                 Name = "t7",
-                Description = "Pressure valve released\nTimestamp, (s)",
+                Description = "[P] Pressure valve released\n" +
+                              "PS01_t7 from .json file\n" +
+                              "Timestamp, (s; bar)",
                 X = unit.JsonPoints.PS01_t7.Available ? Math.Round(unit.JsonPoints.PS01_t7.DateOffset, round) : 0.0,
                 Y = Math.Round(unit.HighPressure.FindPointByX(unit.JsonPoints.PS01_t7.DateOffset).Y, round),
                 UnitX = "s",
                 UnitY = "bar"
             };
 
+            DataPoint t7t = new DataPoint()
+            {
+                Available = unit.JsonPoints.PS01_t7.Available,
+                Name = "t7t",
+                Description = "[T] Temperature value when pressure valve released\n" +
+                              "PS01_t7 from .json file\n" +
+                              "Timestamp, (s; °C)",
+                X = unit.JsonPoints.PS01_t7.Available ? Math.Round(unit.JsonPoints.PS01_t7.DateOffset, round) : 0.0,
+                Y = Math.Round(unit.Temperature.FindPointByX(unit.JsonPoints.PS01_t7.DateOffset).Y, round),
+                UnitX = "s",
+                UnitY = "°C"
+            };
+
             DataPoint t8 = new DataPoint()
             {
                 Available = unit.JsonPoints.PS01_t8.Available,
                 Name = "t8",
-                Description = "Cooling ON\nTimestamp, (s)",
+                Description = "[T] Cooling ON\n" +
+                              "PS01_t8 from .json file\n" +
+                              "Timestamp, (s; °C)",
                 X = unit.JsonPoints.PS01_t8.Available ? Math.Round(unit.JsonPoints.PS01_t8.DateOffset, round) : 0.0,
                 Y = Math.Round(unit.Temperature.FindPointByX(unit.JsonPoints.PS01_t8.DateOffset).Y, round),
                 UnitX = "s",
@@ -105,28 +130,60 @@ namespace ProcessDashboard.src.TTL.Processing
             {
                 Available = unit.JsonPoints.PS01_t9.Available,
                 Name = "t9",
-                Description = "Temperature (cooling) reaches the die cover open temperature\nCooling slope\nTimestamp, (s)",
+                Description = "[T] Temperature (cooling) reaches the die cover open temperature on the cooling slope\n" +
+                              "PS01_t9 from .json file\n" +
+                              "Timestamp, (s; °C)",
                 X = unit.JsonPoints.PS01_t9.Available ? Math.Round(unit.JsonPoints.PS01_t9.DateOffset, round) : 0.0,
                 Y = Math.Round(unit.Temperature.FindPointByX(unit.JsonPoints.PS01_t9.DateOffset).Y, round),
                 UnitX = "s",
                 UnitY = "°C"
             };
 
+            DataPoint t9p = new DataPoint()
+            {
+                Available = unit.JsonPoints.PS01_t9.Available,
+                Name = "t9p",
+                Description = "[P] Pressure when temperature (cooling) reaches the die cover open temperature on the cooling slope\n" +
+                              "PS01_t9 from .json file\n" +
+                              "Timestamp, (s; bar)",
+                X = unit.JsonPoints.PS01_t9.Available ? Math.Round(unit.JsonPoints.PS01_t9.DateOffset, round) : 0.0,
+                Y = Math.Round(unit.HighPressure.FindPointByX(unit.JsonPoints.PS01_t9.DateOffset).Y, round),
+                UnitX = "s",
+                UnitY = "bar"
+            };
+
             DataPoint t10 = new DataPoint()
             {
                 Available = unit.JsonPoints.PS01_t10.Available,
                 Name = "t10",
-                Description = "Measured pressure equals the pre-defined pressure value, P1\nTimestamp, (s)",
+                Description = "[P] Measured pressure equals the pre-defined pressure value, P1\n" +
+                              "PS01_t10 from .json file\n" +
+                              "Timestamp, (s; bar)",
                 X = unit.JsonPoints.PS01_t10.Available ? Math.Round(unit.JsonPoints.PS01_t10.DateOffset, round) : 0.0,
                 Y = Math.Round(unit.HighPressure.FindPointByX(unit.JsonPoints.PS01_t10.DateOffset).Y, round),
                 UnitX = "s",
                 UnitY = "bar"
             };
 
+            DataPoint t10t = new DataPoint()
+            {
+                Available = unit.JsonPoints.PS01_t10.Available,
+                Name = "t10t",
+                Description = "[T] Temperature value when measured pressure equals the pre-defined pressure value, P1\n" +
+                              "PS01_t10 from .json file\n" +
+                              "Timestamp, (s; °C)",
+                X = unit.JsonPoints.PS01_t10.Available ? Math.Round(unit.JsonPoints.PS01_t10.DateOffset, round) : 0.0,
+                Y = Math.Round(unit.Temperature.FindPointByX(unit.JsonPoints.PS01_t10.DateOffset).Y, round),
+                UnitX = "s",
+                UnitY = "°C"
+            };
+
             DataPoint Tmax = new DataPoint()
             {
                 Name = "Tmax",
-                Description = "Maximum temperature\nTemperature, (°C)",
+                Description = "[T] Maximum temperature\n" +
+                              "Max point in Temperature\n" +
+                              "Temperature, (s; °C)",
                 X = Math.Round(unit.Temperature.MaxPointX(), round),
                 Y = Math.Round(unit.Temperature.MaxPointY(), round),
                 UnitX = "s",
@@ -136,9 +193,11 @@ namespace ProcessDashboard.src.TTL.Processing
             DataPoint P3 = new DataPoint()
             {
                 Name = "P3",
-                Description = "Pressure at the start of embossing process\nPressure, (bar)",
+                Description = "[P] Pressure at the start of embossing process\n" +
+                              "t6.X + 0.5s\n" +
+                              "Pressure, (s; bar)",
                 X = Math.Round(t6.X + 0.5, round),
-                Y = Math.Round(unit.HighPressure.FindPointByX(t6.X + config.EmbossingConstants.tsettle).Y, round),
+                Y = Math.Round(unit.HighPressure.FindPointByX(t6.X + 0.5).Y, round),
                 UnitX = "s",
                 UnitY = "bar"
             };
@@ -146,7 +205,9 @@ namespace ProcessDashboard.src.TTL.Processing
             DataPoint P4 = new DataPoint()
             {
                 Name = "P4",
-                Description = "Pressure at the end of embossing process\nPressure, (bar)",
+                Description = "[P] Pressure at the end of embossing process\n" +
+                              "t9.X and finding point in HighPressure\n" +
+                              "Pressure, (s; bar)",
                 X = t9.X,
                 Y = Math.Round(unit.HighPressure.FindPointByX(t9.X).Y, round),
                 UnitX = "s",
@@ -154,7 +215,7 @@ namespace ProcessDashboard.src.TTL.Processing
             };
 
             // Value data points used to calculate features
-            unit.DataPoints = new List<DataPoint> { t2, t3, t4, t5, t6, t7, t8, t9, t10, Tmax, P3, P4 };
+            unit.DataPoints = new List<DataPoint> { t2, t3, t4, t5, t6, t7, t7t, t8, t9, t9p, t10, t10t, Tmax, P3, P4 };
 
             #endregion
 
@@ -186,10 +247,10 @@ namespace ProcessDashboard.src.TTL.Processing
                 Available = t7.Available,
                 Name = "tT3",
                 Description = "Time duration between Heater OFF and Pressure intensifier released\n" +
-                              "(P)t7.X - t4.X\n" +
+                              "t7t.X - t4.X\n" +
                               "Duration, (s)",
-                Value = Math.Round(t7.X - t4.X, round),
-                RelatedDataPoints = new List<DataPoint> { t4 }
+                Value = Math.Round(t7t.X - t4.X, round),
+                RelatedDataPoints = new List<DataPoint> { t4, t7t }
             });
 
             unit.TempFeatures.Add(new Feature()
@@ -197,10 +258,10 @@ namespace ProcessDashboard.src.TTL.Processing
                 Available = t7.Available && t8.Available,
                 Name = "tT4",
                 Description = "Time duration (actual) between slider opening and cooling On \n" +
-                              "t8.X - (P)t7.X\n" +
+                              "t8.X - t7t.X\n" +
                               "Duration, (s)",
                 Value = Math.Round(t8.X - t7.X, round),
-                RelatedDataPoints = new List<DataPoint> { t8 }
+                RelatedDataPoints = new List<DataPoint> { t8, t7t }
             });
 
             unit.TempFeatures.Add(new Feature()
@@ -216,11 +277,11 @@ namespace ProcessDashboard.src.TTL.Processing
 
             unit.TempFeatures.Add(new Feature()
             {
-                Available = t9.Available && t10.Available,
+                Available = t9.Available && t10t.Available,
                 Name = "tT6",
-                Description = "(In rework) t10.X - t9.X",
-                Value = Math.Round(t10.X - t9.X, round),
-                RelatedDataPoints = new List<DataPoint> { t9, t10 }
+                Description = "(In rework) t10t.X - t9.X",
+                Value = Math.Round(t10t.X - t9.X, round),
+                RelatedDataPoints = new List<DataPoint> { t9, t10t }
             });
 
             unit.TempFeatures.Add(new Feature()
@@ -284,18 +345,22 @@ namespace ProcessDashboard.src.TTL.Processing
             {
                 Available = t5.Available && t6.Available,
                 Name = "tp1",
-                Description = "Time duration of pressure buildup in intensifier\nDuration, (s)",
+                Description = "Time duration of pressure buildup in intensifier\n" +
+                              "t6.X - t5.X\n" +
+                              "Duration, (s)",
                 Value = Math.Round(t6.X - t5.X, round),
                 RelatedDataPoints = new List<DataPoint> { t5, t6 }
             });
 
             unit.PressFeatures.Add(new Feature()
             {
-                Available = t6.Available && t9.Available,
+                Available = t6.Available && t9p.Available,
                 Name = "tp2",
-                Description = "Time duration of applying pressure during embossing\nDuration, (s)",
-                Value = Math.Round(t9.X - t6.X, round),
-                RelatedDataPoints = new List<DataPoint> { t6, t9 }
+                Description = "Time duration of applying pressure during embossing\n" +
+                              "t9p.X - t6.X\n" +
+                              "Duration, (s)",
+                Value = Math.Round(t9p.X - t6.X, round),
+                RelatedDataPoints = new List<DataPoint> { t6, t9p }
             });
 
             unit.PressFeatures.Add(new Feature()
@@ -311,7 +376,9 @@ namespace ProcessDashboard.src.TTL.Processing
             {
                 Available = t5.Available,
                 Name = "P1",
-                Description = "Pre-defined pressure value at t5\nPressure, (bar)",
+                Description = "Pre-defined pressure value at t5\n" +
+                              "t5.X\n" +
+                              "Pressure, (bar)",
                 Value = Math.Round(t5.Y, round),
                 RelatedDataPoints = new List<DataPoint> { t5 }
             });
@@ -320,7 +387,9 @@ namespace ProcessDashboard.src.TTL.Processing
             {
                 Available = t6.Available,
                 Name = "P2",
-                Description = "Maximum pressure\nPressure, (bar)",
+                Description = "Maximum pressure\n" +
+                              "t6.Y\n" +
+                              "Pressure, (bar)",
                 Value = Math.Round(t6.Y, round),
                 RelatedDataPoints = new List<DataPoint> { t6 }
             });
@@ -328,7 +397,9 @@ namespace ProcessDashboard.src.TTL.Processing
             unit.PressFeatures.Add(new Feature()
             {
                 Name = "P3",
-                Description = "Pressure Value at (t6 + tsettle)\nPressure, (bar)",
+                Description = "Pressure Value at t6 + 0.5s\n" +
+                              "P3.Y\n" +
+                              "Pressure, (bar)",
                 Value = Math.Round(P3.Y, round),
                 RelatedDataPoints = new List<DataPoint> { P3 }
             });
@@ -337,7 +408,9 @@ namespace ProcessDashboard.src.TTL.Processing
             {
                 Available = t9.Available,
                 Name = "P4",
-                Description = "Pressure Value at t9\nPressure, (bar)",
+                Description = "Pressure Value at t9\n" +
+                              "P4.Y\n" +
+                              "Pressure, (bar)",
                 Value = P4.Y,
                 RelatedDataPoints = new List<DataPoint> { P4 }
             });
@@ -346,34 +419,42 @@ namespace ProcessDashboard.src.TTL.Processing
             {
                 Available = t6.Available,
                 Name = "PresDiff1",
-                Description = "P2 - P1\nPressure difference, (bar)",
-                Value = Math.Round(t6.Y - config.EmbossingConstants.P1, round),
-                RelatedDataPoints = new List<DataPoint> { t6 }
+                Description = "Difference between max pressure and pre-defined pressure at t5\n" +
+                              "P2 - P1 (t6.Y - t5.Y)\n" +
+                              "Pressure difference, (bar)",
+                Value = Math.Round(t6.Y - t5.Y, round),
+                RelatedDataPoints = new List<DataPoint> { t5, t6 }
             });
 
             unit.PressFeatures.Add(new Feature()
             {
                 Available = t6.Available,
                 Name = "PresDiff2",
-                Description = "P2 – P3\nPressure difference, (bar)",
-                Value = Math.Round(P3.Y - t6.Y, round),
+                Description = "Difference between max pressure and pressure value at t6 + 0.5s\n" +
+                              "P2 – P3 (t6.Y - P3.Y)\n" +
+                              "Pressure difference, (bar)",
+                Value = Math.Round(t6.Y - P3.Y, round),
                 RelatedDataPoints = new List<DataPoint> { t6, P3 }
             });
 
             unit.PressFeatures.Add(new Feature()
             {
                 Name = "PresDiff3",
-                Description = "P3 – P4\nPressure difference, (bar)",
-                Value = Math.Round(P3.Y - P4.Y),
+                Description = "Difference between pressure value at t6 + 0.5s and pressure value at t9\n" +
+                              "P3.Y - P4.Y\n" +
+                              "Pressure difference, (bar)",
+                Value = Math.Round(P3.Y - P4.Y, round),
                 RelatedDataPoints = new List<DataPoint> { P3, P4 }
             });
 
             unit.PressFeatures.Add(new Feature()
             {
                 Name = "PresDiff4",
-                Description = "P4 – P1\nPressure difference, (bar)",
-                Value = Math.Round(P4.Y - config.EmbossingConstants.P1),
-                RelatedDataPoints = new List<DataPoint> { P4 }
+                Description = "Difference between pressure value at t9 and pressure value at t5\n" +
+                              "P4 – P1 (|P4.Y - t5.Y|)\n" +
+                              "Pressure difference, (bar)",
+                Value = Math.Round(Math.Abs(P4.Y - t5.Y), round),
+                RelatedDataPoints = new List<DataPoint> { P4, t5 }
             });
             #endregion
         }

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace ProcessDashboard.Model.Data.Acoustic
+namespace Opal.Model.Data.Acoustic
 {
     [JsonObject(MemberSerialization.OptIn)]
     public class AcousticFile
@@ -37,6 +37,18 @@ namespace ProcessDashboard.Model.Data.Acoustic
         [JsonProperty(PropertyName = "duttime")]
         public string Time { get; set; }
 
+        [JsonProperty(PropertyName = "typename")]
+        public string TypeName { get; set; }
+
+        [JsonProperty(PropertyName = "system")]
+        public string System { get; set; }
+
+        [JsonProperty(PropertyName = "workorder")]
+        public string WorkOrder { get; set; }
+
+        [JsonProperty(PropertyName = "executiontime(s)")]
+        public float ExecutionTime { get; set; }
+
         [JsonProperty(PropertyName = "nestnumber")]
         public int Nest { get; set; }
 
@@ -55,5 +67,11 @@ namespace ProcessDashboard.Model.Data.Acoustic
 
         [JsonProperty(PropertyName = "measurement")]
         public List<double[]> Measurement { get; set; }
+
+        [JsonProperty(PropertyName = "upperlimit")]
+        public List<double[]> UpperLimit { get; set; }
+
+        [JsonProperty(PropertyName = "lowerlimit")]
+        public List<double[]> LowerLimit { get; set; }
     }
 }

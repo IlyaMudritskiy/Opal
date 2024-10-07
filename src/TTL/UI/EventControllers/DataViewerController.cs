@@ -1,14 +1,13 @@
-﻿using ProcessDashboard.Forms;
-using ProcessDashboard.src.Forms;
-using ProcessDashboard.src.TTL.Containers.Common;
-using ProcessDashboard.src.TTL.Containers.ScreenData;
+﻿using Opal.src.Forms;
+using Opal.src.TTL.Containers.Common;
+using Opal.src.TTL.Containers.ScreenData;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Windows.Forms;
 
-namespace ProcessDashboard.src.TTL.UI.EventControllers
+namespace Opal.src.TTL.UI.EventControllers
 {
     public class DataViewerController
     {
@@ -18,7 +17,7 @@ namespace ProcessDashboard.src.TTL.UI.EventControllers
 
         private TTLData TTLData { get; set; }
 
-        public DataViewerController(MainForm mainForm)
+        public DataViewerController()
         {
             //this.mainForm = mainForm;
             DV = new DataViewer();
@@ -29,7 +28,7 @@ namespace ProcessDashboard.src.TTL.UI.EventControllers
 
         public void Show()
         {
-            DV.Show();
+            DV.ShowDialog();
         }
 
         public void AddData(TTLData data)

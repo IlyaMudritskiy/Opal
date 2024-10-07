@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace ProcessDashboard.src.TTL.Containers.Common
+namespace Opal.src.TTL.Containers.Common
 {
     public class Feature: IValueDescription
     {
@@ -35,8 +35,8 @@ namespace ProcessDashboard.src.TTL.Containers.Common
                 return null;
             }
 
-            if (a.Name != b.Name)
-                Log.Warn($"Attempting to sum different features. Feature 1: ({a.Name}), Feature 2: ({b.Name}). Using Feature 1 as template.");
+            //if (a.Name != b.Name)
+                //Log.Warn($"Attempting to sum different features. Feature 1: ({a.Name}), Feature 2: ({b.Name}). Using Feature 1 as template.");
             
             var result = new Feature()
             {

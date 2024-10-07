@@ -1,14 +1,18 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using ProcessDashboard.Model.AppConfiguration;
-using ProcessDashboard.src.TTL.Containers.Common;
-using ProcessDashboard.src.TTL.Misc;
+using Opal.Model.AppConfiguration;
+using Opal.src.TTL.Containers.Common;
+using Opal.src.TTL.Misc;
 
-namespace ProcessDashboard.src.TTL.Containers.ScreenData
+namespace Opal.src.TTL.Containers.ScreenData
 {
     public class TTLData
     {
-        private static TTLData instance = null;
+        private static readonly Lazy<TTLData> _instance = new Lazy<TTLData>(() => new TTLData());
+        public static TTLData Instance => _instance.Value;
+
+        private Config _config = Config.Instance;
 
         public ProcessData Temperature { get; set; }
         public ProcessData Pressure { get; set; }
@@ -18,28 +22,32 @@ namespace ProcessDashboard.src.TTL.Containers.ScreenData
         public AcousticData RNB { get; set; }
         public AcousticData IMP { get; set; }
 
-        public List<TTLUnit> Units { get; set; }
-        public PassFailUnits PassFailUnits { get; set; }
+        //public List<TTLUnit> Units { get; set; }
+
         public List<DataPointsRow<IValueDescription>> DataPoints { get; set; }
         public List<DataPointsRow<IValueDescription>> TempFeatures { get; set; }
         public List<DataPointsRow<IValueDescription>> PressFeatures { get; set; }
         public List<DataPointsRow<IValueDescription>> StepsStatus { get; set; }
 
-        private Config config = Config.Instance;
-        private static readonly object _lock = new object();
+        //private static readonly object _lock = new object();
 
-        private TTLData(List<TTLUnit> units)
-        {
-            Units = units;
-            PassFailUnits = new PassFailUnits(units);
-            Temperature = new ProcessData(units, ProcessStep.Temperature);
-            Pressure = new ProcessData(units, ProcessStep.HighPressure);
+        private TTLData() {
+            Temperature = new ProcessData();
+            Pressure = new ProcessData();
             DataPoints = new List<DataPointsRow<IValueDescription>>();
             PressFeatures = new List<DataPointsRow<IValueDescription>>();
             TempFeatures = new List<DataPointsRow<IValueDescription>>();
             StepsStatus = new List<DataPointsRow<IValueDescription>>();
+        }
 
-            if (config.Acoustic.Enabled)
+        public void AddData(List<TTLUnit> units)
+        {
+            //Units = units;
+            Temperature.AddData(units, ProcessStep.Temperature);
+
+            Pressure.AddData(units, ProcessStep.HighPressure);
+
+            if (_config.Acoustic.Enabled)
             {
                 FR = new AcousticData(units, ProcessStep.FR);
                 THD = new AcousticData(units, ProcessStep.THD);
@@ -47,26 +55,13 @@ namespace ProcessDashboard.src.TTL.Containers.ScreenData
                 IMP = new AcousticData(units, ProcessStep.IMP);
             }
 
-            PackDataPointsRows();
+            PackDataPointsRows(units);
         }
 
-        public static TTLData GetInstance(List<TTLUnit> units, bool reload)
+        public void UpdateUnit(TTLUnit unit)
         {
-            if (!reload)
-                if (instance == null)
-                    lock (_lock)
-                        if (instance == null)
-                            instance = new TTLData(units);
-            if (reload)
-                lock (_lock)
-                    instance = new TTLData(units);
-
-            return instance;
-        }
-
-        public static TTLData GetInstance()
-        {
-            return instance;
+            Temperature.UpdateData(unit, ProcessStep.Temperature);
+            Pressure.UpdateData(unit, ProcessStep.HighPressure);
         }
 
         private DataPointsRow<IValueDescription> GetDataPointObj(TTLUnit unit)
@@ -125,9 +120,11 @@ namespace ProcessDashboard.src.TTL.Containers.ScreenData
             };
         }
 
-        private void PackDataPointsRows()
+        private void PackDataPointsRows(List<TTLUnit> units)
         {
-            foreach (var unit in Units)
+            if (units == null || units.Count == 0) return;
+
+            foreach (var unit in units)
             {
                 DataPoints.Add(GetDataPointObj(unit));
                 TempFeatures.Add(GetFeatureObj(unit, unit.Process.TempFeatures));
@@ -135,6 +132,5 @@ namespace ProcessDashboard.src.TTL.Containers.ScreenData
                 StepsStatus.Add(GetStepsStatusObj(unit));
             }
         }
-
     }
 }

@@ -4,13 +4,14 @@ using System.Globalization;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using ProcessDashboard.Model.AppConfiguration;
-using ProcessDashboard.Model.Data.Acoustic;
-using ProcessDashboard.src.CommonClasses.Processing;
+using Opal.Model.AppConfiguration;
+using Opal.Model.Data.Acoustic;
+using Opal.src.CommonClasses.Processing;
 
-namespace ProcessDashboard.src.TTL.Processing
+namespace Opal.src.TTL.Processing
 {
     public static class AcousticDataProcessor
     {
@@ -21,27 +22,22 @@ namespace ProcessDashboard.src.TTL.Processing
 
         private delegate List<AcousticFile> FileOpener(List<JObject> files, string path);
 
-        public static List<AcousticFile> GetAcousticFiles(ref List<JObject> files)
+        public static async Task<List<AcousticFile>> GetAcousticFiles(List<JObject> files)
         {
             if (files == null || files.Count == 0) return null;
 
-            /*
-            if (config.Acoustic.ManualSelection)
+            if (!config.Acoustic.Enabled) return null;
+
+            if (config.Acoustic.CustomLocationEnabled)
             {
-                List<string> filepaths = CommonFileManager.GetFilesFromDialog();
-                if (filepaths == null || filepaths.Count == 0) return null;
-            }
-            */
-            if (config.Acoustic.ManualSelection)
-            {
-                if (config.IsASxReports)
+                if (config.ASxReports)
                     return openFromLocalFiles(files, ASxReportsGet);
                 else
                     return openFromLocalFiles(files, KlippelReportsGet);
             }
             else // Default local network location
             {
-                if (config.IsASxReports)
+                if (config.ASxReports)
                     return openFromShareDrive(files, ASxReportsGet);
                 else
                     return openFromShareDrive(files, KlippelReportsGet);
@@ -138,8 +134,12 @@ namespace ProcessDashboard.src.TTL.Processing
 
         private static List<AcousticFile> openFromShareDrive(List<JObject> files, FileOpener fileOpener)
         {
-            string pathBase = $"{config.DataDriveLetter}:{sep_str}autolines{sep_str}ttl{sep_str}acoustic{sep_str}Reports";
-            return fileOpener(files, pathBase);
+            var path = config.Acoustic.CustomFilesLocation;
+
+            if (!Directory.Exists(path))
+                path = $"{config.DataDriveLetter}:{sep_str}autolines{sep_str}ttl{sep_str}acoustic{sep_str}Reports";
+
+            return fileOpener(files, path);
         }
 
         private static List<AcousticFile> openFromLocalFiles(List<JObject> files, FileOpener fileOpener)
@@ -169,7 +169,18 @@ namespace ProcessDashboard.src.TTL.Processing
 
             foreach (var processPath in config.ProcessFilePaths)
             {
-                var correspondingZipName = getCorrespondingZipName(processPath);
+                var correspondingZipName = "";
+                if (Path.GetExtension(processPath).ToLower() == ".json")
+                {
+                    correspondingZipName = getCorrespondingZipNameFromJson(processPath);
+                }
+                if (Path.GetExtension(processPath).ToLower() == ".zip")
+                {
+                    correspondingZipName = getCorrespondingZipNameFromZip(processPath);
+                }
+
+                if (string.IsNullOrEmpty(correspondingZipName))
+                    continue;
 
                 foreach (var zipfile in zipFiles)
                     if (Path.GetFileName(zipfile).Equals(correspondingZipName) && !correspondingZipFiles.Contains(zipfile))
@@ -255,7 +266,7 @@ namespace ProcessDashboard.src.TTL.Processing
 
         #region Service methods
 
-        private static string getCorrespondingZipName(string processPath)
+        private static string getCorrespondingZipNameFromZip(string processPath)
         {
                 string[] segments = processPath.Split(Path.DirectorySeparatorChar);
                 DateTime dt = DateTime.ParseExact(segments[segments.Length - 3], "yyyyMMdd", CultureInfo.InvariantCulture);
@@ -266,6 +277,30 @@ namespace ProcessDashboard.src.TTL.Processing
                 var hour = dt.Hour.ToString("D2");
 
                 return $"Y{year}D{day}H{hour}.zip";
+        }
+
+        private static string getCorrespondingZipNameFromJson(string processPath)
+        {
+            var filename = Path.GetFileName(processPath);
+
+            string extractedYear = filename.Substring(0, 2); // First 2 chars
+            string extractedDate = filename.Substring(2, 4); // Next 4 chars
+            string extractedHour = filename.Substring(6, 2); // Next 2 chars after date
+
+            // Transform year to 2024
+            int transformedYear = int.Parse("20" + extractedYear);
+
+            // Convert extracted date to DateTime to calculate day number in the year
+            int month = int.Parse(extractedDate.Substring(0, 2));
+            int day = int.Parse(extractedDate.Substring(2, 2));
+            DateTime date = new DateTime(transformedYear, month, day);
+
+            // Calculate day number in the year
+            int dayNumberInYear = date.DayOfYear;
+
+            var res = $"Y{transformedYear}D{dayNumberInYear}H{extractedHour}.zip";
+
+            return res;
         }
 
         private static List<string> findMatchingFileNames(List<string> serials, IEnumerable<string> fileNames)

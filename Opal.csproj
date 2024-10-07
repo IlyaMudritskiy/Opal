@@ -1,0 +1,277 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{E4F680DD-6918-4F78-A2FA-C1FE86206F69}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>Opal</RootNamespace>
+    <AssemblyName>Opal</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Assets\ico\app_icon.ico</ApplicationIcon>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="src\CommonClasses\Containers\FixedSizeBuffer.cs" />
+    <Compile Include="src\CommonClasses\Containers\SearchFilter.cs" />
+    <Compile Include="src\CommonClasses\DataProvider\AcousticDataProvider.cs" />
+    <Compile Include="src\CommonClasses\DataProvider\APIDataProvider.cs" />
+    <Compile Include="src\CommonClasses\DataProvider\DataProviderFactory.cs" />
+    <Compile Include="src\CommonClasses\DataProvider\DataProviderType.cs" />
+    <Compile Include="src\CommonClasses\DataProvider\FileDataProvider.cs" />
+    <Compile Include="src\CommonClasses\DataProvider\HubDataProvider.cs" />
+    <Compile Include="src\CommonClasses\DataProvider\IDataProvider.cs" />
+    <Compile Include="src\CommonClasses\Processing\CommonFileContentManager.cs" />
+    <Compile Include="src\CommonClasses\Processing\CommonFileManager.cs" />
+    <Compile Include="src\CommonClasses\SreenProvider\AcousticOpenerScreenCreator.cs" />
+    <Compile Include="src\CommonClasses\SreenProvider\IScreenCreator.cs" />
+    <Compile Include="src\CommonClasses\SreenProvider\ScreenFactory.cs" />
+    <Compile Include="src\CommonClasses\SreenProvider\TTLScreenCreator.cs" />
+    <Compile Include="src\Forms\APIDataSelectorForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="src\Forms\APIDataSelectorForm.Designer.cs">
+      <DependentUpon>APIDataSelectorForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="src\Forms\DataViewer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="src\Forms\DataViewer.Designer.cs">
+      <DependentUpon>DataViewer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="src\Forms\SettingsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="src\Forms\SettingsForm.Designer.cs">
+      <DependentUpon>SettingsForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="src\Forms\UserLoginForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="src\Forms\UserLoginForm.Designer.cs">
+      <DependentUpon>UserLoginForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="src\TTL\Containers\Common\DataPointsRow.cs" />
+    <Compile Include="src\TTL\Containers\Common\IValueDescription.cs" />
+    <Compile Include="src\TTL\Containers\FileContent\AcousticStepStatistics.cs" />
+    <Compile Include="src\TTL\Containers\ScreenData\SinglePointMeasurement.cs" />
+    <Compile Include="src\TTL\Containers\ScreenData\JSONSinglePoints.cs" />
+    <Compile Include="src\TTL\Containers\ScreenData\PlotViewDSContainer.cs" />
+    <Compile Include="src\TTL\Containers\ScreenData\StepStatus.cs" />
+    <Compile Include="src\TTL\Processing\ProcessDataProcessor.cs" />
+    <Compile Include="src\TTL\Screen\AcousticOpenerScreen.cs" />
+    <Compile Include="src\TTL\UI\EventControllers\ApiDataSelectController.cs" />
+    <Compile Include="src\TTL\UI\EventControllers\DataViewerController.cs" />
+    <Compile Include="src\TTL\UI\EventControllers\FileController.cs" />
+    <Compile Include="src\Forms\MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="src\Forms\MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="src\TTL\Processing\AcousticDataProcessor.cs" />
+    <Compile Include="src\App\App.cs" />
+    <Compile Include="src\TTL\Screen\GetIScreen.cs" />
+    <Compile Include="src\TTL\Processing\FeatureCalculations.cs" />
+    <Compile Include="src\TTL\UI\EventControllers\MenuStripButtonsController.cs" />
+    <Compile Include="src\TTL\UI\EventControllers\SettingsController.cs" />
+    <Compile Include="src\TTL\UI\EventControllers\MainFormController.cs" />
+    <Compile Include="src\Config.cs" />
+    <Compile Include="src\CommonClasses\Containers\Measurements2D.cs" />
+    <Compile Include="src\CommonClasses\Containers\Measurements2DExt.cs" />
+    <Compile Include="src\TTL\Containers\FileContent\AcousticFile.cs" />
+    <Compile Include="src\TTL\Containers\FileContent\Limit.cs" />
+    <Compile Include="src\TTL\Containers\ScreenData\PassFailUnits.cs" />
+    <Compile Include="src\TTL\Containers\ScreenData\AcousticData.cs" />
+    <Compile Include="src\TTL\Containers\Common\DSContainer.cs" />
+    <Compile Include="src\TTL\Containers\ScreenData\ProcessData.cs" />
+    <Compile Include="src\TTL\Containers\ScreenData\TTLData.cs" />
+    <Compile Include="src\TTL\Containers\ScreenData\TTLAcoustic.cs" />
+    <Compile Include="src\TTL\Containers\Common\Feature.cs" />
+    <Compile Include="src\TTL\Containers\Common\Heater.cs" />
+    <Compile Include="src\TTL\Containers\FileContent\ProcessFile.cs" />
+    <Compile Include="src\TTL\Processing\TTLDataProcessor.cs" />
+    <Compile Include="src\TTL\Containers\Common\DataPoint.cs" />
+    <Compile Include="src\CommonClasses\Containers\Point.cs" />
+    <Compile Include="src\TTL\Misc\ProcessStep.cs" />
+    <Compile Include="src\TTL\Containers\ScreenData\TTLProcess.cs" />
+    <Compile Include="src\TTL\Containers\ScreenData\TTLUnit.cs" />
+    <Compile Include="src\TTL\Misc\FailReason.cs" />
+    <Compile Include="src\CommonClasses\SreenProvider\IScreen.cs" />
+    <Compile Include="src\TTL\Screen\Tabs\AcousticTab.cs" />
+    <Compile Include="src\TTL\UI\UIElements\HeaderView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="src\TTL\UI\UIElements\PlotView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="src\TTL\UI\UIElements\TableView.cs" />
+    <Compile Include="src\TTL\Screen\Tabs\ProcessTab.cs" />
+    <Compile Include="src\TTL\Screen\TTLScreen.cs" />
+    <Compile Include="src\Utils\Colors.cs" />
+    <Compile Include="src\Utils\Fonts.cs" />
+    <Compile Include="src\TTL\Screen\CommonElements.cs" />
+    <Compile Include="src\Utils\StepNameGetter.cs" />
+    <EmbeddedResource Include="src\Forms\APIDataSelectorForm.resx">
+      <DependentUpon>APIDataSelectorForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="src\Forms\DataViewer.resx">
+      <DependentUpon>DataViewer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="src\Forms\MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="src\Forms\SettingsForm.resx">
+      <DependentUpon>SettingsForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="src\Forms\UserLoginForm.resx">
+      <DependentUpon>UserLoginForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="app-config.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="NLog.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <None Include="Queries\query.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include=".gitignore" />
+    <Content Include="Assets\ico\filter_purple.ico" />
+    <Content Include="Assets\ico\login_blue.ico" />
+    <Content Include="Assets\ico\menu_other.ico" />
+    <Content Include="Assets\ico\file_green.ico" />
+    <Content Include="Assets\ico\app_icon.ico" />
+    <Content Include="Assets\ico\search.ico" />
+    <Content Include="Assets\ico\settings_blue.ico" />
+    <Content Include="Assets\ico\start_green.ico" />
+    <Content Include="Assets\ico\table_view.ico" />
+    <Content Include="Assets\ico\tools_orange.ico" />
+    <Content Include="Assets\png\filter_purple.png" />
+    <Content Include="Assets\png\login_blue.png" />
+    <Content Include="Assets\png\menu_other.png" />
+    <Content Include="Assets\png\file_green.png" />
+    <Content Include="Assets\png\opal_background.png" />
+    <Content Include="Assets\png\settings_blue.png" />
+    <Content Include="Assets\png\start_green.png" />
+    <Content Include="Assets\png\tools_orange.png" />
+    <Content Include="Assets\png\search.png" />
+    <Content Include="Assets\png\table_view.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.7.2">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.7.2 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="DotNetZip">
+      <Version>1.16.0</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.AspNetCore.SignalR">
+      <Version>1.1.0</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client">
+      <Version>8.0.8</Version>
+    </PackageReference>
+    <PackageReference Include="Newtonsoft.Json">
+      <Version>13.0.3</Version>
+    </PackageReference>
+    <PackageReference Include="NLog">
+      <Version>5.2.7</Version>
+    </PackageReference>
+    <PackageReference Include="ScottPlot">
+      <Version>4.1.74</Version>
+    </PackageReference>
+    <PackageReference Include="ScottPlot.WinForms">
+      <Version>4.1.74</Version>
+    </PackageReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <ProjectExtensions />
+</Project>

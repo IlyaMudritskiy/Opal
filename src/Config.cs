@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using Newtonsoft.Json;
+using Opal.src.CommonClasses.Containers;
 
-namespace ProcessDashboard.Model.AppConfiguration
+namespace Opal.Model.AppConfiguration
 {
     /// <summary>
     /// Json props of the Config
@@ -11,57 +13,91 @@ namespace ProcessDashboard.Model.AppConfiguration
     [JsonObject(MemberSerialization.OptIn)]
     public partial class Config
     {
+        [JsonIgnore]
+        public SearchFilter Filter { get; set; }
+
+        [JsonProperty(PropertyName = "hub_distribution_buffer")]
+        public int HubBufferSize { get; set; }
+
+        [JsonProperty(PropertyName = "product_id")]
         public string ProductID { get; set; }
 
-        [JsonProperty(PropertyName = "DataDriveLetter")]
+        [JsonProperty(PropertyName = "line_id")]
+        public string LineID { get; set; }
+
+        [JsonProperty(PropertyName = "data_drive_letter")]
         public string DataDriveLetter { get; set; }
 
-        [JsonProperty(PropertyName = "CrosshairOn")]
-        public bool CrosshairOn { get; set; }
+        [JsonProperty(PropertyName = "asx_compliant_mode")]
+        public bool ASxReports { get; set; }
 
-        [JsonProperty(PropertyName = "IsASxReports")]
-        public bool IsASxReports { get; set; }
-
-        [JsonProperty(PropertyName = "Acoustic")]
+        [JsonProperty(PropertyName = "acoustic")]
         public Acoustic Acoustic { get; set; }
 
-        [JsonProperty(PropertyName = "EmbossingConstants")]
-        public EmbossingConstants EmbossingConstants { get; set; }
+        [JsonProperty(PropertyName = "data_provider")]
+        public DataProviderInfo DataProvider { get; set; }
+
+        [JsonProperty(PropertyName = "auth")]
+        public Auth Auth { get; set; }
+
+        [JsonProperty(PropertyName = "enabled")]
+        public bool SettingsEnabled { get; set; }
+
+        [JsonProperty(PropertyName = "line_product_map")]
+        public Dictionary<string, List<string>> LineProductMap { get; set; }
+    }
+
+    [JsonObject(MemberSerialization.OptIn)]
+    public class Auth
+    {
+        [JsonProperty(PropertyName = "token")]
+        public string Token { get; set; }
+
+        [JsonIgnore]
+        public bool ApiReachable { get; set; } = false;
+
+        [JsonIgnore]
+        public bool UserAuthenticated { get; set; } = false;
+
+        [JsonIgnore]
+        public bool HubAvailable { get; set; } = false;
     }
 
     [JsonObject(MemberSerialization.OptIn)]
     public class Acoustic
     {
-        [JsonProperty(PropertyName = "Enabled")]
+        [JsonProperty(PropertyName = "enabled")]
         public bool Enabled { get; set; }
 
-        [JsonProperty(PropertyName = "ManualSelection")]
-        public bool ManualSelection { get; set; }
+        public bool CustomLocationEnabled
+        {
+            get
+            {
+                return string.IsNullOrEmpty(CustomFilesLocation);
+            }
+        }
+
+        [JsonProperty(PropertyName = "files_custom_location")]
+        public string CustomFilesLocation { get; set; }
     }
 
     [JsonObject(MemberSerialization.OptIn)]
-    public class EmbossingConstants
+    public class DataProviderInfo
     {
-        [JsonProperty(PropertyName = "TD")]
-        public double TD { get; set; }
+        private string _type;
 
-        [JsonProperty(PropertyName = "t9const")]
-        public double t9const { get; set; }
+        [JsonProperty(PropertyName = "type")]
+        public string Type
+        {
+            get => _type.ToLower();
+            set => _type = value.ToLower();
+        }
 
-        [JsonProperty(PropertyName = "tc")]
-        public double tc { get; set; }
+        [JsonProperty(PropertyName = "api_url")]
+        public string ApiUrl { get; set; }
 
-        [JsonProperty(PropertyName = "tHP")]
-        public double tHP { get; set; }
-
-        [JsonProperty(PropertyName = "tsettle")]
-        public double tsettle { get; set; }
-
-        [JsonProperty(PropertyName = "P1")]
-        public double P1 { get; set; }
-
-        [JsonProperty(PropertyName = "RoundTo")]
-        public int RoundTo { get; set; }
+        [JsonProperty(PropertyName = "hub_url")]
+        public string HubUrl { get; set; }
     }
 
     /// <summary>
@@ -75,7 +111,7 @@ namespace ProcessDashboard.Model.AppConfiguration
 
         private static readonly NLog.Logger Log = NLog.LogManager.GetCurrentClassLogger();
 
-        private string path = $"{Directory.GetCurrentDirectory()}\\config.json";
+        private string path = $"{Path.GetDirectoryName(Assembly.GetEntryAssembly().Location)}\\app-config.json";
 
         private Config()
         {
@@ -90,7 +126,7 @@ namespace ProcessDashboard.Model.AppConfiguration
             }
             catch (Exception ex)
             {
-                Log.Error($"Failed to save config to {path}, {ex}");
+                Log.Error($"Failed to save config to {path}, exception:\n{ex}");
             }
         }
 
@@ -103,8 +139,10 @@ namespace ProcessDashboard.Model.AppConfiguration
             }
             catch (Exception ex)
             {
-                Log.Error(ex);
+                Log.Error($"Failed to read config at {path}, exception:\n{ex}");
             }
+
+            Filter = new SearchFilter();
         }
     }
 }

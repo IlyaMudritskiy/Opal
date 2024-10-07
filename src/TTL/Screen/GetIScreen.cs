@@ -1,6 +1,6 @@
-﻿using ProcessDashboard.src.CommonClasses;
+﻿using ProcessDashboard.src.CommonClasses.SreenProvider;
 
-namespace ProcessDashboard.src.TTL.Screen
+namespace Opal.src.TTL.Screen
 {
     public static class ScreenCreator
     {
