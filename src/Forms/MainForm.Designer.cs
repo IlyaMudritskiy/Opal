@@ -38,9 +38,9 @@
             this.StartButton = new System.Windows.Forms.ToolStripMenuItem();
             this.SettingsMenuButton = new System.Windows.Forms.ToolStripMenuItem();
             this.DataViewer_MenuStripBtn = new System.Windows.Forms.ToolStripMenuItem();
-            this.MainFormPanel = new System.Windows.Forms.Panel();
             this.JsonFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.Status_lbl = new System.Windows.Forms.Label();
+            this.MainFormPanel = new System.Windows.Forms.Panel();
             this.MainMenuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -76,7 +76,7 @@
             this.PDFReportToolStripMenuItem,
             this.dataAndReportToolStripMenuItem});
             this.FileSaveMenuButton.Name = "FileSaveMenuButton";
-            this.FileSaveMenuButton.Size = new System.Drawing.Size(180, 24);
+            this.FileSaveMenuButton.Size = new System.Drawing.Size(109, 24);
             this.FileSaveMenuButton.Text = "Save";
             // 
             // processedDataToolStripMenuItem
@@ -124,16 +124,6 @@
             this.DataViewer_MenuStripBtn.Size = new System.Drawing.Size(28, 24);
             this.DataViewer_MenuStripBtn.ToolTipText = "Process Data Viewer";
             // 
-            // MainFormPanel
-            // 
-            this.MainFormPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.MainFormPanel.Location = new System.Drawing.Point(0, 27);
-            this.MainFormPanel.Name = "MainFormPanel";
-            this.MainFormPanel.Size = new System.Drawing.Size(1584, 835);
-            this.MainFormPanel.TabIndex = 1;
-            // 
             // JsonFileDialog
             // 
             this.JsonFileDialog.FileName = "JsonFileDialog";
@@ -146,6 +136,19 @@
             this.Status_lbl.Name = "Status_lbl";
             this.Status_lbl.Size = new System.Drawing.Size(0, 13);
             this.Status_lbl.TabIndex = 2;
+            // 
+            // MainFormPanel
+            // 
+            this.MainFormPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.MainFormPanel.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.MainFormPanel.BackgroundImage = global::Opal.Properties.Resources.opal_background1;
+            this.MainFormPanel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.MainFormPanel.Location = new System.Drawing.Point(0, 27);
+            this.MainFormPanel.Name = "MainFormPanel";
+            this.MainFormPanel.Size = new System.Drawing.Size(1584, 835);
+            this.MainFormPanel.TabIndex = 1;
             // 
             // MainForm
             // 

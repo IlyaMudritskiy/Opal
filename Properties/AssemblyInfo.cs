@@ -25,11 +25,11 @@ using System.Runtime.InteropServices;
 
 /*
  * Version: major.minor.fix
- * Each completed task (merged PR in Azure) adds +1 to fix parameter.
+ * Each commit adds +1 to the fix parameter
  * When it reaches 10, minor parameter should be increased by 1.
  * Examples: 1.3.9, 2.0.10, 1.1.1
  * If any significant changes were presented, minor or major parameters
  * can be increased independently.
  */ 
-[assembly: AssemblyVersion("1.8.2")]
-[assembly: AssemblyFileVersion("1.8.2")]
+[assembly: AssemblyVersion("1.8.4")]
+[assembly: AssemblyFileVersion("1.8.4")]

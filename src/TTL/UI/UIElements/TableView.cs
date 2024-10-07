@@ -62,13 +62,27 @@ namespace Opal.src.TTL.UI.UIElements
 
         public void Clear()
         {
-            //DataSource.Clear();
             Table.DataSource = null;
+          
             if (CheckBox != null)
             {
                 CheckBox.Checked = true;
             }
             Title.Text = "";
+        }
+
+        public void ClearAll()
+        {
+            //DataSource.Clear();
+            Table.DataSource = null;
+            Table.Rows.Clear();
+            Table.Columns.Clear();
+            if (CheckBox != null)
+            {
+                CheckBox.Checked = true;
+            }
+            Title.Text = "";
+            Table.Refresh();
         }
 
         public void SetTitle(string title)

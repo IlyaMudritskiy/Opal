@@ -1,11 +1,9 @@
 ﻿using Newtonsoft.Json.Linq;
-using NLog.Fluent;
 using Opal.Forms;
 using Opal.Model.AppConfiguration;
 using Opal.Model.Data.Acoustic;
 using Opal.src.CommonClasses.Processing;
 using Opal.src.TTL.Containers.FileContent;
-using Opal.src.TTL.Containers.ScreenData;
 using Opal.src.TTL.UI.UIElements;
 using Opal.src.Utils;
 using ProcessDashboard.src.CommonClasses.SreenProvider;
@@ -54,6 +52,7 @@ namespace Opal.src.TTL.Screen
 
         public void Update(List<JObject> data, MainForm form)
         {
+            Clear();
             Files = GetAcousticFiles(data);
             AggregateData();
             PopulateStepsList();
@@ -67,7 +66,12 @@ namespace Opal.src.TTL.Screen
 
         public void Clear()
         {
-            throw new System.NotImplementedException();
+            StepsSelector.Items.Clear();
+            StatisticsTable.ClearAll();
+            StepsPlot.Clear();
+            if (Files != null) Files.Clear();
+            StepsStatistics.Clear();
+            StepsSelector.Text = string.Empty;
         }
 
         private void CreateLayout()
@@ -104,7 +108,6 @@ namespace Opal.src.TTL.Screen
                     new RowStyle(SizeType.Absolute, 30),
                     new RowStyle(SizeType.Percent, 100)
                 },
-                CellBorderStyle = TableLayoutPanelCellBorderStyle.Single
             };
 
             baseLayout.SuspendLayout();
@@ -201,7 +204,7 @@ namespace Opal.src.TTL.Screen
 
         private void ShowStatistics()
         {
-            StatisticsTable.Clear();
+            StatisticsTable.ClearAll();
 
             StatisticsTable.SetTitle("Statistics");
 
@@ -213,6 +216,8 @@ namespace Opal.src.TTL.Screen
 
             foreach (var stepPair in StepsStatistics)
             {
+                if (stepPair.Key == string.Empty) continue;
+
                 string name = stepPair.Key;
                 int pass = stepPair.Value.Pass;
                 int fail = stepPair.Value.Fail;
@@ -221,6 +226,8 @@ namespace Opal.src.TTL.Screen
                 string yieldPercent = $"{yield}%";
                 StatisticsTable.Table.Rows.Add(name, pass, fail, total, yieldPercent);
             }
+            double yieldTotal = PassCount == 0 ? 0 : Math.Round(((double)PassCount / Files.Count) * 100, 2);
+            StatisticsTable.Table.Rows.Add("TOTAL:", PassCount, FailCount, Files.Count, $"{yieldTotal}%");
             StatisticsTable.Table.AutoResizeColumns();
         }
 
@@ -230,7 +237,9 @@ namespace Opal.src.TTL.Screen
 
             StepsPlot.Clear();
 
-            StepsPlot.SetText($"{Files[0].DUT.TypeName}, {Files[0].DUT.TypeID} | {Files[0].DUT.System} | Total: {Files.Count}");
+            var yeild = Math.Round(((double)PassCount / Files.Count)*100, 2);
+
+            StepsPlot.SetText($"{Files[0].DUT.TypeName}, {Files[0].DUT.TypeID} | {Files[0].DUT.System} | Total: {Files.Count}, Yield: {yeild}%");
 
             string selectedStep = StepsSelector.SelectedItem.ToString();
 
