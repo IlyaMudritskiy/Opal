@@ -120,10 +120,13 @@ namespace Opal.src.TTL.UI.EventControllers
 
         private void EnableGroup(RadioButton sender)
         {
-            // Disable all groupboxes
+            // Disable all Data Provider groupboxes
             foreach (var control in _sf.DataProvider_grp.Controls)
                 if (control is GroupBox grp)
                     SetEnabledGroup(grp, false);
+
+            SetEnabledGroup(_sf.OtherSettings_grp, false);
+            SetEnabledGroup(_sf.LineProduct_grp, false);
 
             switch (sender.Name)
             {

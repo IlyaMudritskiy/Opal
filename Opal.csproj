@@ -230,6 +230,7 @@
     <Content Include="Assets\png\login_blue.png" />
     <Content Include="Assets\png\menu_other.png" />
     <Content Include="Assets\png\file_green.png" />
+    <Content Include="Assets\png\opal_background.png" />
     <Content Include="Assets\png\settings_blue.png" />
     <Content Include="Assets\png\start_green.png" />
     <Content Include="Assets\png\tools_orange.png" />
