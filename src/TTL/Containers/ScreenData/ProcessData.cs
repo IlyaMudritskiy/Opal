@@ -1,7 +1,10 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Opal.Model.AppConfiguration;
+using Opal.src.CommonClasses.Processing;
 using Opal.src.TTL.Containers.Common;
+using Opal.src.TTL.Containers.FileContent;
 using Opal.src.TTL.Misc;
 using ScottPlot.Plottable;
 
@@ -14,6 +17,7 @@ namespace Opal.src.TTL.Containers.ScreenData
         public DSContainer<List<ScatterPlot>> Curves { get; set; }
         public DSContainer<List<Feature>> MeanFeatures { get; set; }
         public DSContainer<List<List<Feature>>> Features { get; set; }
+        public ProductLimits ProductLimits { get; set; }
 
         private ProcessStep Step { get; set; }
 
@@ -37,7 +41,14 @@ namespace Opal.src.TTL.Containers.ScreenData
             SeparateProcessFeatures(units);
             AddCurves(units);
             CalculateMeanFeatures();
+            ProductLimits = LoadProductLimits();
             //GetDataPoints(units);
+        }
+
+        private ProductLimits LoadProductLimits()
+        {
+            var appPath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+            return CommonFileManager.OpenTo<ProductLimits>($"{appPath}\\Limits\\{ProductID}.json");
         }
 
         #region Separate data by DS
@@ -136,8 +147,19 @@ namespace Opal.src.TTL.Containers.ScreenData
         {
             if (!CheckUnit(unit)) return;
             Step = step;
-            
+
+            if (ProductLimits == null || ProductLimits.TypeID != ProductID)
+            {
+                ProductLimits = LoadProductLimits();
+            }
+
             LineID = _config.LineID;
+
+            if (_config.ProductID != unit.ProductID)
+            {
+                _config.ProductID = unit.ProductID;
+            }
+
             ProductID = _config.ProductID;
 
             var ds = $"DS{unit.TrackNumber}{unit.PressNumber}";
@@ -177,8 +199,8 @@ namespace Opal.src.TTL.Containers.ScreenData
             if (LineID == null) LineID = unit.LineID;
             if (unit.LineID != LineID) return false;
 
-            if (ProductID == null) ProductID = unit.ProductID;
-            if (unit.ProductID != ProductID) return false;
+            //if (ProductID == null) ProductID = unit.ProductID;
+            //if (unit.ProductID != ProductID) return false;
 
             return true;
         }

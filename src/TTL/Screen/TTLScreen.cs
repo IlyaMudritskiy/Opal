@@ -17,7 +17,7 @@ namespace Opal.src.TTL.Screen
         private static readonly Lazy<TTLScreen> Lazy = new Lazy<TTLScreen>(() => new TTLScreen());
         public static TTLScreen Instance => Lazy.Value;
 
-        private Config Config = Config.Instance;
+        private Config _config = Config.Instance;
 
         private TabControl Tabs { get; set; }
 
@@ -41,7 +41,7 @@ namespace Opal.src.TTL.Screen
             Tabs.Controls.Add(Temperature.Tab);
             Tabs.Controls.Add(Pressure.Tab);
 
-            if (Config.Acoustic.Enabled)
+            if (_config.Acoustic.Enabled)
             {
                 FR = new AcousticTab("FR", "Hz", "dB SPL");
                 THD = new AcousticTab("THD", "Hz", "%");
@@ -76,7 +76,7 @@ namespace Opal.src.TTL.Screen
             Temperature.AddData(TTLData.Temperature);
             Pressure.AddData(TTLData.Pressure);
 
-            if (Config.Acoustic.Enabled)
+            if (_config.Acoustic.Enabled)
             {
                 FR.AddData(TTLData.FR);
                 THD.AddData(TTLData.THD);
@@ -103,15 +103,19 @@ namespace Opal.src.TTL.Screen
             Temperature.Clear();
             Pressure.Clear();
 
-            if (Config.Acoustic.Enabled)
+            if (_config.Acoustic.Enabled)
             {
                 FR.Clear();
                 THD.Clear();
                 RNB.Clear();
                 IMP.Clear();
             }
+        }
 
-            //TTLData = null;
+        public void ClearAll()
+        {
+            Clear();
+            TTLData = null;
         }
 
         private void FRToggleView(object sender, EventArgs e)

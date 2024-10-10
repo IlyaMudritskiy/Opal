@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using Opal.src.TTL.Containers.Common;
+using Opal.src.TTL.Containers.FileContent;
 using Opal.src.TTL.Screen;
 using Opal.src.Utils;
 
@@ -45,9 +46,157 @@ namespace Opal.src.TTL.UI.UIElements
             if (features != null && features.Count > 0)
             {
                 SetColor(color);
-                Table.DataSource = features;
-            } 
+
+                // Define columns only if they haven't been defined yet
+                if (Table.Columns.Count == 0)
+                {
+                    // Name Column
+                    DataGridViewTextBoxColumn nameColumn = new DataGridViewTextBoxColumn
+                    {
+                        Name = "Name",
+                        DataPropertyName = "Name",
+                        HeaderText = "Feature",
+                        ReadOnly = true
+                    };
+
+                    // Value Column
+                    DataGridViewTextBoxColumn valueColumn = new DataGridViewTextBoxColumn
+                    {
+                        Name = "Value",
+                        DataPropertyName = "Value",
+                        HeaderText = "Value",
+                        ReadOnly = true,
+                        DefaultCellStyle = new DataGridViewCellStyle { Format = "N3" } // 3 decimal places
+                    };
+
+                    // Add columns to the DataGridView
+                    Table.Columns.AddRange(new DataGridViewColumn[] { nameColumn, valueColumn });
+                }
+
+                // Convert features to FeatureWithLimits without limits
+                var featureWithLimitsList = new List<FeatureWithLimits>();
+
+                foreach (var feature in features)
+                {
+                    featureWithLimitsList.Add(new FeatureWithLimits
+                    {
+                        Name = feature.Name,
+                        Value = feature.Value,
+                        Min = null, // No limits provided
+                        Max = null, // No limits provided
+                        Description = feature.Description // Ensure Feature has Description
+                    });
+                }
+
+                // Bind the list to the DataGridView
+                Table.DataSource = featureWithLimitsList;
+            }
             Title.Text = $"{title}  |  Amt: {amount}";
+        }
+
+        public void AddData(List<Feature> features, ProductLimits limits, Color color, int amount)
+        {
+            if (limits == null)
+            {
+                AddData(features, color, amount);
+                return;
+            }
+
+            ClearAll();
+
+            // Define columns only if they haven't been defined yet
+            if (Table.Columns.Count == 0)
+            {
+                // Name Column
+                DataGridViewTextBoxColumn nameColumn = new DataGridViewTextBoxColumn
+                {
+                    Name = "Name",
+                    DataPropertyName = "Name",
+                    HeaderText = "Name",
+                    ReadOnly = true
+                };
+
+                // Min Column
+                DataGridViewTextBoxColumn minColumn = new DataGridViewTextBoxColumn
+                {
+                    Name = "Min",
+                    DataPropertyName = "Min",
+                    HeaderText = "Min",
+                    ReadOnly = true,
+                    DefaultCellStyle = new DataGridViewCellStyle { Format = "N3" } // 3 decimal places
+                };
+
+                // Value Column
+                DataGridViewTextBoxColumn valueColumn = new DataGridViewTextBoxColumn
+                {
+                    Name = "Value",
+                    DataPropertyName = "Value",
+                    HeaderText = "Value",
+                    ReadOnly = true,
+                    DefaultCellStyle = new DataGridViewCellStyle { Format = "N3" } // 3 decimal places
+                };
+
+                // Max Column
+                DataGridViewTextBoxColumn maxColumn = new DataGridViewTextBoxColumn
+                {
+                    Name = "Max",
+                    DataPropertyName = "Max",
+                    HeaderText = "Max",
+                    ReadOnly = true,
+                    DefaultCellStyle = new DataGridViewCellStyle { Format = "N3" } // 3 decimal places
+                };
+
+                // Add columns to the DataGridView
+                Table.Columns.AddRange(new DataGridViewColumn[] { nameColumn, minColumn, valueColumn, maxColumn });
+            }
+
+            Layout.BackColor = Colors.Black;
+
+            if (features != null && features.Count > 0)
+            {
+                SetColor(color);
+                Clear();
+
+                // Convert features and limits to FeatureWithLimits
+                var featureWithLimitsList = new List<FeatureWithLimits>();
+
+                foreach (var feature in features)
+                {
+                    if (limits.MeanLimits.TryGetValue(feature.Name, out MeanLimit meanLimit))
+                    {
+                        featureWithLimitsList.Add(new FeatureWithLimits
+                        {
+                            Name = feature.Name,
+                            Min = meanLimit.Min,
+                            Value = feature.Value,
+                            Max = meanLimit.Max,
+                            Description = feature.Description // Ensure Feature has Description
+                        });
+                    }
+                    else
+                    {
+                        // Features without corresponding limits
+                        featureWithLimitsList.Add(new FeatureWithLimits
+                        {
+                            Name = feature.Name,
+                            Min = null, // Represents "N/A"
+                            Value = feature.Value,
+                            Max = null,  // Represents "N/A"
+                            Description = feature.Description // Ensure Feature has Description
+                        });
+                    }
+                }
+
+                // Bind the list to the DataGridView
+                Table.DataSource = featureWithLimitsList;
+            }
+
+            // Update the title
+            Title.Text = $"{title}  |  Amt: {amount}";
+
+            // Attach CellFormatting event handler for conditional styling
+            Table.CellFormatting -= Table_CellFormatting; // Prevent multiple subscriptions
+            Table.CellFormatting += Table_CellFormatting;
         }
 
         public void AddData(List<Feature> features, int amount)
@@ -154,27 +303,12 @@ namespace Opal.src.TTL.UI.UIElements
                 Font = Fonts.Sennheiser.M,
                 AutoGenerateColumns = false,
                 RowHeadersVisible = false,
-                Columns =
-                {
-                    new DataGridViewTextBoxColumn
-                    {
-                        DataPropertyName = "Name",
-                        HeaderText = "Feature",
-                        CellTemplate = new DataGridViewTextBoxCell()
-                    },
-                    new DataGridViewTextBoxColumn
-                    {
-                        DataPropertyName = "Value",
-                        HeaderText = "Value",
-                        CellTemplate = new DataGridViewTextBoxCell()
-                    }
-                },
+                AllowUserToAddRows = false,
+                SelectionMode = DataGridViewSelectionMode.FullRowSelect,
                 ReadOnly = true
             };
 
             Table.CellMouseEnter += Table_CellMouseEnter;
-
-            //DataSource = new BindingSource();
 
             var titleArea = new TableLayoutPanel()
             {
@@ -244,11 +378,89 @@ namespace Opal.src.TTL.UI.UIElements
             if (e.RowIndex >= 0 && e.RowIndex < Table.Rows.Count) // Ensure it's a valid row
             {
                 var row = Table.Rows[e.RowIndex];
-                var data = row.DataBoundItem as Feature;
-                if (data != null && e.ColumnIndex >= 0)
+                if (e.ColumnIndex >= 0)
                 {
-                    // Set the tooltip text to the Description property
-                    Table.Rows[e.RowIndex].Cells[e.ColumnIndex].ToolTipText = data.Description;
+                    // Retrieve the FeatureWithLimits object
+                    var feature = row.DataBoundItem as FeatureWithLimits;
+                    if (feature != null)
+                    {
+                        // Set the tooltip text to the Description property or another relevant property
+                        Table.Rows[e.RowIndex].Cells[e.ColumnIndex].ToolTipText = feature.Description ?? "No Description Available";
+                    }
+                }
+            }
+        }
+
+        private void Table_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            // Ensure we're formatting the correct columns
+            string dataProperty = Table.Columns[e.ColumnIndex].DataPropertyName;
+
+            if (dataProperty == "Min" || dataProperty == "Max" || dataProperty == "Name")
+            {
+                var row = Table.Rows[e.RowIndex];
+                var feature = row.DataBoundItem as FeatureWithLimits;
+
+                if (feature != null)
+                {
+                    if (feature.HasLimits)
+                    {
+                        if (dataProperty == "Name")
+                        {
+                            if (feature.Value >= feature.Max)
+                            {
+                                e.CellStyle.BackColor = Colors.Red;
+                            }
+                            else if (feature.Value <= feature.Min)
+                            {
+                                e.CellStyle.BackColor = Colors.Red;
+                            }
+                            else
+                            {
+                                e.CellStyle.BackColor = Table.DefaultCellStyle.BackColor;
+                            }
+                        }
+                        else if (dataProperty == "Min")
+                        {
+                            if (feature.Value <= feature.Min)
+                            {
+                                e.CellStyle.BackColor = Colors.Red;
+                            }
+                            else
+                            {
+                                e.CellStyle.BackColor = Table.DefaultCellStyle.BackColor;
+                            }
+                        }
+                        else if (dataProperty == "Max")
+                        {
+                            if (feature.Value >= feature.Max)
+                            {
+                                e.CellStyle.BackColor = Colors.Red;
+                            }
+                            else
+                            {
+                                e.CellStyle.BackColor = Table.DefaultCellStyle.BackColor;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        // Features without limits: Color the entire row if desired
+                        if (dataProperty == "Name" || dataProperty == "Min" || dataProperty == "Max")
+                        {
+                            e.CellStyle.BackColor = Color.LightGray;
+                        }
+                    }
+                }
+            }
+
+            // Handle "N/A" display for Min and Max
+            if (dataProperty == "Min" || dataProperty == "Max")
+            {
+                if (e.Value == null)
+                {
+                    e.Value = "N/A";
+                    e.FormattingApplied = true;
                 }
             }
         }

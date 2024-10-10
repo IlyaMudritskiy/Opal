@@ -26,9 +26,12 @@ namespace Opal.Model.Data.Acoustic
         public string Serial { 
             get { return _serial; } 
             set 
-            { 
-                Track = int.Parse(value[value.Length - 2].ToString());
-                Press = int.Parse(value[value.Length - 1].ToString());
+            {
+                if (value.Length >= 2)
+                {
+                    Track = int.Parse(value[value.Length - 2].ToString());
+                    Press = int.Parse(value[value.Length - 1].ToString());
+                }
                 _serial = value;
             } 
         }
