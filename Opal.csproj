@@ -110,8 +110,10 @@
       <DependentUpon>UserLoginForm.cs</DependentUpon>
     </Compile>
     <Compile Include="src\TTL\Containers\Common\DataPointsRow.cs" />
+    <Compile Include="src\TTL\Containers\Common\FeatureWithLimits.cs" />
     <Compile Include="src\TTL\Containers\Common\IValueDescription.cs" />
     <Compile Include="src\TTL\Containers\FileContent\AcousticStepStatistics.cs" />
+    <Compile Include="src\TTL\Containers\FileContent\ProductLimits.cs" />
     <Compile Include="src\TTL\Containers\ScreenData\SinglePointMeasurement.cs" />
     <Compile Include="src\TTL\Containers\ScreenData\JSONSinglePoints.cs" />
     <Compile Include="src\TTL\Containers\ScreenData\PlotViewDSContainer.cs" />
@@ -193,6 +195,9 @@
       <DependentUpon>UserLoginForm.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="app-config.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Limits\581940.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="NLog.config">

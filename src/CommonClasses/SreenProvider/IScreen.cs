@@ -11,5 +11,6 @@ namespace ProcessDashboard.src.CommonClasses.SreenProvider
         void Update(List<JObject> data, MainForm form);
         void Update(JObject data, MainForm form);
         void Clear();
+        void ClearAll();
     }
 }

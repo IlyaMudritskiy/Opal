@@ -337,10 +337,11 @@ namespace Opal.src.TTL.Processing
                 Value = Math.Round(Tmax.Y - t4.Y, round),
                 RelatedDataPoints = new List<DataPoint> { Tmax, t4 }
             });
+
             #endregion
 
             #region PressureFeatures
-            // Pressure features
+
             unit.PressFeatures.Add(new Feature()
             {
                 Available = t5.Available && t6.Available,
@@ -359,7 +360,7 @@ namespace Opal.src.TTL.Processing
                 Description = "Time duration of applying pressure during embossing\n" +
                               "t9p.X - t6.X\n" +
                               "Duration, (s)",
-                Value = Math.Round(t9p.X - t6.X, round),
+                Value = Math.Round(Math.Abs(t9p.X - t6.X), round),
                 RelatedDataPoints = new List<DataPoint> { t6, t9p }
             });
 
@@ -418,7 +419,7 @@ namespace Opal.src.TTL.Processing
             unit.PressFeatures.Add(new Feature()
             {
                 Available = t6.Available,
-                Name = "PresDiff1",
+                Name = "PressDiff1",
                 Description = "Difference between max pressure and pre-defined pressure at t5\n" +
                               "P2 - P1 (t6.Y - t5.Y)\n" +
                               "Pressure difference, (bar)",
@@ -429,7 +430,7 @@ namespace Opal.src.TTL.Processing
             unit.PressFeatures.Add(new Feature()
             {
                 Available = t6.Available,
-                Name = "PresDiff2",
+                Name = "PressDiff2",
                 Description = "Difference between max pressure and pressure value at t6 + 0.5s\n" +
                               "P2 – P3 (t6.Y - P3.Y)\n" +
                               "Pressure difference, (bar)",
@@ -439,7 +440,7 @@ namespace Opal.src.TTL.Processing
 
             unit.PressFeatures.Add(new Feature()
             {
-                Name = "PresDiff3",
+                Name = "PressDiff3",
                 Description = "Difference between pressure value at t6 + 0.5s and pressure value at t9\n" +
                               "P3.Y - P4.Y\n" +
                               "Pressure difference, (bar)",
@@ -449,7 +450,7 @@ namespace Opal.src.TTL.Processing
 
             unit.PressFeatures.Add(new Feature()
             {
-                Name = "PresDiff4",
+                Name = "PressDiff4",
                 Description = "Difference between pressure value at t9 and pressure value at t5\n" +
                               "P4 – P1 (|P4.Y - t5.Y|)\n" +
                               "Pressure difference, (bar)",
