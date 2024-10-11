@@ -16,7 +16,7 @@ using System.Windows.Forms;
 
 namespace Opal.src.TTL.Screen
 {
-    internal class AcousticOpenerScreen : IScreen
+    internal class AcousticOpenerScreen : IScreen, IDisposable
     {
         private static readonly NLog.Logger Log = NLog.LogManager.GetCurrentClassLogger();
         private static readonly Lazy<AcousticOpenerScreen> Lazy = new Lazy<AcousticOpenerScreen>(() => new AcousticOpenerScreen());
@@ -72,6 +72,11 @@ namespace Opal.src.TTL.Screen
             if (Files != null) Files.Clear();
             StepsStatistics.Clear();
             StepsSelector.Text = string.Empty;
+        }
+
+        public void ClearAll()
+        {
+            Clear();
         }
 
         private void CreateLayout()
@@ -312,6 +317,11 @@ namespace Opal.src.TTL.Screen
                 MarkerSize = markerSize,
                 LineWidth = lineWidth
             };
+        }
+
+        public void Dispose()
+        {
+
         }
     }
 }

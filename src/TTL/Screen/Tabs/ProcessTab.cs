@@ -4,8 +4,10 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using Opal.Model.AppConfiguration;
+using Opal.Model.Data.Acoustic;
 using Opal.src.CommonClasses.DataProvider;
 using Opal.src.TTL.Containers.Common;
+using Opal.src.TTL.Containers.FileContent;
 using Opal.src.TTL.Containers.ScreenData;
 using Opal.src.TTL.UI.UIElements;
 using Opal.src.Utils;
@@ -117,16 +119,16 @@ namespace Opal.Model.Screen.Tabs
             PlotView.Title.Text = title;
 
             if (Data.MeanFeatures.DS11 != null)
-                FeatureTables.DS11.AddData(Data.MeanFeatures.DS11, Colors.DS11C, Data.Features.DS11.Count);
+                FeatureTables.DS11.AddData(Data.MeanFeatures.DS11, Data.ProductLimits, Colors.DS11C, Data.Features.DS11.Count);
 
             if (Data.MeanFeatures.DS12 != null)
-                FeatureTables.DS12.AddData(Data.MeanFeatures.DS12, Colors.DS12C, Data.Features.DS12.Count);
+                FeatureTables.DS12.AddData(Data.MeanFeatures.DS12, Data.ProductLimits, Colors.DS12C, Data.Features.DS12.Count);
 
             if (Data.MeanFeatures.DS21 != null)
-                FeatureTables.DS21.AddData(Data.MeanFeatures.DS21, Colors.DS21C, Data.Features.DS21.Count);
+                FeatureTables.DS21.AddData(Data.MeanFeatures.DS21, Data.ProductLimits, Colors.DS21C, Data.Features.DS21.Count);
 
             if (Data.MeanFeatures.DS22 != null)
-                FeatureTables.DS22.AddData(Data.MeanFeatures.DS22, Colors.DS22C, Data.Features.DS22.Count);
+                FeatureTables.DS22.AddData(Data.MeanFeatures.DS22, Data.ProductLimits, Colors.DS22C, Data.Features.DS22.Count);
         }
 
         private void CreateLayout(string title)
@@ -311,7 +313,7 @@ namespace Opal.Model.Screen.Tabs
             UnplotPoints(dsIdx);
 
             // Get DS data for further use
-            DataGridView table = FeatureTables.Get(dsIdx).Table;                // DS Table containing mean features
+            DataGridView table = FeatureTables.Get(dsIdx).Table; // DS Table containing mean features
 
             List<List<Feature>> accumulatedFeatures = new List<List<Feature>>();
             List<Feature> selectedAccumFeature = new List<Feature>();
@@ -323,8 +325,15 @@ namespace Opal.Model.Screen.Tabs
 
             List<List<Feature>> features = Data.Features.Get(dsIdx);
 
-            Feature feature = getSelectedFeature(e, table); 
-            // Selected mean feature from the table
+            FeatureWithLimits featureWithLimits = getSelectedFeature(e, table); // Now retrieves FeatureWithLimits from cell values
+                                                                                // Convert FeatureWithLimits back to Feature if necessary
+            Feature feature = new Feature
+            {
+                Name = featureWithLimits.Name,
+                Value = featureWithLimits.Value,
+                Description = featureWithLimits.Description
+                // Add other properties if needed
+            };
 
             if (feature == null) return;
             if (accumulatedFeatures != null)
@@ -332,10 +341,10 @@ namespace Opal.Model.Screen.Tabs
                 selectedAccumFeature = getCorrespondingFeatures(feature, accumulatedFeatures);
             }
 
-            List<Feature> selectedFeature = getCorrespondingFeatures(feature, features);   // List of all features that have the same name
-            
-            PlotView distributionPlot = FeaturesDistributions.Get(dsIdx);      // Distribution plot related to a specific DS
-            bool visibility = Visibility.Get(dsIdx);                            // Visibility of the distribution plot related to a specific DS
+            List<Feature> selectedFeature = getCorrespondingFeatures(feature, features); // List of all features that have the same name
+
+            PlotView distributionPlot = FeaturesDistributions.Get(dsIdx); // Distribution plot related to a specific DS
+            bool visibility = Visibility.Get(dsIdx); // Visibility of the distribution plot related to a specific DS
             Color color = Colors.GetDSColor(dsIdx);
 
             distributionPlot.Clear();
@@ -362,15 +371,13 @@ namespace Opal.Model.Screen.Tabs
             SaveSelectedFeature(FeatureTables.Get(dsIdx), e.RowIndex);
         }
 
-        private Feature getSelectedFeature(DataGridViewCellEventArgs e, DataGridView table)
+        private FeatureWithLimits getSelectedFeature(DataGridViewCellEventArgs e, DataGridView table)
         {
-            if (e.RowIndex < 0 && e.ColumnIndex < 0)
+            if (e.RowIndex < 0 || e.ColumnIndex < 0)
                 return null;
 
-            if (table.Rows[e.RowIndex].DataBoundItem is Feature data)
-                return data;
-
-            return null;
+            var row = table.Rows[e.RowIndex];
+            return row.DataBoundItem as FeatureWithLimits;
         }
 
         private void DeselectFeature(DataGridViewCellEventArgs e, int dsIdx)
@@ -461,9 +468,9 @@ namespace Opal.Model.Screen.Tabs
                      *  1. Check the value with the edge including the edge: values[j] <= edges[i + 1]
                      *  2. If not last bin, check the value excluding the edge: values[j] < edges[i + 1]
                      */
-                    bool isInBin = (values[j] >= edges[i]) 
+                    bool isInBin = (values[j] >= edges[i])
                         && (i == binCount - 1 ? values[j] <= edges[i + 1] : values[j] < edges[i + 1]);
-                    
+
                     if (isInBin)
                     {
                         binSizes[i]++;
@@ -476,6 +483,12 @@ namespace Opal.Model.Screen.Tabs
 
             plot.AddBar(binSizes, positions.ToArray(), color, binWidth * 0.8);
             plot.AddVerticalLine(meanFeature.Value, Colors.Green, 2);
+
+            if (Data.ProductLimits != null && Data.ProductLimits.MeanLimits.TryGetValue(meanFeature.Name, out MeanLimit meanLimit))
+            {
+                plot.AddVerticalLine(meanLimit.Min, Colors.Red, 2);
+                plot.AddVerticalLine(meanLimit.Max, Colors.Red, 2);
+            }
         }
 
         private List<List<MarkerPlot>> plotDataPoints(List<Feature> feature, Color color, bool visibility)
