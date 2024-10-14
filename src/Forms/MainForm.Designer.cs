@@ -41,6 +41,7 @@
             this.JsonFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.Status_lbl = new System.Windows.Forms.Label();
             this.MainFormPanel = new System.Windows.Forms.Panel();
+            this.takeAScreenshotToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.MainMenuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -51,7 +52,8 @@
             this.FileMenuButton,
             this.StartButton,
             this.SettingsMenuButton,
-            this.DataViewer_MenuStripBtn});
+            this.DataViewer_MenuStripBtn,
+            this.takeAScreenshotToolStripMenuItem});
             this.MainMenuStrip.Location = new System.Drawing.Point(0, 0);
             this.MainMenuStrip.Name = "MainMenuStrip";
             this.MainMenuStrip.ShowItemToolTips = true;
@@ -150,6 +152,12 @@
             this.MainFormPanel.Size = new System.Drawing.Size(1584, 835);
             this.MainFormPanel.TabIndex = 1;
             // 
+            // takeAScreenshotToolStripMenuItem
+            // 
+            this.takeAScreenshotToolStripMenuItem.Name = "takeAScreenshotToolStripMenuItem";
+            this.takeAScreenshotToolStripMenuItem.Size = new System.Drawing.Size(138, 24);
+            this.takeAScreenshotToolStripMenuItem.Text = "Take a Screenshot";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -183,6 +191,7 @@
         internal System.Windows.Forms.ToolStripMenuItem dataAndReportToolStripMenuItem;
         internal System.Windows.Forms.ToolStripMenuItem SettingsMenuButton;
         private System.Windows.Forms.Label Status_lbl;
+        private System.Windows.Forms.ToolStripMenuItem takeAScreenshotToolStripMenuItem;
     }
 }
 
