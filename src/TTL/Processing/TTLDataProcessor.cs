@@ -50,7 +50,7 @@ namespace Opal.src.TTL.Processing
 
             var processFile = await ProcessDataProcessor.GetProcessFile(file);
 
-            if (processFile == null) { return null; }
+            if (processFile == null) return null;
 
             return new TTLUnit(processFile);
         }
