@@ -30,6 +30,9 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SettingsForm));
             this.DataProvider_grp = new System.Windows.Forms.GroupBox();
+            this.AcousticProvider_rbn = new System.Windows.Forms.RadioButton();
+            this.AcousticProvider_grp = new System.Windows.Forms.GroupBox();
+            this.AcousticProvider_lbl = new System.Windows.Forms.Label();
             this.HubProvider_rbn = new System.Windows.Forms.RadioButton();
             this.ApiProvider_rbn = new System.Windows.Forms.RadioButton();
             this.FilesProvider_rbn = new System.Windows.Forms.RadioButton();
@@ -61,16 +64,17 @@
             this.DataDriveLetter_cmb = new System.Windows.Forms.ComboBox();
             this.ASxCompliant_chk = new System.Windows.Forms.CheckBox();
             this.DriveLetter_lbl = new System.Windows.Forms.Label();
-            this.AcousticProvider_grp = new System.Windows.Forms.GroupBox();
-            this.AcousticProvider_rbn = new System.Windows.Forms.RadioButton();
-            this.AcousticProvider_lbl = new System.Windows.Forms.Label();
+            this.Notifications_chb = new System.Windows.Forms.CheckBox();
+            this.ScreenshotRepeat_txb = new System.Windows.Forms.TextBox();
+            this.Screenshot1_lbl = new System.Windows.Forms.Label();
+            this.Screenshot2_lbl = new System.Windows.Forms.Label();
             this.DataProvider_grp.SuspendLayout();
+            this.AcousticProvider_grp.SuspendLayout();
             this.HubProvider_grp.SuspendLayout();
             this.ApiProvider_grp.SuspendLayout();
             this.FilesProvider_grp.SuspendLayout();
             this.LineProduct_grp.SuspendLayout();
             this.OtherSettings_grp.SuspendLayout();
-            this.AcousticProvider_grp.SuspendLayout();
             this.SuspendLayout();
             // 
             // DataProvider_grp
@@ -83,13 +87,46 @@
             this.DataProvider_grp.Controls.Add(this.HubProvider_grp);
             this.DataProvider_grp.Controls.Add(this.ApiProvider_grp);
             this.DataProvider_grp.Controls.Add(this.FilesProvider_grp);
-            this.DataProvider_grp.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.DataProvider_grp.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.DataProvider_grp.Location = new System.Drawing.Point(12, 12);
             this.DataProvider_grp.Name = "DataProvider_grp";
             this.DataProvider_grp.Size = new System.Drawing.Size(429, 391);
             this.DataProvider_grp.TabIndex = 0;
             this.DataProvider_grp.TabStop = false;
             this.DataProvider_grp.Text = "Data Provider";
+            // 
+            // AcousticProvider_rbn
+            // 
+            this.AcousticProvider_rbn.AutoSize = true;
+            this.AcousticProvider_rbn.Location = new System.Drawing.Point(6, 318);
+            this.AcousticProvider_rbn.Name = "AcousticProvider_rbn";
+            this.AcousticProvider_rbn.Size = new System.Drawing.Size(14, 13);
+            this.AcousticProvider_rbn.TabIndex = 8;
+            this.AcousticProvider_rbn.TabStop = true;
+            this.AcousticProvider_rbn.UseVisualStyleBackColor = true;
+            // 
+            // AcousticProvider_grp
+            // 
+            this.AcousticProvider_grp.Controls.Add(this.AcousticProvider_lbl);
+            this.AcousticProvider_grp.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AcousticProvider_grp.Location = new System.Drawing.Point(26, 310);
+            this.AcousticProvider_grp.Name = "AcousticProvider_grp";
+            this.AcousticProvider_grp.Size = new System.Drawing.Size(392, 70);
+            this.AcousticProvider_grp.TabIndex = 7;
+            this.AcousticProvider_grp.TabStop = false;
+            this.AcousticProvider_grp.Text = "Acoustic File Opener";
+            // 
+            // AcousticProvider_lbl
+            // 
+            this.AcousticProvider_lbl.AutoEllipsis = true;
+            this.AcousticProvider_lbl.AutoSize = true;
+            this.AcousticProvider_lbl.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AcousticProvider_lbl.Location = new System.Drawing.Point(7, 17);
+            this.AcousticProvider_lbl.Name = "AcousticProvider_lbl";
+            this.AcousticProvider_lbl.Size = new System.Drawing.Size(365, 45);
+            this.AcousticProvider_lbl.TabIndex = 0;
+            this.AcousticProvider_lbl.Text = "Will open selected acoustic files regardless of the line and product\r\ntype to pro" +
+    "vide visual representation and statistics of all steps \r\nfound in files.";
             // 
             // HubProvider_rbn
             // 
@@ -284,9 +321,9 @@
             this.LineProduct_grp.Controls.Add(this.ProductId_lbl);
             this.LineProduct_grp.Controls.Add(this.LineName_lbl);
             this.LineProduct_grp.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LineProduct_grp.Location = new System.Drawing.Point(12, 409);
+            this.LineProduct_grp.Location = new System.Drawing.Point(447, 148);
             this.LineProduct_grp.Name = "LineProduct_grp";
-            this.LineProduct_grp.Size = new System.Drawing.Size(216, 82);
+            this.LineProduct_grp.Size = new System.Drawing.Size(224, 82);
             this.LineProduct_grp.TabIndex = 1;
             this.LineProduct_grp.TabStop = false;
             this.LineProduct_grp.Text = "Line and Product";
@@ -331,7 +368,7 @@
             // 
             // Save_btn
             // 
-            this.Save_btn.Location = new System.Drawing.Point(366, 520);
+            this.Save_btn.Location = new System.Drawing.Point(594, 403);
             this.Save_btn.Name = "Save_btn";
             this.Save_btn.Size = new System.Drawing.Size(75, 23);
             this.Save_btn.TabIndex = 2;
@@ -340,7 +377,7 @@
             // 
             // Close_btn
             // 
-            this.Close_btn.Location = new System.Drawing.Point(285, 520);
+            this.Close_btn.Location = new System.Drawing.Point(513, 403);
             this.Close_btn.Name = "Close_btn";
             this.Close_btn.Size = new System.Drawing.Size(75, 23);
             this.Close_btn.TabIndex = 3;
@@ -351,7 +388,7 @@
             // 
             this.Status_lbl.AutoSize = true;
             this.Status_lbl.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Status_lbl.Location = new System.Drawing.Point(9, 502);
+            this.Status_lbl.Location = new System.Drawing.Point(9, 406);
             this.Status_lbl.Name = "Status_lbl";
             this.Status_lbl.Size = new System.Drawing.Size(51, 15);
             this.Status_lbl.TabIndex = 4;
@@ -360,7 +397,7 @@
             // StatusText_lbl
             // 
             this.StatusText_lbl.AutoSize = true;
-            this.StatusText_lbl.Location = new System.Drawing.Point(66, 504);
+            this.StatusText_lbl.Location = new System.Drawing.Point(66, 408);
             this.StatusText_lbl.Name = "StatusText_lbl";
             this.StatusText_lbl.Size = new System.Drawing.Size(52, 13);
             this.StatusText_lbl.TabIndex = 5;
@@ -368,13 +405,17 @@
             // 
             // OtherSettings_grp
             // 
+            this.OtherSettings_grp.Controls.Add(this.Screenshot2_lbl);
+            this.OtherSettings_grp.Controls.Add(this.Screenshot1_lbl);
+            this.OtherSettings_grp.Controls.Add(this.ScreenshotRepeat_txb);
+            this.OtherSettings_grp.Controls.Add(this.Notifications_chb);
             this.OtherSettings_grp.Controls.Add(this.DataDriveLetter_cmb);
             this.OtherSettings_grp.Controls.Add(this.ASxCompliant_chk);
             this.OtherSettings_grp.Controls.Add(this.DriveLetter_lbl);
             this.OtherSettings_grp.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.OtherSettings_grp.Location = new System.Drawing.Point(235, 410);
+            this.OtherSettings_grp.Location = new System.Drawing.Point(447, 12);
             this.OtherSettings_grp.Name = "OtherSettings_grp";
-            this.OtherSettings_grp.Size = new System.Drawing.Size(206, 81);
+            this.OtherSettings_grp.Size = new System.Drawing.Size(224, 130);
             this.OtherSettings_grp.TabIndex = 6;
             this.OtherSettings_grp.TabStop = false;
             this.OtherSettings_grp.Text = "Other Settings";
@@ -419,7 +460,7 @@
             // 
             this.ASxCompliant_chk.AutoSize = true;
             this.ASxCompliant_chk.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ASxCompliant_chk.Location = new System.Drawing.Point(10, 51);
+            this.ASxCompliant_chk.Location = new System.Drawing.Point(10, 77);
             this.ASxCompliant_chk.Name = "ASxCompliant_chk";
             this.ASxCompliant_chk.Size = new System.Drawing.Size(163, 17);
             this.ASxCompliant_chk.TabIndex = 1;
@@ -436,45 +477,51 @@
             this.DriveLetter_lbl.TabIndex = 0;
             this.DriveLetter_lbl.Text = "Data Drive Letter";
             // 
-            // AcousticProvider_grp
+            // Notifications_chb
             // 
-            this.AcousticProvider_grp.Controls.Add(this.AcousticProvider_lbl);
-            this.AcousticProvider_grp.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AcousticProvider_grp.Location = new System.Drawing.Point(26, 310);
-            this.AcousticProvider_grp.Name = "AcousticProvider_grp";
-            this.AcousticProvider_grp.Size = new System.Drawing.Size(392, 70);
-            this.AcousticProvider_grp.TabIndex = 7;
-            this.AcousticProvider_grp.TabStop = false;
-            this.AcousticProvider_grp.Text = "Acoustic File Opener";
+            this.Notifications_chb.AutoSize = true;
+            this.Notifications_chb.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Notifications_chb.Location = new System.Drawing.Point(10, 100);
+            this.Notifications_chb.Name = "Notifications_chb";
+            this.Notifications_chb.Size = new System.Drawing.Size(86, 19);
+            this.Notifications_chb.TabIndex = 3;
+            this.Notifications_chb.Text = "Notifictions";
+            this.Notifications_chb.UseVisualStyleBackColor = true;
             // 
-            // AcousticProvider_rbn
+            // ScreenshotRepeat_txb
             // 
-            this.AcousticProvider_rbn.AutoSize = true;
-            this.AcousticProvider_rbn.Location = new System.Drawing.Point(6, 318);
-            this.AcousticProvider_rbn.Name = "AcousticProvider_rbn";
-            this.AcousticProvider_rbn.Size = new System.Drawing.Size(14, 13);
-            this.AcousticProvider_rbn.TabIndex = 8;
-            this.AcousticProvider_rbn.TabStop = true;
-            this.AcousticProvider_rbn.UseVisualStyleBackColor = true;
+            this.ScreenshotRepeat_txb.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ScreenshotRepeat_txb.Location = new System.Drawing.Point(113, 50);
+            this.ScreenshotRepeat_txb.Name = "ScreenshotRepeat_txb";
+            this.ScreenshotRepeat_txb.Size = new System.Drawing.Size(47, 21);
+            this.ScreenshotRepeat_txb.TabIndex = 4;
             // 
-            // AcousticProvider_lbl
+            // Screenshot1_lbl
             // 
-            this.AcousticProvider_lbl.AutoEllipsis = true;
-            this.AcousticProvider_lbl.AutoSize = true;
-            this.AcousticProvider_lbl.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AcousticProvider_lbl.Location = new System.Drawing.Point(7, 17);
-            this.AcousticProvider_lbl.Name = "AcousticProvider_lbl";
-            this.AcousticProvider_lbl.Size = new System.Drawing.Size(365, 45);
-            this.AcousticProvider_lbl.TabIndex = 0;
-            this.AcousticProvider_lbl.Text = "Will open selected acoustic files regardless of the line and product\r\ntype to pro" +
-    "vide visual representation and statistics of all steps \r\nfound in files.";
+            this.Screenshot1_lbl.AutoSize = true;
+            this.Screenshot1_lbl.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Screenshot1_lbl.Location = new System.Drawing.Point(7, 53);
+            this.Screenshot1_lbl.Name = "Screenshot1_lbl";
+            this.Screenshot1_lbl.Size = new System.Drawing.Size(100, 15);
+            this.Screenshot1_lbl.TabIndex = 5;
+            this.Screenshot1_lbl.Text = "Screenshot every";
+            // 
+            // Screenshot2_lbl
+            // 
+            this.Screenshot2_lbl.AutoSize = true;
+            this.Screenshot2_lbl.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Screenshot2_lbl.Location = new System.Drawing.Point(166, 53);
+            this.Screenshot2_lbl.Name = "Screenshot2_lbl";
+            this.Screenshot2_lbl.Size = new System.Drawing.Size(34, 15);
+            this.Screenshot2_lbl.TabIndex = 6;
+            this.Screenshot2_lbl.Text = "mins";
             // 
             // SettingsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
-            this.ClientSize = new System.Drawing.Size(452, 553);
+            this.ClientSize = new System.Drawing.Size(681, 436);
             this.Controls.Add(this.OtherSettings_grp);
             this.Controls.Add(this.StatusText_lbl);
             this.Controls.Add(this.Status_lbl);
@@ -487,6 +534,8 @@
             this.Text = "Opal Settings";
             this.DataProvider_grp.ResumeLayout(false);
             this.DataProvider_grp.PerformLayout();
+            this.AcousticProvider_grp.ResumeLayout(false);
+            this.AcousticProvider_grp.PerformLayout();
             this.HubProvider_grp.ResumeLayout(false);
             this.HubProvider_grp.PerformLayout();
             this.ApiProvider_grp.ResumeLayout(false);
@@ -497,8 +546,6 @@
             this.LineProduct_grp.PerformLayout();
             this.OtherSettings_grp.ResumeLayout(false);
             this.OtherSettings_grp.PerformLayout();
-            this.AcousticProvider_grp.ResumeLayout(false);
-            this.AcousticProvider_grp.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -541,5 +588,9 @@
         internal System.Windows.Forms.RadioButton AcousticProvider_rbn;
         internal System.Windows.Forms.GroupBox AcousticProvider_grp;
         private System.Windows.Forms.Label AcousticProvider_lbl;
+        private System.Windows.Forms.Label Screenshot2_lbl;
+        private System.Windows.Forms.Label Screenshot1_lbl;
+        internal System.Windows.Forms.TextBox ScreenshotRepeat_txb;
+        internal System.Windows.Forms.CheckBox Notifications_chb;
     }
 }
