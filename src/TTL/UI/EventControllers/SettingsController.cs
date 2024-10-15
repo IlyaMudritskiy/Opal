@@ -78,6 +78,8 @@ namespace Opal.src.TTL.UI.EventControllers
             // Other
             _config.DataDriveLetter = _sf.DataDriveLetter_cmb.Text;
             _config.ASxReports = _sf.ASxCompliant_chk.Checked;
+            _config.NotificationsEnabled = _sf.Notifications_chb.Checked;
+            _config.ScreenshotsInterval = int.Parse(_sf.ScreenshotRepeat_txb.Text);
 
             _config.Save();
         }
@@ -104,6 +106,8 @@ namespace Opal.src.TTL.UI.EventControllers
             _sf.ASxCompliant_chk.Checked = _config.ASxReports;
 
             _sf.BufferSize_txb.Text = _config.HubBufferSize.ToString();
+            _sf.Notifications_chb.Checked = _config.NotificationsEnabled;
+            _sf.ScreenshotRepeat_txb.Text = _config.ScreenshotsInterval.ToString();
         }
 
         private void EnableAcousticCustomPath(CheckBox sender)
@@ -125,7 +129,7 @@ namespace Opal.src.TTL.UI.EventControllers
                 if (control is GroupBox grp)
                     SetEnabledGroup(grp, false);
 
-            SetEnabledGroup(_sf.OtherSettings_grp, false);
+            SetEnabledGroup(_sf.OtherSettings_grp, true);
             SetEnabledGroup(_sf.LineProduct_grp, false);
 
             switch (sender.Name)

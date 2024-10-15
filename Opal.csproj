@@ -48,7 +48,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Assets\ico\app_icon.ico</ApplicationIcon>
+    <ApplicationIcon>menu_other.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -173,6 +173,7 @@
     <Compile Include="src\Utils\Colors.cs" />
     <Compile Include="src\Utils\Fonts.cs" />
     <Compile Include="src\TTL\Screen\CommonElements.cs" />
+    <Compile Include="src\Utils\ScreenshotHandler.cs" />
     <Compile Include="src\Utils\StepNameGetter.cs" />
     <EmbeddedResource Include="src\Forms\APIDataSelectorForm.resx">
       <DependentUpon>APIDataSelectorForm.cs</DependentUpon>
@@ -221,6 +222,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include=".gitignore" />
+    <Content Include="Assets\ico\screenshot.ico" />
+    <Content Include="Assets\ico\screenshot.png" />
     <Content Include="Assets\ico\filter_purple.ico" />
     <Content Include="Assets\ico\login_blue.ico" />
     <Content Include="Assets\ico\menu_other.ico" />
@@ -236,11 +239,14 @@
     <Content Include="Assets\png\menu_other.png" />
     <Content Include="Assets\png\file_green.png" />
     <Content Include="Assets\png\opal_background.png" />
+    <Content Include="Assets\png\screenshot.png" />
     <Content Include="Assets\png\settings_blue.png" />
     <Content Include="Assets\png\start_green.png" />
     <Content Include="Assets\png\tools_orange.png" />
     <Content Include="Assets\png\search.png" />
     <Content Include="Assets\png\table_view.png" />
+    <Content Include="menu_other.ico" />
+    <None Include="Resources\app_icon.bmp" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.7.2">

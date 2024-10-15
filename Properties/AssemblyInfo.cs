@@ -10,11 +10,11 @@ using System.Runtime.InteropServices;
  * - Ilya Mudritskiy (ilya.mudritskiy@sonova.com)
  */
 
-[assembly: AssemblyTitle("ProcessDashboard")]
+[assembly: AssemblyTitle("Opal")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Sonova Consumer Hearing Ireland")]
-[assembly: AssemblyProduct("ProcessDashboard")]
+[assembly: AssemblyProduct("Opal")]
 [assembly: AssemblyCopyright("Copyright © 2024")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

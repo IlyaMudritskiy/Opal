@@ -31,6 +31,12 @@ namespace Opal.Model.AppConfiguration
         [JsonProperty(PropertyName = "asx_compliant_mode")]
         public bool ASxReports { get; set; }
 
+        [JsonProperty(PropertyName = "screenshots_interval")]
+        public int ScreenshotsInterval { get; set; }
+
+        [JsonProperty(PropertyName = "notifications_enabled")]
+        public bool NotificationsEnabled { get; set; }
+
         [JsonProperty(PropertyName = "acoustic")]
         public Acoustic Acoustic { get; set; }
 
