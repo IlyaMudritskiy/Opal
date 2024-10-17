@@ -11,7 +11,6 @@ namespace Opal.src.TTL.UI.EventControllers
 {
     public class DataViewerController
     {
-        //private MainForm mainForm;
         private DataViewer DV;
         private DataGridView DGV;
 
@@ -19,7 +18,6 @@ namespace Opal.src.TTL.UI.EventControllers
 
         public DataViewerController()
         {
-            //this.mainForm = mainForm;
             DV = new DataViewer();
             DGV = DV.DataViewerMainTable;
             DGV.AutoGenerateColumns = false;
@@ -124,10 +122,6 @@ namespace Opal.src.TTL.UI.EventControllers
                 // Perform your action here, for example, select the row
                 DGV.CurrentCell = DGV.Rows[rowIndex].Cells[0];
                 DGV.Rows[DGV.CurrentCell.RowIndex].Selected = true;
-            }
-            else
-            {
-
             }
         }
 

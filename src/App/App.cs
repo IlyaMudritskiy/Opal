@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Globalization;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Opal.Forms;
 using Opal.Model.AppConfiguration;
 using Opal.src.CommonClasses.DataProvider;
-using Opal.src.CommonClasses.SreenProvider;
-using ProcessDashboard.src.CommonClasses.SreenProvider;
 
 namespace Opal.src.App
 {

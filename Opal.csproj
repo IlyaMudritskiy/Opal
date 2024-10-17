@@ -198,6 +198,7 @@
     <None Include="app-config.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="app-config.json.example" />
     <None Include="Limits\581940.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -238,6 +239,7 @@
     <Content Include="Assets\png\login_blue.png" />
     <Content Include="Assets\png\menu_other.png" />
     <Content Include="Assets\png\file_green.png" />
+    <Content Include="Assets\png\OpalBackground.jpg" />
     <Content Include="Assets\png\opal_background.png" />
     <Content Include="Assets\png\screenshot.png" />
     <Content Include="Assets\png\settings_blue.png" />
@@ -246,7 +248,6 @@
     <Content Include="Assets\png\search.png" />
     <Content Include="Assets\png\table_view.png" />
     <Content Include="menu_other.ico" />
-    <None Include="Resources\app_icon.bmp" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.7.2">
