@@ -4,7 +4,7 @@ namespace Opal.src.Utils
 {
     public static class StepNameGetter
     {
-        
+
         public static string GetStepName(string stepName)
         {
             Config config = Config.Instance;

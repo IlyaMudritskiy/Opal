@@ -48,7 +48,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>menu_other.ico</ApplicationIcon>
+    <ApplicationIcon>
+    </ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -248,7 +249,6 @@
     <Content Include="Assets\png\tools_orange.png" />
     <Content Include="Assets\png\search.png" />
     <Content Include="Assets\png\table_view.png" />
-    <Content Include="menu_other.ico" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.7.2">
