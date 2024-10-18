@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Opal.Model.AppConfiguration;
+using Opal.src.CommonClasses.Containers;
 using Opal.src.TTL.Containers.Common;
 using Opal.src.TTL.Misc;
 
@@ -22,29 +23,18 @@ namespace Opal.src.TTL.Containers.ScreenData
         public AcousticData RNB { get; set; }
         public AcousticData IMP { get; set; }
 
-        //public List<TTLUnit> Units { get; set; }
+        private List<TTLUnit> _units;
 
-        public List<DataPointsRow<IValueDescription>> DataPoints { get; set; }
-        public List<DataPointsRow<IValueDescription>> TempFeatures { get; set; }
-        public List<DataPointsRow<IValueDescription>> PressFeatures { get; set; }
-        public List<DataPointsRow<IValueDescription>> StepsStatus { get; set; }
-
-        //private static readonly object _lock = new object();
-
-        private TTLData() {
+        private TTLData()
+        {
             Temperature = new ProcessData();
             Pressure = new ProcessData();
-            DataPoints = new List<DataPointsRow<IValueDescription>>();
-            PressFeatures = new List<DataPointsRow<IValueDescription>>();
-            TempFeatures = new List<DataPointsRow<IValueDescription>>();
-            StepsStatus = new List<DataPointsRow<IValueDescription>>();
         }
 
         public void AddData(List<TTLUnit> units)
         {
-            //Units = units;
+            _units = units;
             Temperature.AddData(units, ProcessStep.Temperature);
-
             Pressure.AddData(units, ProcessStep.HighPressure);
 
             if (_config.Acoustic.Enabled)
@@ -54,8 +44,6 @@ namespace Opal.src.TTL.Containers.ScreenData
                 RNB = new AcousticData(units, ProcessStep.RNB);
                 IMP = new AcousticData(units, ProcessStep.IMP);
             }
-
-            PackDataPointsRows(units);
         }
 
         public void UpdateUnit(TTLUnit unit)
@@ -64,73 +52,54 @@ namespace Opal.src.TTL.Containers.ScreenData
             Pressure.UpdateData(unit, ProcessStep.HighPressure);
         }
 
-        private DataPointsRow<IValueDescription> GetDataPointObj(TTLUnit unit)
+        public Dictionary<string, TableDataContainer> GetDataViewerFormat()
         {
-            return new DataPointsRow<IValueDescription>
+            if (_units == null || _units.Count == 0) return null;
+
+            var result = new Dictionary<string, TableDataContainer>
             {
-                Serial = unit.SerialNumber,
-                WPC = unit.WPC,
-                Values = unit.Process.DataPoints.Select(
-                        x => new IValueDescription
-                        {
-                            Name = x.Name,
-                            Description = x.Description,
-                            sValue = x.ToString(),
-                        }).ToList()
+                { "Data Points", DataToDataViewer(unit => unit.Process.DataPoints, x => x.Name, x => $"{x.X} {x.UnitX}, {x.Y} {x.UnitY}") },
+                { "Temperature Features", DataToDataViewer(unit => unit.Process.TempFeatures, x => x.Name, x => $"{x.Value}") },
+                { "Pressure Features", DataToDataViewer(unit => unit.Process.PressFeatures, x => x.Name, x => $"{x.Value}") }
             };
+
+            if (_config.Acoustic.Enabled)
+            {
+                result.Add("Acoustic Steps", DataToDataViewer(unit => unit.Acoustic.StepsStatus, x => x.StepName, x => x.StepPass ? "PASS" : "FAIL"));
+            }
+
+            return result;
         }
 
-        private DataPointsRow<IValueDescription> GetFeatureObj(TTLUnit unit, List<Feature> features)
+        private TableDataContainer DataToDataViewer<T>(
+            Func<TTLUnit, IEnumerable<T>> dataSourceSelector,
+            Func<T, string> nameRepr,
+            Func<T, string> valueRepr)
         {
-            return new DataPointsRow<IValueDescription>
+            var firstUnit = _units[0];
+            var headers = new List<string>
             {
-                Serial = unit.SerialNumber,
-                WPC = unit.WPC,
-                Values = features.Select(
-                        x => new IValueDescription
-                        {
-                            Name = x.Name,
-                            Description = x.Description,
-                            sValue = x.ToString(),
-                        }).ToList()
+                "Serial",
+                "WPC"
             };
-        }
 
-        private DataPointsRow<IValueDescription> GetStepsStatusObj(TTLUnit unit)
-        {
-            if (unit.Acoustic == null) return null;
-            var unitSteps = unit.Acoustic.StepsStatus;
-            var values = new List<IValueDescription>();
+            headers.AddRange(dataSourceSelector(firstUnit).Select(nameRepr).ToList());
 
-            foreach (var step in unitSteps)
+            var featuresValues = new List<List<string>>();
+
+            foreach (var unit in _units)
             {
-                values.Add(new IValueDescription
+                var unitValues = new List<string>
                 {
-                    Name = step.StepName,
-                    Description = "",
-                    sValue = step.StepPass ? "PASS" : "FAIL",
-                    Available = true,
-                });
-            }
-            return new DataPointsRow<IValueDescription>
-            {
-                Serial = unit.SerialNumber,
-                Values = values,
-                WPC = unit.WPC
-            };
-        }
+                unit.SerialNumber,
+                unit.WPC
+                };
 
-        private void PackDataPointsRows(List<TTLUnit> units)
-        {
-            if (units == null || units.Count == 0) return;
-
-            foreach (var unit in units)
-            {
-                DataPoints.Add(GetDataPointObj(unit));
-                TempFeatures.Add(GetFeatureObj(unit, unit.Process.TempFeatures));
-                PressFeatures.Add(GetFeatureObj(unit, unit.Process.PressFeatures));
-                StepsStatus.Add(GetStepsStatusObj(unit));
+                unitValues.AddRange(dataSourceSelector(unit).Select(valueRepr));
+                featuresValues.Add(unitValues);
             }
+
+            return new TableDataContainer(headers, featuresValues);
         }
     }
 }

@@ -72,6 +72,7 @@
     </Compile>
     <Compile Include="src\CommonClasses\Containers\FixedSizeBuffer.cs" />
     <Compile Include="src\CommonClasses\Containers\SearchFilter.cs" />
+    <Compile Include="src\CommonClasses\Containers\TableDataContainer.cs" />
     <Compile Include="src\CommonClasses\DataProvider\AcousticDataProvider.cs" />
     <Compile Include="src\CommonClasses\DataProvider\APIDataProvider.cs" />
     <Compile Include="src\CommonClasses\DataProvider\DataProviderFactory.cs" />
