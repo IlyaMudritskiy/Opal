@@ -24,14 +24,11 @@ namespace Opal.src.TTL.UI.EventControllers
 
         private void DataViewer_MenuStripBtn_Click(object sender, EventArgs e)
         {
-            if (config.DataProvider.Type == "hub")
-                return;
-
-            var DV = new DataViewerController();
+            var DV = new DataViewerController(); // We create new DV every time but when close we hide it
             var data = TTLData.Instance;
             if (data != null)
             {
-                DV.AddData(data);
+                DV.AddData(data.GetDataViewerFormat());
                 DV.Show();
             }
         }

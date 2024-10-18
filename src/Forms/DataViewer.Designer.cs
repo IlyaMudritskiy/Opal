@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DataViewer));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.DataViewerMenuStrip = new System.Windows.Forms.MenuStrip();
             this.SelectObjectDropDown = new System.Windows.Forms.ToolStripComboBox();
             this.DataViewerInputField = new System.Windows.Forms.ToolStripTextBox();
@@ -57,14 +57,14 @@
             // SelectObjectDropDown
             // 
             this.SelectObjectDropDown.Name = "SelectObjectDropDown";
-            this.SelectObjectDropDown.Size = new System.Drawing.Size(123, 23);
+            this.SelectObjectDropDown.Size = new System.Drawing.Size(200, 23);
             this.SelectObjectDropDown.Text = "Select object(s)";
             // 
             // DataViewerInputField
             // 
             this.DataViewerInputField.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.DataViewerInputField.Name = "DataViewerInputField";
-            this.DataViewerInputField.Size = new System.Drawing.Size(100, 23);
+            this.DataViewerInputField.Size = new System.Drawing.Size(150, 23);
             // 
             // DataViewerSearchButton
             // 
@@ -91,8 +91,8 @@
             this.DataViewerMainTable.AllowUserToDeleteRows = false;
             this.DataViewerMainTable.AllowUserToOrderColumns = true;
             this.DataViewerMainTable.AllowUserToResizeRows = false;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            this.DataViewerMainTable.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            this.DataViewerMainTable.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle2;
             this.DataViewerMainTable.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));

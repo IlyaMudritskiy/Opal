@@ -1,0 +1,32 @@
+﻿{
+  "product_id": "521836",
+  "line_id": "TTL_M",
+  "data_drive_letter": "Z",
+  "asx_compliant_mode": true,
+  "enabled": true,
+  "hub_distribution_buffer": 20,
+  "screenshots_interval": 0,
+  "notifications_enabled": true,
+
+  "acoustic": {
+    "enabled": false,
+    "files_custom_location": ""
+  },
+  "auth": {
+    "token": ""
+  },
+  "data_provider": {
+    "type": "hub",
+    "api_url": "",
+    "hub_url": ""
+  },
+
+  "line_product_map": {
+    "line1": [
+      "888111",
+    ],
+    "line2": [
+      "999999"
+    ]
+  }
+}

@@ -8,8 +8,6 @@
         public string UnitX { get; set; }
         public string UnitY { get; set; }
 
-        //public bool Available { get; set; }
-
         public override string ToString()
         {
             return $"{X}{UnitX}, {Y}{UnitY}";
