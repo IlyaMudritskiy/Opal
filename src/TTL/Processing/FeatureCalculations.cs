@@ -8,8 +8,6 @@ namespace Opal.src.TTL.Processing
 {
     public static class FeatureCalculations
     {
-        private static Config config = Config.Instance;
-
         private static List<DataPoint> lastDataPoints;
 
         public static void Calculate(TTLProcess unit)

@@ -48,16 +48,34 @@ namespace Opal.src.TTL.Processing
 
         private static ProcessFile checkFileContent(ProcessFile file)
         {
+            if (file == null)
+            {
+                Log.Warn("Process file is empty");
+                return null;
+            }
+
+            // exception
             var temp = new Measurements2D(file.Steps.Where(x => x.StepName == "ps01_temperature_actual").FirstOrDefault().Measurements);
             var press = new Measurements2D(file.Steps.Where(x => x.StepName == "ps01_high_pressure_actual").FirstOrDefault().Measurements);
             var heater = file.Steps.Where(x => x.StepName == "ps01_heater_on").FirstOrDefault();
+
+            if (temp == null)
+            {
+                Log.Warn($"File [{file.DUT.SerialNumber}] ps01_temperature_actual step is wrong.");
+                return null;
+            }
+
+            if (press == null)
+            {
+                Log.Warn($"File [{file.DUT.SerialNumber}] ps01_high_pressure_actual step is wrong.");
+                return null;
+            }
 
             if (heater == null || heater.Measurements.Count != 2)
             {
                 Log.Warn($"File [{file.DUT.SerialNumber}] ps01_heater_on step is wrong.");
                 return null;
             }
-                
 
             if ((temp.MaxX() + press.MaxX()) / 2 > 25)
             {

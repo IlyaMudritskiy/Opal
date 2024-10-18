@@ -16,5 +16,13 @@ namespace Opal.src.Forms
                 BufferSize_txb.Text = "";
             }
         }
+
+        private void ScreenshotRepeat_txb_TextChanged(object sender, System.EventArgs e)
+        {
+            if (System.Text.RegularExpressions.Regex.IsMatch(BufferSize_txb.Text, "[^0-9]"))
+            {
+                ScreenshotRepeat_txb.Text = "0";
+            }
+        }
     }
 }

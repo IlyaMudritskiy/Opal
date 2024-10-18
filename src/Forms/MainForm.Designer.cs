@@ -37,6 +37,7 @@
             this.dataAndReportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.StartButton = new System.Windows.Forms.ToolStripMenuItem();
             this.SettingsMenuButton = new System.Windows.Forms.ToolStripMenuItem();
+            this.makeScreenshotToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.DataViewer_MenuStripBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.JsonFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.Status_lbl = new System.Windows.Forms.Label();
@@ -51,6 +52,7 @@
             this.FileMenuButton,
             this.StartButton,
             this.SettingsMenuButton,
+            this.makeScreenshotToolStripMenuItem,
             this.DataViewer_MenuStripBtn});
             this.MainMenuStrip.Location = new System.Drawing.Point(0, 0);
             this.MainMenuStrip.Name = "MainMenuStrip";
@@ -108,20 +110,27 @@
             // SettingsMenuButton
             // 
             this.SettingsMenuButton.Image = global::Opal.Properties.Resources.settings_blue;
-            this.SettingsMenuButton.Margin = new System.Windows.Forms.Padding(0, 0, 20, 0);
             this.SettingsMenuButton.Name = "SettingsMenuButton";
             this.SettingsMenuButton.Size = new System.Drawing.Size(90, 24);
             this.SettingsMenuButton.Text = "Settings";
             this.SettingsMenuButton.Click += new System.EventHandler(this.SettingsMenuButton_Click);
             // 
+            // makeScreenshotToolStripMenuItem
+            // 
+            this.makeScreenshotToolStripMenuItem.Image = global::Opal.Properties.Resources.screenshot;
+            this.makeScreenshotToolStripMenuItem.Name = "makeScreenshotToolStripMenuItem";
+            this.makeScreenshotToolStripMenuItem.Size = new System.Drawing.Size(109, 24);
+            this.makeScreenshotToolStripMenuItem.Text = "Screenshot";
+            this.makeScreenshotToolStripMenuItem.Click += new System.EventHandler(this.makeScreenshotToolStripMenuItem_Click);
+            // 
             // DataViewer_MenuStripBtn
             // 
             this.DataViewer_MenuStripBtn.AutoToolTip = true;
             this.DataViewer_MenuStripBtn.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.DataViewer_MenuStripBtn.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.DataViewer_MenuStripBtn.Image = ((System.Drawing.Image)(resources.GetObject("DataViewer_MenuStripBtn.Image")));
             this.DataViewer_MenuStripBtn.Name = "DataViewer_MenuStripBtn";
-            this.DataViewer_MenuStripBtn.Size = new System.Drawing.Size(28, 24);
+            this.DataViewer_MenuStripBtn.Size = new System.Drawing.Size(118, 24);
+            this.DataViewer_MenuStripBtn.Text = "Data Viewer";
             this.DataViewer_MenuStripBtn.ToolTipText = "Process Data Viewer";
             // 
             // JsonFileDialog
@@ -132,10 +141,11 @@
             // Status_lbl
             // 
             this.Status_lbl.AutoSize = true;
-            this.Status_lbl.Location = new System.Drawing.Point(300, 9);
+            this.Status_lbl.Location = new System.Drawing.Point(460, 9);
             this.Status_lbl.Name = "Status_lbl";
-            this.Status_lbl.Size = new System.Drawing.Size(0, 13);
+            this.Status_lbl.Size = new System.Drawing.Size(29, 13);
             this.Status_lbl.TabIndex = 2;
+            this.Status_lbl.Text = "<message>";
             // 
             // MainFormPanel
             // 
@@ -143,7 +153,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.MainFormPanel.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.MainFormPanel.BackgroundImage = global::Opal.Properties.Resources.opal_background1;
+            this.MainFormPanel.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("MainFormPanel.BackgroundImage")));
             this.MainFormPanel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.MainFormPanel.Location = new System.Drawing.Point(0, 27);
             this.MainFormPanel.Name = "MainFormPanel";
@@ -183,6 +193,7 @@
         internal System.Windows.Forms.ToolStripMenuItem dataAndReportToolStripMenuItem;
         internal System.Windows.Forms.ToolStripMenuItem SettingsMenuButton;
         private System.Windows.Forms.Label Status_lbl;
+        private System.Windows.Forms.ToolStripMenuItem makeScreenshotToolStripMenuItem;
     }
 }
 

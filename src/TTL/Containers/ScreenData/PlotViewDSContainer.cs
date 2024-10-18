@@ -9,6 +9,8 @@ namespace Opal.src.TTL.Containers.ScreenData
     {
         public void AddScatter(params DSContainer<List<ScatterPlot>>[] plotContainers)
         {
+            if (plotContainers == null) return;
+
             foreach (var container in plotContainers)
             {
                 DS11.AddScatter(container.DS11);

@@ -29,6 +29,8 @@ namespace Opal.src.CommonClasses.DataProvider
             _config.LineID = CommonFileContentManager.GetLineCode(files);
             _config.ProductID = CommonFileContentManager.GetProductCode(files);
 
+            if (_config.LineID == null) return;
+
             files = CommonFileContentManager.FilterByLine(files, _config.LineID);
             files = CommonFileContentManager.FilterByProduct(files, _config.ProductID);
 

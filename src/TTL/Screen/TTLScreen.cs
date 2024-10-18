@@ -38,30 +38,35 @@ namespace Opal.src.TTL.Screen
             Temperature = new ProcessTab("Temperature");
             Pressure = new ProcessTab("Pressure");
 
-            Tabs.Controls.Add(Temperature.Tab);
-            Tabs.Controls.Add(Pressure.Tab);
+            Tabs.TabPages.Add(Temperature.Tab);
+            Tabs.TabPages.Add(Pressure.Tab);
 
             if (_config.Acoustic.Enabled)
             {
-                FR = new AcousticTab("FR", "Hz", "dB SPL");
-                THD = new AcousticTab("THD", "Hz", "%");
-                RNB = new AcousticTab("RNB", "Hz", "dB SPL");
-                IMP = new AcousticTab("IMP", "Hz", "Ω");
-
-                Tabs.TabPages.Add(FR.Tab);
-                Tabs.TabPages.Add(THD.Tab);
-                Tabs.TabPages.Add(RNB.Tab);
-                Tabs.TabPages.Add(IMP.Tab);
-
-                FR.SubscribeToDSNestToggleButtonClick(FRToggleView);
-                THD.SubscribeToDSNestToggleButtonClick(THDToggleView);
-                RNB.SubscribeToDSNestToggleButtonClick(RNBToggleView);
-                IMP.SubscribeToDSNestToggleButtonClick(IMPToggleView);
+                CreateAcoustic();
             }
 
             panel.SuspendLayout();
             panel.Controls.Add(Tabs);
             panel.ResumeLayout();
+        }
+
+        private void CreateAcoustic()
+        {
+            FR = new AcousticTab("FR", "Hz", "dB SPL");
+            THD = new AcousticTab("THD", "Hz", "%");
+            RNB = new AcousticTab("RNB", "Hz", "dB SPL");
+            IMP = new AcousticTab("IMP", "Hz", "Ω");
+
+            Tabs.TabPages.Add(FR.Tab);
+            Tabs.TabPages.Add(THD.Tab);
+            Tabs.TabPages.Add(RNB.Tab);
+            Tabs.TabPages.Add(IMP.Tab);
+
+            FR.SubscribeToDSNestToggleButtonClick(FRToggleView);
+            THD.SubscribeToDSNestToggleButtonClick(THDToggleView);
+            RNB.SubscribeToDSNestToggleButtonClick(RNBToggleView);
+            IMP.SubscribeToDSNestToggleButtonClick(IMPToggleView);
         }
 
         public void Update(List<JObject> data, MainForm form)
@@ -78,6 +83,11 @@ namespace Opal.src.TTL.Screen
 
             if (_config.Acoustic.Enabled)
             {
+                if (FR == null && THD == null && RNB == null && IMP == null)
+                {
+                    CreateAcoustic();
+                }
+
                 FR.AddData(TTLData.FR);
                 THD.AddData(TTLData.THD);
                 RNB.AddData(TTLData.RNB);

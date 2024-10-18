@@ -10,11 +10,11 @@ using System.Runtime.InteropServices;
  * - Ilya Mudritskiy (ilya.mudritskiy@sonova.com)
  */
 
-[assembly: AssemblyTitle("ProcessDashboard")]
+[assembly: AssemblyTitle("Opal")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Sonova Consumer Hearing Ireland")]
-[assembly: AssemblyProduct("ProcessDashboard")]
+[assembly: AssemblyProduct("Opal")]
 [assembly: AssemblyCopyright("Copyright © 2024")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -31,5 +31,5 @@ using System.Runtime.InteropServices;
  * If any significant changes were presented, minor or major parameters
  * can be increased independently.
  */ 
-[assembly: AssemblyVersion("1.8.5")]
-[assembly: AssemblyFileVersion("1.8.5")]
+[assembly: AssemblyVersion("1.9.2")]
+[assembly: AssemblyFileVersion("1.9.2")]

@@ -11,12 +11,14 @@ namespace Opal.Forms
     {
         private readonly MainFormController UIController;
         private readonly App App;
+        private ScreenshotHandler _screenshotHandler;
 
         public MainForm()
         {
             InitializeComponent();
             UIController = new MainFormController(this);
             App = App.Instance;
+            _screenshotHandler = new ScreenshotHandler();
         }
 
         public void SelectFilesMenuButton_Click(object sender, EventArgs e)
@@ -59,6 +61,17 @@ namespace Opal.Forms
         public void ClearScreen()
         {
             MainFormPanel.Controls.Clear();
+        }
+
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            _screenshotHandler?.Dispose();
+            base.OnFormClosing(e);
+        }
+
+        private void makeScreenshotToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            _screenshotHandler.Make();
         }
     }
 }

@@ -1,5 +1,5 @@
-﻿using Opal.src.Forms;
-using Opal.src.TTL.Containers.Common;
+﻿using Opal.src.CommonClasses.Containers;
+using Opal.src.Forms;
 using Opal.src.TTL.Containers.ScreenData;
 using System;
 using System.Collections.Generic;
@@ -11,18 +11,20 @@ namespace Opal.src.TTL.UI.EventControllers
 {
     public class DataViewerController
     {
-        //private MainForm mainForm;
         private DataViewer DV;
         private DataGridView DGV;
+
+        Dictionary<string, TableDataContainer> TableData;
+        // Also tooltip text is missing
 
         private TTLData TTLData { get; set; }
 
         public DataViewerController()
         {
-            //this.mainForm = mainForm;
             DV = new DataViewer();
             DGV = DV.DataViewerMainTable;
             DGV.AutoGenerateColumns = false;
+            TableData = new Dictionary<string, TableDataContainer>();
             RegisterEvents();
         }
 
@@ -31,103 +33,88 @@ namespace Opal.src.TTL.UI.EventControllers
             DV.ShowDialog();
         }
 
-        public void AddData(TTLData data)
+        public void AddData(string key, TableDataContainer data)
         {
-            this.TTLData = data;
+            if (string.IsNullOrEmpty(key)) return;
+            if (!data.IsValid()) return;
+
+            if (!TableData.ContainsKey(key))
+            {
+                TableData.Add(key, data);
+                DV.SelectObjectDropDown.Items.Add(key);
+            }
+            else
+            {
+                TableData[key] = data;
+            }
         }
 
-        private void ClearData()
+        public void AddData(Dictionary<string, TableDataContainer> data)
+        {
+            foreach (var pair in data)
+            {
+                AddData(pair.Key, pair.Value);
+            }
+        }
+
+        public void Clear()
+        {
+            TableData.Clear();
+            ClearScreen();
+            DV.SelectObjectDropDown.Items.Clear();
+        }
+
+        private void ClearScreen()
         {
             DGV.Columns.Clear();
-            DGV.DataSource = null;
-            DGV.Refresh();
+            DGV.Rows.Clear();
         }
 
-        private void AddSerialColumn()
+        private void ShowData(string key)
         {
-            var serialColumn = new DataGridViewTextBoxColumn
+            if (string.IsNullOrEmpty(key)) return;
+            if (!TableData.ContainsKey(key)) return;
+
+            ClearScreen();
+
+            var data = TableData[key];
+
+            foreach (var colName in data.ColumnsNames)
             {
-                Name = "Serial",
-                HeaderText = "Serial",
-                ToolTipText = "Serial number"
-            };
-            DGV.Columns.Add(serialColumn);
-        }
-
-        private void AddWPCColumn()
-        {
-            var WPCcolumn = new DataGridViewTextBoxColumn
-            {
-                Name = "WPC",
-                HeaderText = "WPC",
-                ToolTipText = "Work Piece Carrier"
-            };
-            DGV.Columns.Add(WPCcolumn);
-        }
-
-        private void ShowData(List<DataPointsRow<IValueDescription>> data)
-        {
-            if (data == null) return;
-            //Data = data;
-            ClearData();
-            AddSerialColumn();
-            AddWPCColumn();
-
-            var newRows = new List<DataPointsRow<IValueDescription>>();
-
-            foreach (var dataRow in data)
-            {
-                if (dataRow ==  null) continue;
-                newRows.Add(dataRow);
-            }
-
-            int maxValuesCount = newRows.Max(row => row.Values.Count);
-
-            for (int i = 0; i < maxValuesCount; i++)
-            {
-                var valueColumn = new DataGridViewTextBoxColumn
+                var col = new DataGridViewTextBoxColumn
                 {
-                    Name = newRows.First().Values[i].Name,
-                    HeaderText = newRows.First().Values[i].Name,
-                    ToolTipText = newRows.First().Values[i].Description
+                    Name = colName,
+                    HeaderText = colName
                 };
-                DGV.Columns.Add(valueColumn);
+
+                DGV.Columns.Add(col);
             }
 
-            foreach (var row in newRows)
+            foreach (var row in data.DataRows)
             {
-                var rowValues = new object[maxValuesCount + 2]; // +1 for the Serial
-                rowValues[0] = row.Serial;
-                rowValues[1] = row.WPC;
-                for (int i = 0; i < row.Values.Count; i++)
-                {
-                    rowValues[i + 2] = row.Values[i].sValue; // +1 to skip the Serial column
-                }
-                DGV.Rows.Add(rowValues);
+                DGV.Rows.Add(row.ToArray());
             }
+
             DGV.Refresh();
         }
 
         private void FindRow()
         {
-            string searchValue = DV.DataViewerInputField.Text; // Assuming DataViewerInputField is your TextBox
-            int rowIndex = -1;
+            // Search with choosing the column where to perform the search
+            // or
+            // Search across all columns
 
-            // Use LINQ to find the row where the Serial column matches the searchValue
-            DataGridViewRow row = DGV.Rows
-                .Cast<DataGridViewRow>()
-                .FirstOrDefault(r => r.Cells["Serial"].Value.ToString().Equals(searchValue));
+            var searchValue = DV.DataViewerInputField.Text;
+
+            if (string.IsNullOrEmpty(searchValue)) return;
+
+            var row = DGV.Rows.Cast<DataGridViewRow>()
+                .FirstOrDefault(r => r.Cells[0].Value != null && r.Cells[0].Value.ToString() == searchValue);
 
             if (row != null)
             {
-                rowIndex = row.Index;
-                // Perform your action here, for example, select the row
-                DGV.CurrentCell = DGV.Rows[rowIndex].Cells[0];
+                DGV.CurrentCell = row.Cells[0];
                 DGV.Rows[DGV.CurrentCell.RowIndex].Selected = true;
-            }
-            else
-            {
-
             }
         }
 
@@ -145,6 +132,7 @@ namespace Opal.src.TTL.UI.EventControllers
             {
                 e.Cancel = true;
                 DV.Hide();
+                // Why hide instead of dispose?
             }
         }
 
@@ -153,40 +141,23 @@ namespace Opal.src.TTL.UI.EventControllers
             FindRow();
         }
 
-        private void SelectObjectDropDown_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            ToolStripComboBox comboBox = sender as ToolStripComboBox;
-
-            if (comboBox.SelectedItem != null && comboBox.SelectedItem.ToString() == "Data Points")
-            {
-                ShowData(TTLData.DataPoints);
-            }
-
-            if (comboBox.SelectedItem != null && comboBox.SelectedItem.ToString() == "Temperature Features")
-            {
-                ShowData(TTLData.TempFeatures);
-            }
-
-            if (comboBox.SelectedItem != null && comboBox.SelectedItem.ToString() == "Pressure Features")
-            {
-                ShowData(TTLData.PressFeatures);
-            }
-
-            if (comboBox.SelectedItem != null && comboBox.SelectedItem.ToString() == "Acoustic Steps Status")
-            {
-                ShowData(TTLData.StepsStatus);
-            }
-        }
-
         private void DataViewerInputField_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (e.KeyChar == (char)Keys.Enter)
             {
-                if (!string.IsNullOrEmpty(DV.DataViewerInputField.Text))
-                {
-                    FindRow();
-                    e.Handled = true;
-                }
+                FindRow();
+                e.Handled = true;
+            }
+        }
+
+        private void SelectObjectDropDown_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ToolStripComboBox comboBox = sender as ToolStripComboBox;
+            string selectedKey = comboBox?.SelectedItem?.ToString();
+
+            if (selectedKey != null && TableData.ContainsKey(selectedKey))
+            {
+                ShowData(selectedKey);
             }
         }
     }
