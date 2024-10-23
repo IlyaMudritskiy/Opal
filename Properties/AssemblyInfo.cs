@@ -30,6 +30,6 @@ using System.Runtime.InteropServices;
  * Examples: 1.3.9, 2.0.10, 1.1.1
  * If any significant changes were presented, minor or major parameters
  * can be increased independently.
- */ 
+ */
 [assembly: AssemblyVersion("1.9.2")]
 [assembly: AssemblyFileVersion("1.9.2")]

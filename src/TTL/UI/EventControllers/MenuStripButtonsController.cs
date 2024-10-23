@@ -7,8 +7,6 @@ namespace Opal.src.TTL.UI.EventControllers
 {
     public class MenuStripButtonsController
     {
-        private Config config = Config.Instance;
-
         private MainForm mainForm;
 
         public MenuStripButtonsController(MainForm mainForm)
@@ -25,12 +23,17 @@ namespace Opal.src.TTL.UI.EventControllers
         private void DataViewer_MenuStripBtn_Click(object sender, EventArgs e)
         {
             var DV = new DataViewerController(); // We create new DV every time but when close we hide it
+            /*
             var data = TTLData.Instance;
             if (data != null)
             {
                 DV.AddData(data.GetDataViewerFormat());
                 DV.Show();
             }
+            */
+
+            DV.AddData();
+            DV.Show();
         }
     }
 }

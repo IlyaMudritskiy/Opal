@@ -1,9 +1,11 @@
 ﻿using Newtonsoft.Json.Linq;
 using Opal.Forms;
 using Opal.Model.AppConfiguration;
+using Opal.src.CommonClasses.Containers;
 using Opal.src.CommonClasses.Processing;
 using Opal.src.CommonClasses.SreenProvider;
 using ProcessDashboard.src.CommonClasses.SreenProvider;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -42,6 +44,10 @@ namespace Opal.src.CommonClasses.DataProvider
             _screen.Update(files, _form);
         }
 
+        public Func<Dictionary<string, TableDataContainer>> GetDVCallback()
+        {
+            return _screen.GetDVCallback();
+        }
 
         private List<string> GetFilepathsFromDialog()
         {
