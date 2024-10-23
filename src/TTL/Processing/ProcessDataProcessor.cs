@@ -54,29 +54,38 @@ namespace Opal.src.TTL.Processing
                 return null;
             }
 
-            var temp = new Measurements2D(file.Steps.Where(x => x.StepName == "ps01_temperature_actual").FirstOrDefault().Measurements);
-            var press = new Measurements2D(file.Steps.Where(x => x.StepName == "ps01_high_pressure_actual").FirstOrDefault().Measurements);
-            var heater = file.Steps.Where(x => x.StepName == "ps01_heater_on").FirstOrDefault();
+            var temperatureActual = file.Steps.Where(x => x.StepName == "ps01_temperature_actual").FirstOrDefault();
+            var highPressureActual = file.Steps.Where(x => x.StepName == "ps01_high_pressure_actual").FirstOrDefault();
+            var heaterOn = file.Steps.Where(x => x.StepName == "ps01_heater_on").FirstOrDefault();
 
-            if (temp == null)
+            if (temperatureActual == null)
             {
                 Log.Warn($"File [{file.DUT.SerialNumber}] ps01_temperature_actual step is wrong or missing.");
                 return null;
             }
 
-            if (press == null)
+            if (highPressureActual == null)
             {
                 Log.Warn($"File [{file.DUT.SerialNumber}] ps01_high_pressure_actual step is wrong or missing.");
                 return null;
             }
 
-            if (heater == null || heater.Measurements.Count != 2)
+            if (heaterOn == null)
             {
-                Log.Warn($"File [{file.DUT.SerialNumber}] ps01_heater_on step is wrong or missing.");
+                Log.Warn($"File [{file.DUT.SerialNumber}] ps01_heater_on step is missing.");
                 return null;
             }
 
-            if ((temp.MaxX() + press.MaxX()) / 2 > 25)
+            if (heaterOn.Measurements.Count != 2)
+            {
+                Log.Warn($"File [{file.DUT.SerialNumber}] ps01_heater_on step is missing.");
+                return null;
+            }
+
+            var temp = new Measurements2D(temperatureActual.Measurements);
+            var press = new Measurements2D(highPressureActual.Measurements);
+
+            if ((temp.MaxX() + press.MaxX()) / 2 > 30)
             {
                 Log.Warn($"File [{file.DUT.SerialNumber}] temperature max time ({temp.MaxX()}) and pressure max time ({press.MaxX()}) are off or missing.");
                 return null;

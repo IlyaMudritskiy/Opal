@@ -52,7 +52,7 @@ namespace Opal.src.TTL.Processing
 
             if (!Directory.Exists(path))
             {
-                Log.Error($"Directory for limits does not exist ({path})");
+                Log.Debug($"Directory for limits does not exist ({path})");
                 return null;
             }
 
