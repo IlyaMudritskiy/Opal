@@ -17,7 +17,7 @@ public sealed class FixedSizeBuffer<T>
     public FixedSizeBuffer(int maxSize)
     {
         if (maxSize <= 0)
-            throw new ArgumentException("Max size must be greater than zero", nameof(maxSize));
+            maxSize = 200;
 
         Buffer = new List<T>(maxSize);
         _maxSize = maxSize;
@@ -65,7 +65,7 @@ public sealed class FixedSizeBuffer<T>
     public void SetSize(int maxSize)
     {
         if (maxSize <= 0)
-            throw new ArgumentException("Max size must be greater than zero", nameof(maxSize));
+            maxSize= 200;
 
         _maxSize = maxSize;
         if (Buffer.Count > _maxSize)

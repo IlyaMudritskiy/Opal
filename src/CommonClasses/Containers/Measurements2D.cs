@@ -25,7 +25,7 @@ namespace Opal.src.CommonClasses.Containers
             if (measurements == null)
             {
                 Log.Error("Null List<Measurement> was passed to Measurements2D ctor.");
-                throw new ArgumentNullException(nameof(measurements));
+                return;
             }
                 
 

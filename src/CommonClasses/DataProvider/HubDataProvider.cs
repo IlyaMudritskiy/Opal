@@ -115,7 +115,7 @@ namespace Opal.src.CommonClasses.DataProvider
 
         public Func<Dictionary<string, TableDataContainer>> GetDVCallback()
         {
-            throw new NotImplementedException();
+            return null;
         }
     }
 }
