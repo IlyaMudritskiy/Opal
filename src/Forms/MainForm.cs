@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Reflection;
 using System.Windows.Forms;
 using Opal.src.App;
 using Opal.src.TTL.UI.EventControllers;
@@ -19,11 +20,14 @@ namespace Opal.Forms
             UIController = new MainFormController(this);
             App = App.Instance;
             _screenshotHandler = new ScreenshotHandler();
+            this.Text = $"Opal {GetAssemblyVersion()}";
         }
 
         public void SelectFilesMenuButton_Click(object sender, EventArgs e)
         {
             App.Run(MainFormPanel, this);
+            var callback = App.GetDVCallback();
+            UIController.DataViewer.AddDataCallback(callback);
         }
 
         private void SettingsMenuButton_Click(object sender, EventArgs e)
@@ -72,6 +76,19 @@ namespace Opal.Forms
         private void makeScreenshotToolStripMenuItem_Click(object sender, EventArgs e)
         {
             _screenshotHandler.Make();
+        }
+
+        public string GetAssemblyVersion()
+        {
+            Assembly assembly = Assembly.GetExecutingAssembly();
+            Version version = assembly.GetName().Version;
+
+            if (version != null)
+            {
+                return $"{version.Major}.{version.Minor}.{version.Build}";
+            }
+
+            return "";
         }
     }
 }

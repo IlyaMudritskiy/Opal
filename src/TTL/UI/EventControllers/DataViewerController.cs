@@ -1,6 +1,5 @@
 ﻿using Opal.src.CommonClasses.Containers;
 using Opal.src.Forms;
-using Opal.src.TTL.Containers.ScreenData;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -14,10 +13,8 @@ namespace Opal.src.TTL.UI.EventControllers
         private DataViewer DV;
         private DataGridView DGV;
 
-        Dictionary<string, TableDataContainer> TableData;
-        // Also tooltip text is missing
-
-        private TTLData TTLData { get; set; }
+        private Dictionary<string, TableDataContainer> TableData;  // Also tooltip text is missing
+        private static Func<Dictionary<string, TableDataContainer>> _callback;
 
         public DataViewerController()
         {
@@ -55,6 +52,20 @@ namespace Opal.src.TTL.UI.EventControllers
             {
                 AddData(pair.Key, pair.Value);
             }
+        }
+
+        public void AddData()
+        {
+            if (_callback == null) return;
+
+            Dictionary<string, TableDataContainer> data = _callback();
+
+            AddData(data);
+        }
+
+        public void AddDataCallback(Func<Dictionary<string, TableDataContainer>> callback)
+        {
+            _callback = callback;
         }
 
         public void Clear()

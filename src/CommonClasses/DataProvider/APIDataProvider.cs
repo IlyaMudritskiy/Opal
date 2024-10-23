@@ -2,6 +2,7 @@
 using Newtonsoft.Json.Linq;
 using Opal.Forms;
 using Opal.Model.AppConfiguration;
+using Opal.src.CommonClasses.Containers;
 using Opal.src.CommonClasses.SreenProvider;
 using Opal.src.TTL.UI.EventControllers;
 using Opal.src.Utils;
@@ -132,6 +133,11 @@ namespace Opal.src.CommonClasses.DataProvider
             data.Add(pageContent);
 
             return data;
+        }
+
+        public Func<Dictionary<string, TableDataContainer>> GetDVCallback()
+        {
+            throw new NotImplementedException();
         }
     }
 }

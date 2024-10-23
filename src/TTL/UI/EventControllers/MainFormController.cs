@@ -1,7 +1,4 @@
 ﻿using Opal.Forms;
-using Opal.src.CommonClasses.DataProvider;
-using ProcessDashboard.src.CommonClasses.SreenProvider;
-using System.Threading.Tasks;
 
 namespace Opal.src.TTL.UI.EventControllers
 {
@@ -13,9 +10,6 @@ namespace Opal.src.TTL.UI.EventControllers
         public DataViewerController DataViewer { get; private set; }
 
         private MainForm _mainForm;
-        private IScreen _screen;
-        private IDataProvider _provider;
-
 
         public MainFormController(MainForm mainForm)
         {

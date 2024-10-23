@@ -2,10 +2,12 @@
 using Newtonsoft.Json.Linq;
 using Opal.Forms;
 using Opal.Model.AppConfiguration;
+using Opal.src.CommonClasses.Containers;
 using Opal.src.CommonClasses.SreenProvider;
 using Opal.src.Utils;
 using ProcessDashboard.src.CommonClasses.SreenProvider;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Opal.src.CommonClasses.DataProvider
@@ -109,6 +111,11 @@ namespace Opal.src.CommonClasses.DataProvider
             {
                 action.Invoke();
             }
+        }
+
+        public Func<Dictionary<string, TableDataContainer>> GetDVCallback()
+        {
+            throw new NotImplementedException();
         }
     }
 }

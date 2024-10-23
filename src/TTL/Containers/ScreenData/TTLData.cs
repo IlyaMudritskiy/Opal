@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Opal.Model.AppConfiguration;
 using Opal.src.CommonClasses.Containers;
-using Opal.src.TTL.Containers.Common;
 using Opal.src.TTL.Misc;
 
 namespace Opal.src.TTL.Containers.ScreenData
@@ -91,8 +90,8 @@ namespace Opal.src.TTL.Containers.ScreenData
             {
                 var unitValues = new List<string>
                 {
-                unit.SerialNumber,
-                unit.WPC
+                    unit.SerialNumber,
+                    unit.WPC
                 };
 
                 unitValues.AddRange(dataSourceSelector(unit).Select(valueRepr));

@@ -1,9 +1,11 @@
 ﻿using Newtonsoft.Json.Linq;
 using Opal.Forms;
 using Opal.Model.AppConfiguration;
+using Opal.src.CommonClasses.Containers;
 using Opal.src.CommonClasses.Processing;
 using Opal.src.CommonClasses.SreenProvider;
 using ProcessDashboard.src.CommonClasses.SreenProvider;
+using System;
 using System.Collections.Generic;
 
 namespace Opal.src.CommonClasses.DataProvider
@@ -43,6 +45,11 @@ namespace Opal.src.CommonClasses.DataProvider
         {
             var paths = CommonFileManager.GetFilesFromDialog();
             return CommonFileManager.ParseJsonFiles(paths);
+        }
+
+        public Func<Dictionary<string, TableDataContainer>> GetDVCallback()
+        {
+            return _screen.GetDVCallback();
         }
     }
 }

@@ -39,7 +39,6 @@ namespace Opal.Model.Screen.Tabs
         {
             UnitX = unitX;
             UnitY = unitY;
-            //Plots = new DSContainer<PlotView>();
             Plots = new PlotViewDSContainer();
             TabType = title;
             createLayout(title);

@@ -6,6 +6,7 @@ using Newtonsoft.Json.Linq;
 using Opal.Forms;
 using Opal.Model.AppConfiguration;
 using Opal.Model.Screen.Tabs;
+using Opal.src.CommonClasses.Containers;
 using Opal.src.TTL.Containers.ScreenData;
 using Opal.src.TTL.Processing;
 using ProcessDashboard.src.CommonClasses.SreenProvider;
@@ -126,6 +127,11 @@ namespace Opal.src.TTL.Screen
         {
             Clear();
             TTLData = null;
+        }
+
+        public Func<Dictionary<string, TableDataContainer>> GetDVCallback()
+        {
+            return TTLData.GetDataViewerFormat;
         }
 
         private void FRToggleView(object sender, EventArgs e)

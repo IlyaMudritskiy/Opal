@@ -4,9 +4,11 @@ using System.Drawing;
 
 namespace Opal.src.TTL.Containers.FileContent
 {
+    /// <summary>
+    /// Data container that stores the statistics about specific step (not file) i.e. SPL
+    /// </summary>
     public class AcousticStepStatistics
     {
-        //public string StepName { get; set; }
         public int Count { get; set; }
 
         public int Pass {  get; set; }

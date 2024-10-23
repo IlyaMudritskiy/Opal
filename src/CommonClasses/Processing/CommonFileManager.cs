@@ -86,7 +86,7 @@ namespace Opal.src.CommonClasses.Processing
         {
             if (!File.Exists(filePath))
             {
-                Log.Error($"The file '{filePath}' does not exist");
+                Log.Warn($"The file '{filePath}' does not exist");
                 return default;
             }
 
@@ -98,7 +98,7 @@ namespace Opal.src.CommonClasses.Processing
             }
             catch (JsonSerializationException ex)
             {
-                Log.Error($"Error deserializing JSON: {ex.Message}");
+                Log.Warn($"Error deserializing JSON: {ex.Message}");
             }
             return default;
         }
@@ -107,7 +107,7 @@ namespace Opal.src.CommonClasses.Processing
         {
             if (!File.Exists(filePath))
             {
-                Log.Error($"The file '{filePath}' does not exist");
+                Log.Warn($"The file '{filePath}' does not exist");
                 return default;
             }
 
@@ -119,7 +119,7 @@ namespace Opal.src.CommonClasses.Processing
             }
             catch (JsonSerializationException ex)
             {
-                Log.Error($"Error deserializing JSON: {ex.Message}");
+                Log.Warn($"Error deserializing JSON: {ex.Message}");
             }
             return default;
         }

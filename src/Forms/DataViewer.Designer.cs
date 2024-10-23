@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DataViewer));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.DataViewerMenuStrip = new System.Windows.Forms.MenuStrip();
             this.SelectObjectDropDown = new System.Windows.Forms.ToolStripComboBox();
             this.DataViewerInputField = new System.Windows.Forms.ToolStripTextBox();
@@ -91,11 +91,12 @@
             this.DataViewerMainTable.AllowUserToDeleteRows = false;
             this.DataViewerMainTable.AllowUserToOrderColumns = true;
             this.DataViewerMainTable.AllowUserToResizeRows = false;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            this.DataViewerMainTable.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            this.DataViewerMainTable.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
             this.DataViewerMainTable.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.DataViewerMainTable.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
             this.DataViewerMainTable.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.DataViewerMainTable.Location = new System.Drawing.Point(0, 0);
             this.DataViewerMainTable.Name = "DataViewerMainTable";

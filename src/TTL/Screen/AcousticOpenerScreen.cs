@@ -2,6 +2,7 @@
 using Opal.Forms;
 using Opal.Model.AppConfiguration;
 using Opal.Model.Data.Acoustic;
+using Opal.src.CommonClasses.Containers;
 using Opal.src.CommonClasses.Processing;
 using Opal.src.TTL.Containers.FileContent;
 using Opal.src.TTL.UI.UIElements;
@@ -31,14 +32,24 @@ namespace Opal.src.TTL.Screen
 
         private List<AcousticFile> Files { get; set; }
 
+        private List<ScatterPlot> PassPlots;
+        private List<ScatterPlot> FailPlots;
+        private List<ScatterPlot> LimitPlots;
+
         Dictionary<string, AcousticStepStatistics> StepsStatistics { get; set; }
         private int PassCount { get; set; }
         private int FailCount { get; set; }
+
+        private CheckBox ShowPass_chk;
+        private CheckBox ShowFail_chk;
 
         public void Show(Panel panel)
         {
             StepsStatistics = new Dictionary<string, AcousticStepStatistics>();
             CreateLayout();
+            PassPlots = new List<ScatterPlot>();
+            FailPlots = new List<ScatterPlot>();
+            LimitPlots = new List<ScatterPlot>();
             panel.SuspendLayout();
             panel.Controls.Add(Layout);
             panel.ResumeLayout();
@@ -69,6 +80,9 @@ namespace Opal.src.TTL.Screen
             StepsSelector.Items.Clear();
             StatisticsTable.ClearAll();
             StepsPlot.Clear();
+            PassPlots.Clear();
+            FailPlots.Clear();
+            LimitPlots.Clear();
             if (Files != null) Files.Clear();
             StepsStatistics.Clear();
             StepsSelector.Text = string.Empty;
@@ -77,6 +91,48 @@ namespace Opal.src.TTL.Screen
         public void ClearAll()
         {
             Clear();
+        }
+
+        public Func<Dictionary<string, TableDataContainer>> GetDVCallback()
+        {
+            return GetDVData;
+        }
+
+        public Dictionary<string, TableDataContainer> GetDVData()
+        {
+            if (Files  == null || Files.Count == 0) return null;
+
+            var firstFile = Files[0];
+
+            var headers = new List<string>
+            {
+                "Serial",
+                "Timestamp",
+                "Pass"
+            };
+
+            headers.AddRange(firstFile.Steps.Select(x => x.StepName));
+
+            var values = new List<List<string>>();
+
+            foreach (var file in Files)
+            {
+                var fileData = new List<string>
+                {
+                    file.DUT.Serial,
+                    file.DUT.Time,
+                    file.DUT.Pass ? "PASS" : "FAIL"
+                };
+
+                fileData.AddRange(file.Steps.Select(x => x.StepPass ? "PASS" : "FAIL"));
+
+                values.Add(fileData);
+            }
+
+            return new Dictionary<string, TableDataContainer>
+            {
+                { "Acoustic Opener Screen", new TableDataContainer(headers, values) }
+            };
         }
 
         private void CreateLayout()
@@ -94,6 +150,7 @@ namespace Opal.src.TTL.Screen
             };
 
             StatisticsTable = new TableView();
+            StatisticsTable.Table.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
             StepsPlot = new PlotView(GetPlotHeader(), color);
 
             StatisticsTable.SetColor(color);
@@ -115,10 +172,59 @@ namespace Opal.src.TTL.Screen
                 },
             };
 
+            TableLayoutPanel buttonsLayout = new TableLayoutPanel()
+            {
+                ColumnCount = 2,
+                RowCount = 1,
+                Dock = DockStyle.Fill,
+                ColumnStyles =
+                {
+                    new ColumnStyle(SizeType.Absolute, 120),
+                    new ColumnStyle(SizeType.Percent, 50)
+                },
+                RowStyles =
+                {
+                    new RowStyle(SizeType.Percent, 100)
+                },
+            };
+
+            ShowPass_chk = new CheckBox
+            {
+                Dock = DockStyle.Fill,
+                Text = "Show/hide PASS",
+                Checked = true,
+            };
+
+            ShowFail_chk = new CheckBox
+            {
+                Dock = DockStyle.Fill,
+                Text = "Show/hide FAIL",
+                Checked = true
+            };
+
+            ShowPass_chk.CheckedChanged += OnShowPass_chkCheckedChanged;
+            ShowFail_chk.CheckedChanged += OnShowFail_chkCheckedChanged;
+
+            buttonsLayout.SuspendLayout();
+            buttonsLayout.Controls.Add(ShowPass_chk, 0, 0);
+            buttonsLayout.Controls.Add(ShowFail_chk, 1, 0);
+            buttonsLayout.ResumeLayout();
+
+            SplitContainer splitContainer = new SplitContainer
+            {
+                Dock = DockStyle.Fill,
+                Orientation = Orientation.Vertical,
+                SplitterDistance = 50,
+            };
+
+            splitContainer.Panel1.Controls.Add(StatisticsTable.Layout);
+            splitContainer.Panel2.Controls.Add(StepsPlot.Layout);
+
             baseLayout.SuspendLayout();
             baseLayout.Controls.Add(StepsSelector, 0, 0);
-            baseLayout.Controls.Add(StatisticsTable.Layout, 0, 1);
-            baseLayout.Controls.Add(StepsPlot.Layout, 1, 1);
+            baseLayout.Controls.Add(buttonsLayout, 1, 0);
+            baseLayout.Controls.Add(splitContainer, 0, 1);
+            baseLayout.SetColumnSpan(splitContainer, 2);
             baseLayout.ResumeLayout();
 
             Layout = baseLayout;
@@ -241,16 +347,17 @@ namespace Opal.src.TTL.Screen
             if (StepsSelector.SelectedItem == null) return;
 
             StepsPlot.Clear();
+            PassPlots.Clear();
+            FailPlots.Clear();
+            LimitPlots.Clear();
 
-            var yeild = Math.Round(((double)PassCount / Files.Count)*100, 2);
+            var yeild = Math.Round(((double)PassCount / Files.Count) * 100, 2);
 
             StepsPlot.SetText($"{Files[0].DUT.TypeName}, {Files[0].DUT.TypeID} | {Files[0].DUT.System} | Total: {Files.Count}, Yield: {yeild}%");
 
             string selectedStep = StepsSelector.SelectedItem.ToString();
 
             var stepProp = StepsStatistics[selectedStep];
-
-            var plots = new List<ScatterPlot>();
 
             foreach (var stepStat in stepProp.Measurements)
             {
@@ -263,6 +370,7 @@ namespace Opal.src.TTL.Screen
                 if (stepStat.Measurements[0].Length == 1 || stepStat.Measurements[1].Length == 1)
                 {
                     p = GetPlot(stepStat.Measurements, stepStat.Color, markerSize: 10);
+
                     StepsPlot.ToNormal();
                 }
                 else
@@ -270,22 +378,29 @@ namespace Opal.src.TTL.Screen
                     p = GetPlot(stepStat.Measurements, stepStat.Color, true);
                 }
 
-                plots.Add(p);
+                if (stepStat.Pass)
+                    PassPlots.Add(p);
+                if (!stepStat.Pass)
+                    FailPlots.Add(p);
             }
 
             if (stepProp.UpperLimit != null && stepProp.UpperLimit.Count > 0)
             {
                 var p = GetPlot(stepProp.UpperLimit, Colors.Blue, true, lineWidth: 2);
-                plots.Add(p);
+                LimitPlots.Add(p);
             }
 
             if (stepProp.LowerLimit != null && stepProp.LowerLimit.Count > 0)
             {
                 var p = GetPlot(stepProp.LowerLimit, Colors.Blue, true, lineWidth: 2);
-                plots.Add(p);
+                LimitPlots.Add(p);
             }
 
-            StepsPlot.AddScatter(plots);
+            SetPlotsVisibility(PassPlots, ShowPass_chk.Checked);
+            SetPlotsVisibility(FailPlots, ShowFail_chk.Checked);
+            StepsPlot.AddScatter(PassPlots, FailPlots, LimitPlots);
+            StepsPlot.Refresh();
+            StepsPlot.Fit();
         }
 
         private double[] ToLog(double[] array)
@@ -317,6 +432,34 @@ namespace Opal.src.TTL.Screen
                 MarkerSize = markerSize,
                 LineWidth = lineWidth
             };
+        }
+
+        private void OnShowPass_chkCheckedChanged(object sender, EventArgs e)
+        {
+            OnCheckedChanged(PassPlots, sender);
+        }
+
+        private void OnShowFail_chkCheckedChanged(object sender, EventArgs e)
+        {
+            OnCheckedChanged(FailPlots, sender);
+        }
+
+        private void OnCheckedChanged(List<ScatterPlot> plots, object sender)
+        {
+            CheckBox checkBox = sender as CheckBox;
+
+            if (checkBox != null)
+                SetPlotsVisibility(plots, checkBox.Checked);
+        }
+
+        private void SetPlotsVisibility(List<ScatterPlot> plots, bool visible)
+        {
+            if (plots == null) return;
+
+            foreach (var plot in plots)
+                plot.IsVisible = visible;
+
+            StepsPlot.Refresh();
         }
 
         public void Dispose()

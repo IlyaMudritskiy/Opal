@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Threading;
 using System.Windows.Forms;
 using Opal.Forms;
 using Opal.Model.AppConfiguration;
+using Opal.src.CommonClasses.Containers;
 using Opal.src.CommonClasses.DataProvider;
 
 namespace Opal.src.App
@@ -38,6 +40,13 @@ namespace Opal.src.App
             SetDataprovider(mainForm);
 
             _dataProvider.Start();
+        }
+
+        public Func<Dictionary<string, TableDataContainer>> GetDVCallback()
+        {
+            if (_dataProvider == null) return null;
+
+            return _dataProvider.GetDVCallback();
         }
 
         /// <summary>
