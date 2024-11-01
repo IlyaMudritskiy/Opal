@@ -70,6 +70,18 @@ namespace Opal.src.TTL.Containers.ScreenData
             return result;
         }
 
+        public void Clear()
+        {
+            Temperature = new ProcessData();
+            Pressure = new ProcessData();
+            FR = null;
+            THD = null;
+            RNB = null;
+            IMP = null;
+            _units = null;
+            _config = Config.Instance;
+        }
+
         private TableDataContainer DataToDataViewer<T>(
             Func<TTLUnit, IEnumerable<T>> dataSourceSelector,
             Func<T, string> nameRepr,

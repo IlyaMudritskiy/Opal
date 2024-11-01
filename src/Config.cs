@@ -49,6 +49,8 @@ namespace Opal.Model.AppConfiguration
         [JsonProperty(PropertyName = "enabled")]
         public bool SettingsEnabled { get; set; }
 
+        public bool Restart { get; set; }
+
         [JsonProperty(PropertyName = "line_product_map")]
         public Dictionary<string, List<string>> LineProductMap { get; set; }
     }

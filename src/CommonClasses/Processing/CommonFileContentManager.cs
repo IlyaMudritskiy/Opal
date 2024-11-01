@@ -160,6 +160,14 @@ namespace Opal.src.CommonClasses.Processing
             return getFieldValue(files.First(), "type_id");
         }
 
+        /// <summary>
+        /// Retrieves the product code from the first JSON object in a list by extracting the value of the "type_id" field.
+        /// </summary>
+        /// <param name="files">The list of JSON objects from which to retrieve the product code.</param>
+        /// <returns>
+        /// The product code extracted from the "type_id" field of the first JSON object in the list.
+        /// If the list is null or empty, or the "type_id" field does not exist, returns null.
+        /// </returns>
         public static string GetAcousticProductCode(List<JObject> files)
         {
             if (files == null || files.Count() == 0) return null;

@@ -32,8 +32,13 @@ namespace Opal.src.TTL.Screen
 
         private TTLData TTLData { get; set; }
 
+        private Panel _panel;
+
         public void Show(Panel panel)
         {
+            if (_panel == null)
+                _panel = panel;
+
             Tabs = new TabControl() { Dock = DockStyle.Fill };
 
             Temperature = new ProcessTab("Temperature");
@@ -47,9 +52,9 @@ namespace Opal.src.TTL.Screen
                 CreateAcoustic();
             }
 
-            panel.SuspendLayout();
-            panel.Controls.Add(Tabs);
-            panel.ResumeLayout();
+            _panel.SuspendLayout();
+            _panel.Controls.Add(Tabs);
+            _panel.ResumeLayout();
         }
 
         private void CreateAcoustic()
@@ -127,6 +132,19 @@ namespace Opal.src.TTL.Screen
         {
             Clear();
             TTLData = null;
+        }
+
+        public void Reload()
+        {
+            if (_panel == null) return;
+
+            _panel.SuspendLayout();
+            _panel.Controls.Clear();
+            _panel.ResumeLayout();
+            _panel.Refresh();
+            TTLData.Clear();
+            ClearAll();
+            Show(_panel);
         }
 
         public Func<Dictionary<string, TableDataContainer>> GetDVCallback()

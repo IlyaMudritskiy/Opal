@@ -269,7 +269,7 @@ namespace Opal.src.TTL.Screen
                 {
                     if (!StepsStatistics.ContainsKey(step.StepName))
                     {
-                        StepsStatistics.Add(step.StepName, new AcousticStepStatistics());
+                        StepsStatistics.Add(step.StepName, new AcousticStepStatistics()); // Keep the statistics of the step (not file)
                         StepsStatistics[step.StepName].Measurements = new List<StepStat>();
                     }
 
@@ -396,6 +396,10 @@ namespace Opal.src.TTL.Screen
                 LimitPlots.Add(p);
             }
 
+            /*
+             * Set the visibility of plots before showing
+             * if set after showing, they will blink and disappear
+             */
             SetPlotsVisibility(PassPlots, ShowPass_chk.Checked);
             SetPlotsVisibility(FailPlots, ShowFail_chk.Checked);
             StepsPlot.AddScatter(PassPlots, FailPlots, LimitPlots);
@@ -465,6 +469,11 @@ namespace Opal.src.TTL.Screen
         public void Dispose()
         {
 
+        }
+
+        public void Reload()
+        {
+            throw new NotImplementedException();
         }
     }
 }

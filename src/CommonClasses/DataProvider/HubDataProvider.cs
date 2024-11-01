@@ -19,6 +19,7 @@ namespace Opal.src.CommonClasses.DataProvider
         private static MainForm _form;
         private IScreen _screen;
         private string _machineName;
+        private string _currentTypeId;
 
         public HubDataProvider(MainForm form)
         {
@@ -37,10 +38,23 @@ namespace Opal.src.CommonClasses.DataProvider
             Task.Run(() => StartSignalRConnectionAsync());
         }
 
+        private void CheckTypeIdAndReload(string typeId)
+        {
+            if (_currentTypeId == null)
+                _currentTypeId = typeId;
+
+            if (_currentTypeId != typeId)
+            {
+                _currentTypeId = typeId;
+                InvokeOnUiThread(() => _screen.Reload());
+            }
+        }
+
         private async Task StartSignalRConnectionAsync()
         {
             var connection = new HubConnectionBuilder()
-                .WithUrl($"{_config.DataProvider.HubUrl}?clientId={_machineName}&lineId={_config.LineID}&typeId={_config.ProductID}")
+                //.WithUrl($"{_config.DataProvider.HubUrl}?clientId={_machineName}&lineId={_config.LineID}&typeId={_config.ProductID}")
+                .WithUrl($"{_config.DataProvider.HubUrl}?clientId={_machineName}&lineId={_config.LineID}")
                 .WithAutomaticReconnect()
                 .Build();
 
@@ -60,6 +74,7 @@ namespace Opal.src.CommonClasses.DataProvider
                 {
                     var parsedMessage = JObject.Parse(message);
                     Log.Info($"[PARSED] On NewDataAvailable: {parsedMessage["DUT"]["serial_nr"]}");
+                    CheckTypeIdAndReload(parsedMessage["DUT"]["type_id"].ToString());
                     InvokeOnUiThread(() => _form.SetMessage($"{parsedMessage["DUT"]["serial_nr"]}", Colors.Green));
                     InvokeOnUiThread(() => _screen.Update(parsedMessage, _form));
                 }
@@ -115,7 +130,7 @@ namespace Opal.src.CommonClasses.DataProvider
 
         public Func<Dictionary<string, TableDataContainer>> GetDVCallback()
         {
-            throw new NotImplementedException();
+            return null;
         }
     }
 }

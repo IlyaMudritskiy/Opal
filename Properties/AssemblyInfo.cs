@@ -31,5 +31,5 @@ using System.Runtime.InteropServices;
  * If any significant changes were presented, minor or major parameters
  * can be increased independently.
  */
-[assembly: AssemblyVersion("1.9.5")]
-[assembly: AssemblyFileVersion("1.9.5")]
+[assembly: AssemblyVersion("1.9.7")]
+[assembly: AssemblyFileVersion("1.9.7")]
