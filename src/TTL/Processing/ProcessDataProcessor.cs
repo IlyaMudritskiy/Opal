@@ -85,9 +85,15 @@ namespace Opal.src.TTL.Processing
             var temp = new Measurements2D(temperatureActual.Measurements);
             var press = new Measurements2D(highPressureActual.Measurements);
 
-            if ((temp.MaxX() + press.MaxX()) / 2 > 30)
+            if (temp.MaxX() <= 5 && temp.MaxX() >= 30)
             {
-                Log.Warn($"File [{file.DUT.SerialNumber}] temperature max time ({temp.MaxX()}) and pressure max time ({press.MaxX()}) are off or missing.");
+                Log.Warn($"File [{file.DUT.SerialNumber}] temperature max time ({temp.MaxX()}) is off or missing.");
+                return null;
+            }
+
+            if (press.MaxX() <= 5 && press.MaxX() >= 30)
+            {
+                Log.Warn($"File [{file.DUT.SerialNumber}] pressure max time ({temp.MaxX()}) is off or missing.");
                 return null;
             }
 

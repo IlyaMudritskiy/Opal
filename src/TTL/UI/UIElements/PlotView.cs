@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Windows.Forms;
 using Opal.src.TTL.Containers.Common;
 using Opal.src.TTL.Screen;
 using Opal.src.Utils;
@@ -66,18 +67,6 @@ namespace Opal.src.TTL.UI.UIElements
             Refresh();
             Fit();
         }
-        /*
-        public void AddScatter(Color color, params Measurements2D[] data)
-        {
-            if (data == null) return;
-
-            foreach (var acoustic in data)
-                Control.Plot.AddScatter(acoustic.X.ToArray(), acoustic.Y.ToArray(), color, 2);
-
-            Refresh();
-            Fit();
-        }
-        */
 
         public Bracket AddGetBracket(DataPoint start, DataPoint end, bool visibility = true)
         {
@@ -225,6 +214,18 @@ namespace Opal.src.TTL.UI.UIElements
             Refresh();
             Fit();
             return result;
+        }
+
+        public void RotateTicks(float rotationAngle = 45)
+        {
+            Control.Plot.XAxis.TickLabelStyle(rotation: rotationAngle);
+            Control.Refresh();
+        }
+
+        public void SetPadding(PixelPadding padding)
+        {
+            Control.Plot.ManualDataArea(padding);
+            Control.Refresh();
         }
 
         public void Clear()

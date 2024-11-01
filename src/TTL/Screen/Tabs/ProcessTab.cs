@@ -133,7 +133,7 @@ namespace Opal.Model.Screen.Tabs
 
         private void CreateLayout(string title)
         {
-            PixelPadding padding = new PixelPadding(30, 7, 25, 7);
+            var padding = new PixelPadding(30, 7, 25, 7);
 
             Tab = new TabPage() { Text = title };
             PlotView = new PlotView(title, Colors.Black, padding);
@@ -146,6 +146,9 @@ namespace Opal.Model.Screen.Tabs
             FeaturesDistributions.DS12 = new PlotView("DS 1-2", Colors.DS12C, padding);
             FeaturesDistributions.DS21 = new PlotView("DS 2-1", Colors.DS21C, padding);
             FeaturesDistributions.DS22 = new PlotView("DS 2-2", Colors.DS22C, padding);
+
+            FeaturesDistributions.Apply(x => x.RotateTicks(45));
+            FeaturesDistributions.Apply(x => x.SetPadding(new PixelPadding(30, 7, 38, 7)));
 
             TableLayoutPanel tabBase = new TableLayoutPanel()
             {
