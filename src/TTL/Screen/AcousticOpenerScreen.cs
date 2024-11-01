@@ -470,5 +470,10 @@ namespace Opal.src.TTL.Screen
         {
 
         }
+
+        public void Reload()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

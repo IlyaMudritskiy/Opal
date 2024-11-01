@@ -15,5 +15,6 @@ namespace ProcessDashboard.src.CommonClasses.SreenProvider
         Func<Dictionary<string, TableDataContainer>> GetDVCallback();
         void Clear();
         void ClearAll();
+        void Reload();
     }
 }
