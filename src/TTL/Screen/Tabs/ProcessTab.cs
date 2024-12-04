@@ -653,21 +653,25 @@ namespace Opal.Model.Screen.Tabs
 
         private void TableView_CheckboxStateChanged_DS11(object sender, EventArgs e)
         {
+            if (Data.Curves.DS11 == null || MarkerPlots.DS11 == null || Brackets.DS11 == null) return;
             Visibility.DS11 = toggleCurvesVisibility(Data.Curves.DS11, MarkerPlots.DS11, Brackets.DS11, sender);
         }
 
         private void TableView_CheckboxStateChanged_DS12(object sender, EventArgs e)
         {
+            if (Data.Curves.DS12 == null || MarkerPlots.DS12 == null || Brackets.DS12 == null) return;
             Visibility.DS12 = toggleCurvesVisibility(Data.Curves.DS12, MarkerPlots.DS12, Brackets.DS12, sender);
         }
 
         private void TableView_CheckboxStateChanged_DS21(object sender, EventArgs e)
         {
+            if (Data.Curves.DS21 == null || MarkerPlots.DS21 == null || Brackets.DS21 == null) return;
             Visibility.DS21 = toggleCurvesVisibility(Data.Curves.DS21, MarkerPlots.DS21, Brackets.DS21, sender);
         }
 
         private void TableView_CheckboxStateChanged_DS22(object sender, EventArgs e)
         {
+            if (Data.Curves.DS22 == null || MarkerPlots.DS22 == null || Brackets.DS22 == null) return;
             Visibility.DS22 = toggleCurvesVisibility(Data.Curves.DS22, MarkerPlots.DS22, Brackets.DS22, sender);
         }
 

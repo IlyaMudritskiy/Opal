@@ -46,14 +46,9 @@
             this.TimeFrom_dtp = new System.Windows.Forms.DateTimePicker();
             this.Serial_grp = new System.Windows.Forms.GroupBox();
             this.Serial_txb = new System.Windows.Forms.TextBox();
-            this.CustomQuery_grp = new System.Windows.Forms.GroupBox();
-            this.Clear_btn = new System.Windows.Forms.Button();
-            this.CustomQuery_cmb = new System.Windows.Forms.ComboBox();
-            this.RefreshQueries_btn = new System.Windows.Forms.Button();
             this.DateTimeRange_grp.SuspendLayout();
             this.Range_grp.SuspendLayout();
             this.Serial_grp.SuspendLayout();
-            this.CustomQuery_grp.SuspendLayout();
             this.SuspendLayout();
             // 
             // label2
@@ -76,7 +71,7 @@
             // 
             // Confirm_btn
             // 
-            this.Confirm_btn.Location = new System.Drawing.Point(208, 345);
+            this.Confirm_btn.Location = new System.Drawing.Point(208, 260);
             this.Confirm_btn.Name = "Confirm_btn";
             this.Confirm_btn.Size = new System.Drawing.Size(131, 23);
             this.Confirm_btn.TabIndex = 7;
@@ -230,54 +225,11 @@
             this.Serial_txb.Size = new System.Drawing.Size(313, 20);
             this.Serial_txb.TabIndex = 0;
             // 
-            // CustomQuery_grp
-            // 
-            this.CustomQuery_grp.Controls.Add(this.Clear_btn);
-            this.CustomQuery_grp.Controls.Add(this.CustomQuery_cmb);
-            this.CustomQuery_grp.Controls.Add(this.RefreshQueries_btn);
-            this.CustomQuery_grp.Enabled = false;
-            this.CustomQuery_grp.Location = new System.Drawing.Point(12, 260);
-            this.CustomQuery_grp.Name = "CustomQuery_grp";
-            this.CustomQuery_grp.Size = new System.Drawing.Size(327, 79);
-            this.CustomQuery_grp.TabIndex = 17;
-            this.CustomQuery_grp.TabStop = false;
-            this.CustomQuery_grp.Text = "Custom Query";
-            // 
-            // Clear_btn
-            // 
-            this.Clear_btn.Enabled = false;
-            this.Clear_btn.Location = new System.Drawing.Point(244, 46);
-            this.Clear_btn.Name = "Clear_btn";
-            this.Clear_btn.Size = new System.Drawing.Size(75, 23);
-            this.Clear_btn.TabIndex = 2;
-            this.Clear_btn.Text = "Clear";
-            this.Clear_btn.UseVisualStyleBackColor = true;
-            // 
-            // CustomQuery_cmb
-            // 
-            this.CustomQuery_cmb.Enabled = false;
-            this.CustomQuery_cmb.FormattingEnabled = true;
-            this.CustomQuery_cmb.Location = new System.Drawing.Point(6, 19);
-            this.CustomQuery_cmb.Name = "CustomQuery_cmb";
-            this.CustomQuery_cmb.Size = new System.Drawing.Size(313, 21);
-            this.CustomQuery_cmb.TabIndex = 1;
-            // 
-            // RefreshQueries_btn
-            // 
-            this.RefreshQueries_btn.Enabled = false;
-            this.RefreshQueries_btn.Location = new System.Drawing.Point(161, 46);
-            this.RefreshQueries_btn.Name = "RefreshQueries_btn";
-            this.RefreshQueries_btn.Size = new System.Drawing.Size(75, 23);
-            this.RefreshQueries_btn.TabIndex = 0;
-            this.RefreshQueries_btn.Text = "Refresh";
-            this.RefreshQueries_btn.UseVisualStyleBackColor = true;
-            // 
             // APIDataSelectorForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(349, 377);
-            this.Controls.Add(this.CustomQuery_grp);
+            this.ClientSize = new System.Drawing.Size(349, 293);
             this.Controls.Add(this.Serial_grp);
             this.Controls.Add(this.DateTimeRange_grp);
             this.Controls.Add(this.Confirm_btn);
@@ -290,7 +242,6 @@
             this.Range_grp.PerformLayout();
             this.Serial_grp.ResumeLayout(false);
             this.Serial_grp.PerformLayout();
-            this.CustomQuery_grp.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -314,9 +265,5 @@
         internal System.Windows.Forms.DateTimePicker DateTo_dtp;
         internal System.Windows.Forms.GroupBox Serial_grp;
         internal System.Windows.Forms.TextBox Serial_txb;
-        private System.Windows.Forms.GroupBox CustomQuery_grp;
-        internal System.Windows.Forms.ComboBox CustomQuery_cmb;
-        internal System.Windows.Forms.Button RefreshQueries_btn;
-        internal System.Windows.Forms.Button Clear_btn;
     }
 }

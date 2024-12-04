@@ -1,22 +1,11 @@
 # OPAL
 
-> Insights into production processes.
-
-> Authors:
-> 
-> Ilya Mudritskiy
-> 
-> Thomas Lawless
-
-Opal is an end user application for opening, processing, anayzing and representing data from production lines. It can be used as a standalone application to open `.json` files (Process and Acoustic files) and in bundle with [`Onyx`](https://dev.azure.com/sch-ireland/Onyx) service to gather data from database or get a real-time data using SignalR hub.
-
-First Opal was put in production on `TTL` and it provides real-time visual updates for process `ps01` (embossing).
+Opal is an end user application for opening, processing, anayzing and representing data from production lines. It can be used as a standalone application to open `.json` files (Process and Acoustic files) and in bundle with [`Onyx`](https://github.com/IlyaMudritskiy/Onyx) service to gather data from database (MongoDB) or get a real-time data using SignalR hub.
 
 # Installation
 
 **For end users:** 
 - Get the latest version of the application and just put the whole folder in a location you find convenient for you.
-- **Important:** please, avoid putting the app in any locations that are backed up in OneDrive. It might cause problems.
 
 **For developers**
 - You can follow the steps above.
@@ -32,14 +21,14 @@ File is stored at the same location where `Opal.exe` resides.
 
 ## Settings menu in UI
 
-Settings during runtime and in the editor:
+Settings during runtime and in the VS Designer:
 
 ![Settings during runtime](./Assets/png/settings1.png)
 ![Settings in editor](./Assets/png/settings2.png)
 
 1. Each `DataProvider` has its own set of settings and the areas that are not used are disabled.
 2. `Save` button also performs extra actions:
-   1. `Opyx API` - will send a ping GET HTTP request to a specific endpoint to check if API is reachable and token is valid.
+   1. `Opyx API` - will send a "ping" GET HTTP request to a specific endpoint to check if API is reachable and JWT is valid.
       1. If not reachable - will update `Status` in red color
       2. If token is not valid - will update `Status` in yellow and ask the user to Log in.
    2. `Onyx Notifications Hub`:
@@ -57,10 +46,8 @@ Limits for product's Mean Features and distribution are stored in `Limits` folde
 > In `app-config.json`: 
 
 ```json
-...
 "data_provider": {
     "type": "files",
-...
 }
 ```
 
@@ -68,7 +55,7 @@ This Data Provider will open an `OpenFileDialog` window with multiselect enabled
 
 - If **Acoustic Tabs** are **enabled** and **Files location is empty**, it will try to find acoustic files on a specified drive (**Data Drive Letter**) automatically.
 - If **Acoustic Tabs** are **enabled** and **Files location is not empty**, it will try to find acoustic files in the specified location.
-- If **Acoustic Tabs** are **disabled** to acoustic data will be loaded and tabs will not be shown.
+- If **Acoustic Tabs** are **disabled**, acoustic data will not be loaded and tabs will not be shown.
 
 Then it will process the data, perform the calculations and populate the corresponding screen with data.
 
@@ -77,10 +64,8 @@ Then it will process the data, perform the calculations and populate the corresp
 > In `app-config.json`: 
 
 ```json
-...
 "data_provider": {
     "type": "api",
-...
 }
 ```
 
@@ -89,22 +74,18 @@ When you click `Start` with this Data Provider selected, it will open a window w
 ![API Data Selector form](./Assets/png/api_data_selector.png)
 
 User can find data by these parameters:
-1. (always used) **Line ID** from `Settings` - should be selected beforehand.
+1. (always used) **Line ID** from `Settings` - should be selected beforehand in **Settings**.
 2. (always used) **Type ID** or **Product ID** from `Settings` - should be selected beforehand.
 3. Date and Time range - uses the `DUT.created_at` field from the file.
 4. Signle DUT by a specific Serial Number.
-
-Custom Query is not available at the moment and planned for the future to be in the form of a `.json` file with a valid MongoDB request that will be sent to Onyx API..
 
 ## Notifications Hub
 
 > In `app-config.json`: 
 
 ```json
-...
 "data_provider": {
     "type": "hub",
-...
 }
 ```
 
@@ -112,7 +93,7 @@ Application will connect to SignalR Hub with a specific group and listen for any
 
 Updates are tied to usage of `/api/ProcessData` `POST` request.
 
-Updates are sent only to corresponding group which is formed by Line ID and Product ID (`G-TTL_M-588408`).
+Updates are sent only to corresponding group which is formed by Line ID (`G-LINE`).
 
 Buffer size defines how many Mean Features collections will be stored to plot the distribution on a distribution plot. Best results are achieved using size of `200`.
 
@@ -121,10 +102,8 @@ Buffer size defines how many Mean Features collections will be stored to plot th
 > In `app-config.json`: 
 
 ```json
-...
 "data_provider": {
     "type": "acoustic",
-...
 }
 ```
 
@@ -162,32 +141,14 @@ public void Start()
 }
 ```
 
-# Main terms
-
-- `Opal`: Codename for this project, Process Dashboard was omitted because this name gave the wrong idea of app purpuse.
-- `Screen`: An object of `Control` type that is inserted in `Panel` in `MainForm`. A visual representation for a specific line or purpose.
-- `Data Provider`: A class that is responsible for acquiring and processing the data before providing the resulting data to the screen.
-- `Tab`: Applicable to `TTLScreen`. `Tab` from `TabControl`, i.e. **Temperature**, **Pressure**, **FR**, **THD**, etc.
-- `Hub`: `SignalR` hub that is implemented in **Onyx** and to which Opal can connect using corresponding Data Provider. 
-- `Plot`: `ScottPlot` `Plot` object canvas that can plot different styles of graphs and plots.
-- `Curve`: Usually any type of **ScatterPlot**.
-- `Table`: Tabular data, usually references the **Features** tables.
-- `Distribution`: Bar graphs that show the number of values in specific buckets over some parameter (time, temperature, pressure)
-- `Data Point`: A (**x** - time, **y** - presure or temperature) point of some event during the process, like HeaterOff, CoolingOn, etc.
-- `Feature`: Calculated parameter using DataPoints that shows (usually difference) between said DataPoints and representing a charachteristic of the process, i.e. HRc is Heater Runtime Calculated and is calculated as t4 - t2 or HeaterOff - HeaterOn. 
-- `Mean Feature`: Mean value of multiple features, if several files were selected. Acts as current **Feature** if 1 unit of data was opened for 1 Die-side.
-- `Data Viewer`: Additional form that shows all calculated **Features** and **Data Points** in a big table along with serial numbers.
-- `Limits`: Limits for a specific product's features (i.e. 576661). used in tables as min and max columns and as red vertical lines on distribution plots with the same idea.
-
-
 # Configuration file
 
 `app-config.json`:
 
 ```json
 {
-  "product_id": "521836",
-  "line_id": "TTL_M",
+  "product_id": "PRODUCT1",
+  "line_id": "LINE1",
   "data_drive_letter": "Z",
   "asx_compliant_mode": true,
   "enabled": true,
@@ -195,7 +156,7 @@ public void Start()
 
   "acoustic": {
     "enabled": false,
-    "files_custom_location": "C:\\Code\\Azure\\ProcessDashboard\\bin\\Release\\Acoustic"
+    "files_custom_location": "C:\\Folder"
   },
   "auth": {
     "token": "abeC93d..."
@@ -207,14 +168,10 @@ public void Start()
   },
 
   "line_product_map": {
-    "TTL_M": [
-      "588408",
-      "521836",
-      "576661"
+    "LINE1": [
+      "PRODUCT1",
+      "PRODUCT2",
     ],
-    "MDA": [
-      "999999"
-    ]
   }
 }
 ```
@@ -222,8 +179,8 @@ public void Start()
 ## Configuration overview
 
 ```json
-"product_id": "521836",
-"line_id": "TTL_M",
+"product_id": "PRODUCT1",
+"line_id": "LINE1",
 "data_drive_letter": "Z",
 "asx_compliant_mode": true,
 "enabled": true,
@@ -244,7 +201,7 @@ public void Start()
 ```json
 "acoustic": {
     "enabled": false,
-    "files_custom_location": "C:\\Code\\Azure\\ProcessDashboard\\bin\\Release\\Acoustic"
+    "files_custom_location": "C:\\Folder"
 }
 ```
 
@@ -289,13 +246,12 @@ public void Start()
 ---
 ```json
 "line_product_map": {
-    "TTL_M": [
-        "588408",
-        "521836",
-        "576661"
+    "LINE1": [
+        "PRODUCT1",
+        "PRODUCT2",
     ],
-    "MDA": [
-        "999999"
+    "LINE2": [
+        "PRODUCT34"
     ]
 }
 ```
@@ -309,11 +265,11 @@ Opal supports product limits from version `V1.8.5`. They are stored in the `.jso
 
 Additional fields or limits can be added, for example limits for curves (Temperature and Pressure). 
 
-Here is an example of the limits (file `581940.json`):
+Here is an example of the limits (file `PRODUCTX.json`):
 
 ```json
 {
-  "typeid": "581940",
+  "typeid": "PRODUCTX",
   "mean_limits": {
     "HR": {
       "min": 7.446,
